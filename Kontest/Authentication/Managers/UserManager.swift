@@ -27,13 +27,13 @@ actor UserManager {
         }
         
         // Construct the URL
-        let url = URL(string: Constants.Endpoints.userServiceURL)!.appendingPathComponent("user/all-details")
+        let url = URL(string: Constants.Endpoints.userServiceURL)!.appendingPathComponent("user_info")
         
         // Create the URL request
         var request = URLRequest(url: url)
         request.httpMethod = "PUT" // Assuming you are using PUT method to update user details
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("\(jwtToken)", forHTTPHeaderField: "Authorization")
         
         // Prepare the request body
         var body: [String: Any] = [:]
@@ -45,10 +45,10 @@ actor UserManager {
             body["last_name"] = lastName
         }
         if let selectedCollegeState = selectedCollegeState {
-            body["selected_college_state"] = selectedCollegeState
+            body["college_state"] = selectedCollegeState
         }
         if let selectedCollege = selectedCollege {
-            body["selected_college"] = selectedCollege
+            body["college_name"] = selectedCollege
         }
         if let leetcodeUsername = leetcodeUsername {
             body["leetcode_username"] = leetcodeUsername
@@ -83,12 +83,12 @@ actor UserManager {
             throw AppError(title: "Authenticated user is missing", description: "Authenticated user is missing")
         }
         
-        let url = URL(string: Constants.Endpoints.userServiceURL)!.appending(components: "user", "all-details")
+        let url = URL(string: Constants.Endpoints.userServiceURL)!.appending(components: "user_info")
         
         // Create the URL request
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("\(jwtToken)", forHTTPHeaderField: "Authorization")
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
@@ -113,8 +113,8 @@ actor UserManager {
                     firstName: decodedData["firstName"] as! String,
                     lastName: decodedData["lastName"] as! String,
                     email: authenticatedUser.email,
-                    selectedCollegeState: decodedData["selectedCollegeState"] as! String,
-                    selectedCollege: decodedData["selectedCollege"] as! String,
+                    selectedCollegeState: decodedData["college_state"] as! String,
+                    selectedCollege: decodedData["college_name"] as! String,
                     leetcodeUsername: decodedData["leetcodeUsername"] as! String,
                     codeForcesUsername: decodedData["codeforcesUsername"] as! String,
                     codeChefUsername: decodedData["codechefUsername"] as! String,
@@ -124,7 +124,18 @@ actor UserManager {
                 throw AppError(title: "Date Parsing Error", description: "Unable to parse the createdAt field.")
             }
         } else {
-            throw AppError(title: "Invalid Data", description: "createdAt field is missing.")
+//            throw AppError(title: "Invalid Data", description: "createdAt field is missing.")
+            return DBUser(
+                firstName: decodedData["first_name"] as! String,
+                lastName: decodedData["last_name"] as! String,
+                email: decodedData["email"] as! String,
+                selectedCollegeState: decodedData["college_state"] as! String,
+                selectedCollege: decodedData["college_name"] as! String,
+                leetcodeUsername: decodedData["leetcode_username"] as! String,
+                codeForcesUsername: decodedData["codeforces_username"] as! String,
+                codeChefUsername: decodedData["codechef_username"] as! String,
+                dateCreated: .now
+            )
         }
     }
 }

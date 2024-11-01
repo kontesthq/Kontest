@@ -89,9 +89,9 @@ actor AuthenticationManager: Sendable {
         let email = email.lowercased()
         
         logger.info("Attempting sign-in for email: \(email)")
-        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("auth/login")
+        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("user/login")
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let body: [String: Any] = [
@@ -115,6 +115,7 @@ actor AuthenticationManager: Sendable {
         }
         
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         let loginResponse = try decoder.decode(LoginResponse.self, from: data)
         
         // Use TokenManager to store tokens
@@ -253,12 +254,12 @@ actor AuthenticationManager: Sendable {
             throw AppError(title: "Refresh Token Missing", description: "No refresh token found in Keychain")
         }
         
-        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("auth/refresh")
+        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("user/refresh")
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let body: [String: Any] = ["refreshToken": refreshToken]
+        let body: [String: Any] = ["refresh_token": refreshToken]
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
         
         let (data, response) = try await URLSession.shared.data(for: request)

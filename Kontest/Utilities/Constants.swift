@@ -72,7 +72,7 @@ enum Constants {
         private static let graphql = "/graphql"
         private static let kontests = "/kontest"
         private static let auth = "/auth"
-        private static let userService = "/user-service"
+        private static let userService = "/user"
         
         // Computed properties to return full URLs
         static var graphqlURL: String {

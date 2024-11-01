@@ -7,220 +7,160 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B4A892DC-AFCD-4356-BF9B-2AA0FAB22342"
+            uuid = "7D1883F9-B6BF-4C00-85B3-5AB66D41EC2D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Kontest/Authentication/Managers/UserManager.swift"
+            filePath = "Kontest/Authentication/ViewModels/AuthenticationEmailViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "getUser()"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "signIn()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "B4A892DC-AFCD-4356-BF9B-2AA0FAB22342 - c401cd5d0816211c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82">
-               </Location>
-               <Location
-                  uuid = "B4A892DC-AFCD-4356-BF9B-2AA0FAB22342 - 6a771f1e4791ec0b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) await resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "110"
-                  endingLineNumber = "110">
-               </Location>
-               <Location
-                  uuid = "B4A892DC-AFCD-4356-BF9B-2AA0FAB22342 - 6a771f1e4791e0f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) await resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82">
-               </Location>
-               <Location
-                  uuid = "B4A892DC-AFCD-4356-BF9B-2AA0FAB22342 - 97f88f040b88a1c2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "110"
-                  endingLineNumber = "110">
-               </Location>
-               <Location
-                  uuid = "B4A892DC-AFCD-4356-BF9B-2AA0FAB22342 - 97f88f040b88ad3e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82">
-               </Location>
-               <Location
-                  uuid = "B4A892DC-AFCD-4356-BF9B-2AA0FAB22342 - 97f88f040b88ad3e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B0970973-2B46-46A4-A569-78ACB889A3AB"
+            uuid = "E452F017-3986-4386-860A-51CA84B0BE24"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Kontest/Authentication/Managers/UserManager.swift"
+            filePath = "Kontest/Authentication/ViewModels/AuthenticationEmailViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "getUser()"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "signIn()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "B0970973-2B46-46A4-A569-78ACB889A3AB - 312e0aba0ce5a5b8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80">
-               </Location>
-               <Location
-                  uuid = "B0970973-2B46-46A4-A569-78ACB889A3AB - b3e00acf82ae3811"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "110"
-                  endingLineNumber = "110">
-               </Location>
-               <Location
-                  uuid = "B0970973-2B46-46A4-A569-78ACB889A3AB - c401cd5d08162de0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "110"
-                  endingLineNumber = "110">
-               </Location>
-               <Location
-                  uuid = "B0970973-2B46-46A4-A569-78ACB889A3AB - 97f88f040b88adfc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80">
-               </Location>
-               <Location
-                  uuid = "B0970973-2B46-46A4-A569-78ACB889A3AB - 2ad051af073d2e22"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(7) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80">
-               </Location>
-               <Location
-                  uuid = "B0970973-2B46-46A4-A569-78ACB889A3AB - 9427f08380e46833"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(8) suspend resume partial function for Kontest.UserManager.getUser() async throws -&gt; Kontest.DBUser"
-                  moduleName = "Kontest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ayushsinghal/Development/Apple/XCode%20Projects/Completed/Kontest/Kontest/Authentication/Managers/UserManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5F918B51-444E-470D-A9A8-C4CAB0076711"
+            uuid = "631B4D9F-5862-4E1B-B9B1-6A341F6946A9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Kontest/Authentication/Managers/UserManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "getUser()"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "updateUserDetails(firstName:lastName:selectedCollegeState:selectedCollege:leetcodeUsername:codeForcesUsername:codeChefUsername:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C7965CF1-5401-45EC-A2F1-A15A4A5475AA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kontest/Authentication/Managers/UserManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "updateUserDetails(firstName:lastName:selectedCollegeState:selectedCollege:leetcodeUsername:codeForcesUsername:codeChefUsername:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "980EAB40-B804-4DD4-A8C6-827C79408B57"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kontest/Authentication/Managers/AuthenticationManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
+            landmarkName = "getJWTToken()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B3E91502-2BD8-4FB0-B065-BA91320C75C7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kontest/Authentication/Managers/AuthenticationManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
+            landmarkName = "getJWTToken()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6093E858-0B8D-4F16-9FBC-2BB1C4D2FFF2"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kontest/Authentication/Managers/AuthenticationManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "294"
+            endingLineNumber = "294"
+            landmarkName = "getJWTToken()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0BCB99C1-78AC-400F-BBB9-5D9E47BF7FE4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kontest/Authentication/Managers/UserManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "updateUserDetails(firstName:lastName:selectedCollegeState:selectedCollege:leetcodeUsername:codeForcesUsername:codeChefUsername:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F4AB657D-6AD4-4EFC-ABE8-6228C2312FCF"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kontest/Authentication/Managers/UserManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "updateUserDetails(firstName:lastName:selectedCollegeState:selectedCollege:leetcodeUsername:codeForcesUsername:codeChefUsername:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2D7C0470-2194-4970-B8D6-8CEAB1270C66"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kontest/Authentication/Managers/UserManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
+            landmarkName = "updateUserDetails(firstName:lastName:selectedCollegeState:selectedCollege:leetcodeUsername:codeForcesUsername:codeChefUsername:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
