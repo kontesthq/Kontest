@@ -41,7 +41,7 @@ final class AllKontestsViewModel: Sendable {
     }
 
     var isLoading = false
-    
+
     let repositories: MultipleRepositories<KontestDTO>
 
     init(notificationsViewModel: any NotificationsViewModelProtocol, filterWebsitesViewModel: any FilterWebsitesViewModelProtocol, repos: MultipleRepositories<KontestDTO>) {
@@ -63,15 +63,7 @@ final class AllKontestsViewModel: Sendable {
         }
         #endif
 
-        Task {
-            do {
-                let authenticatedUser = await AuthenticationManager.shared.getAuthenticatedUser()
-
-                if let userEmail = authenticatedUser?.email {
-                    try await AuthenticationEmailViewModel.shared.setDownloadedUsernamesAsLocalUsernames(userId: userEmail)
-                }
-            } catch {}
-        }
+        _ = AuthenticationManager.shared // To initialize the AuthenticationManager
     }
 
     func fetchAllKontests() {

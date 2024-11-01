@@ -20,7 +20,7 @@ public struct LoginResponse: Decodable, Sendable {
         case email = "username"
         case jwtToken
         case refreshToken
-    }    
+    }
 }
 
 struct SignupResponse: Decodable {
@@ -46,11 +46,17 @@ actor AuthenticationManager: Sendable {
     
     static let shared = AuthenticationManager()
     
-    static private(set) var isAuthenticated: Bool = false
+    private(set) static var isAuthenticated: Bool = false
     
     private init() {
         Task {
             AuthenticationManager.isAuthenticated = await self.checkAuthenticationStatus()
+            
+            let authenticatedUser = await getAuthenticatedUser()
+            
+            if let userEmail = authenticatedUser?.email {
+                try await AuthenticationEmailViewModel.shared.setDownloadedUsernamesAsLocalUsernames(userId: userEmail)
+            }
         }
     }
     
@@ -274,6 +280,7 @@ actor AuthenticationManager: Sendable {
         }
         
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         let authResponse = try decoder.decode(LoginResponse.self, from: data)
         
         TokenManager.shared.storeTokens(jwtToken: authResponse.jwtToken, refreshToken: authResponse.refreshToken)
