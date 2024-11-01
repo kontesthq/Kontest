@@ -28,14 +28,11 @@ final class KontestNewAPIRepository: Fetcher, KontestFetcher {
         do {
             let mainUrl = URL(string: Constants.Endpoints.kontestsURL)!
             
-            let version = "v1"
             let page = 1
             let perPage = 10000
             
             let endpointURL = mainUrl
-                .appendingPathComponent("api")
-                .appendingPathComponent(version)
-                .appendingPathComponent("get_kontests")
+                .appendingPathComponent("kontests")
                 .appending(queryItems: [
                     .init(name: "page", value: String(page)),
                     .init(name: "per_page", value: String(perPage))
@@ -58,6 +55,7 @@ final class KontestNewAPIRepository: Fetcher, KontestFetcher {
     private func decodeKontests(from data: Data) throws -> [KontestDTO] {
         // Create a JSONDecoder instance
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         // Decode the raw JSON data into an array of dictionaries
         let rawKontests = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] ?? []

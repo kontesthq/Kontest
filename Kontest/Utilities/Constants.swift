@@ -70,7 +70,7 @@ enum Constants {
     
     enum Endpoints {
         private static let graphql = "/graphql"
-        private static let kontests = "/kontests"
+        private static let kontests = "/kontest"
         private static let auth = "/auth"
         private static let userService = "/user-service"
         
