@@ -173,14 +173,14 @@ actor AuthenticationManager: Sendable {
     func changePassword(newPassword: String) async throws {
         let jwtToken = await getJWTToken()
         
-        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("auth/reset-password")
+        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("user/change_password")
         
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let body: [String: Any] = [
-            "newPassword": newPassword
+            "new_password": newPassword
         ]
         
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
@@ -195,7 +195,8 @@ actor AuthenticationManager: Sendable {
         
         guard httpResponse.statusCode == 200 else {
             logger.error("Password change failed with status code: \(httpResponse.statusCode) and response: \(response)")
-            throw handleError(for: httpResponse.statusCode)
+            let body = String(data: data, encoding: .utf8) ?? ""
+            throw AppError(title: "There is an Error in changing password", description: body)
         }
         
         logger.info("Password changed")
