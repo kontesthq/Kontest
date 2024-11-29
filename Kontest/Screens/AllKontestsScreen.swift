@@ -327,7 +327,7 @@ struct AllKontestsScreen: View {
                                 case .AccountInformationScreen:
                                     AccountInformationScreen()
                                 }
-                                
+
                             case .ChangePasswordScreen:
                                 ChangePasswordScreen()
                             }

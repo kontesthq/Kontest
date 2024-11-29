@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -32,6 +32,17 @@
 		073E75862C9171E400E5B934 /* Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073E75812C916ECB00E5B934 /* Fetcher.swift */; };
 		073E75882C91766200E5B934 /* MultipleRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073E75832C916F3300E5B934 /* MultipleRepositories.swift */; };
 		073E75892C91766200E5B934 /* MultipleRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073E75832C916F3300E5B934 /* MultipleRepositories.swift */; };
+		074215D32CF9721C00ADF523 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07CFEBA32AB02DCB00291484 /* WidgetKit.framework */; };
+		074215D42CF9721C00ADF523 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07CFEBA52AB02DCB00291484 /* SwiftUI.framework */; };
+		074215E12CF9721F00ADF523 /* KontestLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 074215D22CF9721C00ADF523 /* KontestLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		074215EB2CF972F900ADF523 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074215EA2CF972F900ADF523 /* ActivityManager.swift */; };
+		0742162E2CF978DC00ADF523 /* KontestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB522AA58259008513C6 /* KontestModel.swift */; };
+		0742162F2CF9796600ADF523 /* KontestStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB4D2AA58259008513C6 /* KontestStatus.swift */; };
+		074216302CF979BD00ADF523 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB652AA58259008513C6 /* Constants.swift */; };
+		074216312CF979CB00ADF523 /* KontestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB742AA58259008513C6 /* KontestDTO.swift */; };
+		074216322CF979D900ADF523 /* CalendarUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB662AA58259008513C6 /* CalendarUtility.swift */; };
+		074216332CF979EB00ADF523 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB682AA58259008513C6 /* LocalNotificationManager.swift */; };
+		074216342CF979F800ADF523 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074DD4512AA61570005C16A5 /* AppError.swift */; };
 		0742254B2AC1444500EEB578 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB682AA58259008513C6 /* LocalNotificationManager.swift */; };
 		0742254C2AC1444600EEB578 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB682AA58259008513C6 /* LocalNotificationManager.swift */; };
 		074DD4522AA61570005C16A5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074DD4512AA61570005C16A5 /* AppError.swift */; };
@@ -207,6 +218,13 @@
 			remoteGlobalIDString = 076016542A87CD52007CE9F5;
 			remoteInfo = Kontest;
 		};
+		074215DF2CF9721F00ADF523 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0760164D2A87CD52007CE9F5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 074215D12CF9721C00ADF523;
+			remoteInfo = KontestLiveActivityExtension;
+		};
 		0764FF872ABC717F0060AC1F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0760164D2A87CD52007CE9F5 /* Project object */;
@@ -231,6 +249,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				0764FF892ABC717F0060AC1F /* Upcoming Kontest iOS WidgetExtension.appex in Embed Foundation Extensions */,
+				074215E12CF9721F00ADF523 /* KontestLiveActivityExtension.appex in Embed Foundation Extensions */,
 				079F68142ABC80C2001B0EFE /* Upcoming Kontest macOS WidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -262,6 +281,8 @@
 		073850BE2BE20C7F00EF24D7 /* FilterWebsitesViewCompact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterWebsitesViewCompact.swift; sourceTree = "<group>"; };
 		073E75812C916ECB00E5B934 /* Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fetcher.swift; sourceTree = "<group>"; };
 		073E75832C916F3300E5B934 /* MultipleRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleRepositories.swift; sourceTree = "<group>"; };
+		074215D22CF9721C00ADF523 /* KontestLiveActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KontestLiveActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		074215EA2CF972F900ADF523 /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
 		074DD4512AA61570005C16A5 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		076016552A87CD52007CE9F5 /* Kontest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kontest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		076134CE2AA86AC300946B02 /* KontestDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KontestDetailViewModel.swift; sourceTree = "<group>"; };
@@ -385,11 +406,41 @@
 		07FD85AC2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterWebsitesViewModelProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		074215E42CF9721F00ADF523 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 074215D12CF9721C00ADF523 /* KontestLiveActivityExtension */;
+		};
+		074215E92CF9727E00ADF523 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				KontestLiveActivityAttributes.swift,
+			);
+			target = 076016542A87CD52007CE9F5 /* Kontest */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		074215D52CF9721C00ADF523 /* KontestLiveActivity */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (074215E92CF9727E00ADF523 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 074215E42CF9721F00ADF523 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = KontestLiveActivity; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		07183E9F2AB85633006C92AD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		074215CF2CF9721C00ADF523 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				074215D42CF9721C00ADF523 /* SwiftUI.framework in Frameworks */,
+				074215D32CF9721C00ADF523 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +558,7 @@
 				07183EA32AB85633006C92AD /* KontestTests */,
 				0764FF7F2ABC717E0060AC1F /* Upcoming Kontest iOS Widget */,
 				079F68092ABC80C2001B0EFE /* Upcoming Kontest macOS Widget */,
+				074215D52CF9721C00ADF523 /* KontestLiveActivity */,
 				07CFEBA22AB02DCB00291484 /* Frameworks */,
 				076016562A87CD52007CE9F5 /* Products */,
 			);
@@ -519,6 +571,7 @@
 				07183EA22AB85633006C92AD /* KontestTests.xctest */,
 				0764FF7C2ABC717E0060AC1F /* Upcoming Kontest iOS WidgetExtension.appex */,
 				079F68062ABC80C2001B0EFE /* Upcoming Kontest macOS WidgetExtension.appex */,
+				074215D22CF9721C00ADF523 /* KontestLiveActivityExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -647,6 +700,7 @@
 				07ECFB642AA58259008513C6 /* Utilities */,
 				07ECFB752AA58259008513C6 /* GraphQL */,
 				07ECFB782AA58259008513C6 /* Protocols */,
+				074215EA2CF972F900ADF523 /* ActivityManager.swift */,
 			);
 			path = Kontest;
 			sourceTree = "<group>";
@@ -868,6 +922,28 @@
 			productReference = 07183EA22AB85633006C92AD /* KontestTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		074215D12CF9721C00ADF523 /* KontestLiveActivityExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 074215E52CF9721F00ADF523 /* Build configuration list for PBXNativeTarget "KontestLiveActivityExtension" */;
+			buildPhases = (
+				074215CE2CF9721C00ADF523 /* Sources */,
+				074215CF2CF9721C00ADF523 /* Frameworks */,
+				074215D02CF9721C00ADF523 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				074215D52CF9721C00ADF523 /* KontestLiveActivity */,
+			);
+			name = KontestLiveActivityExtension;
+			packageProductDependencies = (
+			);
+			productName = KontestLiveActivityExtension;
+			productReference = 074215D22CF9721C00ADF523 /* KontestLiveActivityExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		076016542A87CD52007CE9F5 /* Kontest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 076016632A87CD55007CE9F5 /* Build configuration list for PBXNativeTarget "Kontest" */;
@@ -882,6 +958,7 @@
 			dependencies = (
 				0764FF882ABC717F0060AC1F /* PBXTargetDependency */,
 				079F68132ABC80C2001B0EFE /* PBXTargetDependency */,
+				074215E02CF9721F00ADF523 /* PBXTargetDependency */,
 			);
 			name = Kontest;
 			packageProductDependencies = (
@@ -947,12 +1024,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					07183EA12AB85633006C92AD = {
 						CreatedOnToolsVersion = 15.0;
 						TestTargetID = 076016542A87CD52007CE9F5;
+					};
+					074215D12CF9721C00ADF523 = {
+						CreatedOnToolsVersion = 16.1;
 					};
 					076016542A87CD52007CE9F5 = {
 						CreatedOnToolsVersion = 15.0;
@@ -988,12 +1068,20 @@
 				07183EA12AB85633006C92AD /* KontestTests */,
 				0764FF7B2ABC717E0060AC1F /* Upcoming Kontest iOS WidgetExtension */,
 				079F68052ABC80C2001B0EFE /* Upcoming Kontest macOS WidgetExtension */,
+				074215D12CF9721C00ADF523 /* KontestLiveActivityExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		07183EA02AB85633006C92AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		074215D02CF9721C00ADF523 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1044,6 +1132,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		074215CE2CF9721C00ADF523 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				074216312CF979CB00ADF523 /* KontestDTO.swift in Sources */,
+				074216342CF979F800ADF523 /* AppError.swift in Sources */,
+				0742162F2CF9796600ADF523 /* KontestStatus.swift in Sources */,
+				0742162E2CF978DC00ADF523 /* KontestModel.swift in Sources */,
+				074216332CF979EB00ADF523 /* LocalNotificationManager.swift in Sources */,
+				074216322CF979D900ADF523 /* CalendarUtility.swift in Sources */,
+				074216302CF979BD00ADF523 /* Constants.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		076016512A87CD52007CE9F5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1064,6 +1166,7 @@
 				07ECFB822AA58259008513C6 /* LeetCodeGraphQLViewModel.swift in Sources */,
 				07ECFB882AA58259008513C6 /* KontestApp.swift in Sources */,
 				079CF5542B52843B00BE8E13 /* CodeChefChartView.swift in Sources */,
+				074215EB2CF972F900ADF523 /* ActivityManager.swift in Sources */,
 				07ECFBB72AA58259008513C6 /* CodeChefFetcher.swift in Sources */,
 				07ECFBA12AA58259008513C6 /* SingleNotificationMenu.swift in Sources */,
 				079A672D2B545A0000901C0D /* UserManager.swift in Sources */,
@@ -1232,6 +1335,11 @@
 			target = 076016542A87CD52007CE9F5 /* Kontest */;
 			targetProxy = 07183EA62AB85633006C92AD /* PBXContainerItemProxy */;
 		};
+		074215E02CF9721F00ADF523 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 074215D12CF9721C00ADF523 /* KontestLiveActivityExtension */;
+			targetProxy = 074215DF2CF9721F00ADF523 /* PBXContainerItemProxy */;
+		};
 		0764FF882ABC717F0060AC1F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -1290,6 +1398,66 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kontest.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kontest";
+			};
+			name = Release;
+		};
+		074215E22CF9721F00ADF523 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KontestLiveActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KontestLiveActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest.KontestLiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		074215E32CF9721F00ADF523 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KontestLiveActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KontestLiveActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest.KontestLiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1458,6 +1626,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kontest/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1499,6 +1668,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kontest/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1656,6 +1826,15 @@
 			buildConfigurations = (
 				07183EA82AB85633006C92AD /* Debug */,
 				07183EA92AB85633006C92AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		074215E52CF9721F00ADF523 /* Build configuration list for PBXNativeTarget "KontestLiveActivityExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				074215E22CF9721F00ADF523 /* Debug */,
+				074215E32CF9721F00ADF523 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

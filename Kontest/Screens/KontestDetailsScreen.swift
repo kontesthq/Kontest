@@ -96,6 +96,21 @@ struct ButtonsView: View {
 
     var body: some View {
         VStack {
+//            if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate ?? Date(), kontestEndDate: kontestEndDate ?? Date()) {
+                VStack {
+                    Button((ActivityManager.shared.kontest == nil || ActivityManager.shared.kontest != kontest) ? "Start Live Activity" : "Stop Live Activity") {
+                        Task {
+                            if ActivityManager.shared.activityID == nil || ActivityManager.shared.kontest != kontest {
+                                await ActivityManager.shared.start(kontest: kontest)
+                            } else {
+                                await ActivityManager.shared.endActivity()
+                            }
+                        }
+                    }
+                    .padding(.vertical)
+                }
+//            }
+            
             if CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate ?? Date()), notificationsViewModel.getNumberOfNotificationsWhichCanBeSettedForAKontest(kontest: kontest) > 0 {
                 SingleNotificationMenu(kontest: kontest)
                     .controlSize(.large)
