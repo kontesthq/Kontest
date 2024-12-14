@@ -27,7 +27,8 @@ struct SignInScreen: View {
                 isPasswordType: false,
                 focusedField: _focusedField,
                 currentField: .email,
-                textBinding: Bindable(authenticationEmailViewModel).email
+                textBinding: Bindable(authenticationEmailViewModel).email,
+                keyboardType: .emailAddress
             )
             .padding(.horizontal)
 
@@ -121,21 +122,45 @@ private struct SignInViewTextField: View {
     let currentField: SignInTextField
     @Binding var textBinding: String
 
-    init(
-        leftText: String,
-        textHint: String,
-        isPasswordType: Bool,
-        focusedField: FocusState<SignInTextField?>,
-        currentField: SignInTextField,
-        textBinding: Binding<String>
-    ) {
-        self.leftText = leftText
-        self.textHint = textHint
-        self.isPasswordType = isPasswordType
-        self._focusedField = focusedField
-        self.currentField = currentField
-        self._textBinding = textBinding
-    }
+    #if os(iOS)
+        let keyboardType: UIKeyboardType
+    #endif
+
+    #if os(iOS)
+        init(
+            leftText: String,
+            textHint: String,
+            isPasswordType: Bool,
+            focusedField: FocusState<SignInTextField?>,
+            currentField: SignInTextField,
+            textBinding: Binding<String>,
+            keyboardType: UIKeyboardType = .default
+        ) {
+            self.leftText = leftText
+            self.textHint = textHint
+            self.isPasswordType = isPasswordType
+            self._focusedField = focusedField
+            self.currentField = currentField
+            self._textBinding = textBinding
+            self.keyboardType = keyboardType
+        }
+    #else
+        init(
+            leftText: String,
+            textHint: String,
+            isPasswordType: Bool,
+            focusedField: FocusState<SignInTextField?>,
+            currentField: SignInTextField,
+            textBinding: Binding<String>
+        ) {
+            self.leftText = leftText
+            self.textHint = textHint
+            self.isPasswordType = isPasswordType
+            self._focusedField = focusedField
+            self.currentField = currentField
+            self._textBinding = textBinding
+        }
+    #endif
 
     var body: some View {
         HStack {
@@ -151,6 +176,7 @@ private struct SignInViewTextField: View {
                     .multilineTextAlignment(.trailing)
                     .textFieldStyle(.plain)
                     .focused($focusedField, equals: currentField)
+                    .keyboardType(keyboardType)
             }
         }
         .padding(10)
@@ -163,7 +189,7 @@ private struct SignInViewTextField: View {
 
 struct TextErrorView: View {
     let error: any Error
-    
+
     var body: some View {
         HStack {
             Spacer()

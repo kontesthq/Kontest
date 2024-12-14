@@ -138,7 +138,7 @@ actor AuthenticationManager: Sendable {
         let email = email.lowercased()
         
         logger.info("Creating new user with email: \(email)")
-        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("auth/register")
+        let url = URL(string: Constants.Endpoints.authenticationURL)!.appendingPathComponent("user/register")
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -146,7 +146,8 @@ actor AuthenticationManager: Sendable {
         
         let body: [String: Any] = [
             "email": email,
-            "password": password
+            "password": password,
+            "device_id": CryptoKitUtility.sha512(for: KeychainHelper.getUniqueDeviceIdentifier())
         ]
         
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])

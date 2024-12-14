@@ -39,7 +39,7 @@ struct SignUpScreen: View {
 
                 TextField("name@example.com", text: Bindable(authenticationEmailViewModel).email)
                     .focused($focusedField, equals: .email)
-                #if available
+                #if os(iOS)
                     .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
                 #endif
