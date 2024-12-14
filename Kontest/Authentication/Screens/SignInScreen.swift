@@ -21,16 +21,28 @@ struct SignInScreen: View {
 
     var body: some View {
         VStack {
-            SignInViewTextField(
-                leftText: "Email ID:",
-                textHint: "Email",
-                isPasswordType: false,
-                focusedField: _focusedField,
-                currentField: .email,
-                textBinding: Bindable(authenticationEmailViewModel).email,
-                keyboardType: .emailAddress
-            )
-            .padding(.horizontal)
+            #if os(iOS)
+                SignInViewTextField(
+                    leftText: "Email ID:",
+                    textHint: "Email",
+                    isPasswordType: false,
+                    focusedField: _focusedField,
+                    currentField: .email,
+                    textBinding: Bindable(authenticationEmailViewModel).email,
+                    keyboardType: .emailAddress
+                )
+                .padding(.horizontal)
+            #else
+                SignInViewTextField(
+                    leftText: "Email ID:",
+                    textHint: "Email",
+                    isPasswordType: false,
+                    focusedField: _focusedField,
+                    currentField: .email,
+                    textBinding: Bindable(authenticationEmailViewModel).email
+                )
+                .padding(.horizontal)
+            #endif
 
             if isPasswordFieldVisible {
                 SignInViewTextField(
@@ -176,7 +188,9 @@ private struct SignInViewTextField: View {
                     .multilineTextAlignment(.trailing)
                     .textFieldStyle(.plain)
                     .focused($focusedField, equals: currentField)
+                #if os(iOS)
                     .keyboardType(keyboardType)
+                #endif
             }
         }
         .padding(10)

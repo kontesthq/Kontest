@@ -5,6 +5,7 @@
 //  Created by Ayush Singhal on 29/11/24.
 //
 
+#if os(iOS)
 @preconcurrency import ActivityKit
 import Foundation
 
@@ -126,3 +127,4 @@ final class ActivityManager: Sendable {
         }
     }
 }
+#endif

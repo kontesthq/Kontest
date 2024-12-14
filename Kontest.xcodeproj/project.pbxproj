@@ -34,7 +34,7 @@
 		073E75892C91766200E5B934 /* MultipleRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073E75832C916F3300E5B934 /* MultipleRepositories.swift */; };
 		074215D32CF9721C00ADF523 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07CFEBA32AB02DCB00291484 /* WidgetKit.framework */; };
 		074215D42CF9721C00ADF523 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07CFEBA52AB02DCB00291484 /* SwiftUI.framework */; };
-		074215E12CF9721F00ADF523 /* KontestLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 074215D22CF9721C00ADF523 /* KontestLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		074215E12CF9721F00ADF523 /* KontestLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 074215D22CF9721C00ADF523 /* KontestLiveActivityExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		074215EB2CF972F900ADF523 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074215EA2CF972F900ADF523 /* ActivityManager.swift */; };
 		0742162E2CF978DC00ADF523 /* KontestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB522AA58259008513C6 /* KontestModel.swift */; };
 		0742162F2CF9796600ADF523 /* KontestStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ECFB4D2AA58259008513C6 /* KontestStatus.swift */; };
@@ -1337,6 +1337,7 @@
 		};
 		074215E02CF9721F00ADF523 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 074215D12CF9721C00ADF523 /* KontestLiveActivityExtension */;
 			targetProxy = 074215DF2CF9721F00ADF523 /* PBXContainerItemProxy */;
 		};
@@ -1415,7 +1416,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = KontestLiveActivity;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1425,6 +1426,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest.KontestLiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1445,7 +1449,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = KontestLiveActivity;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1455,6 +1459,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest.KontestLiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
