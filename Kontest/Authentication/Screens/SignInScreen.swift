@@ -29,7 +29,11 @@ struct SignInScreen: View {
                     focusedField: _focusedField,
                     currentField: .email,
                     textBinding: Bindable(authenticationEmailViewModel).email,
-                    keyboardType: .emailAddress
+                    keyboardType: .emailAddress,
+                    submitLabel: .next,
+                    onSubmit: {
+                        actionToPerformWhenContinuingAfterEnteringEmail()
+                    }
                 )
                 .padding(.horizontal)
                 .onChange(of: authenticationEmailViewModel.email) {
@@ -42,7 +46,11 @@ struct SignInScreen: View {
                     isPasswordType: false,
                     focusedField: _focusedField,
                     currentField: .email,
-                    textBinding: Bindable(authenticationEmailViewModel).email
+                    textBinding: Bindable(authenticationEmailViewModel).email,
+                    submitLabel: .next,
+                    onSubmit: {
+                        actionToPerformWhenContinuingAfterEnteringEmail()
+                    }
                 )
                 .padding(.horizontal)
                 .onChange(of: authenticationEmailViewModel.email) {
@@ -57,7 +65,11 @@ struct SignInScreen: View {
                     isPasswordType: true,
                     focusedField: _focusedField,
                     currentField: .password,
-                    textBinding: Bindable(authenticationEmailViewModel).password
+                    textBinding: Bindable(authenticationEmailViewModel).password,
+                    submitLabel: .continue,
+                    onSubmit: {
+                        actionToPerformWhenContinuingAfterEnteringPassword()
+                    }
                 )
                 .padding(.horizontal)
             }
@@ -87,35 +99,13 @@ struct SignInScreen: View {
                     authenticationEmailViewModel.error = nil
 
                     if !isPasswordFieldVisible { // only email field is visible
-                        if authenticationEmailViewModel.email.isEmpty {
-                            authenticationEmailViewModel.error = AppError(title: "Email can not be empty.", description: "")
-                        } else if !checkIfEmailIsCorrect(emailAddress: authenticationEmailViewModel.email) {
-                            authenticationEmailViewModel.error = AppError(title: "Email is not in correct format.", description: "")
-                        } else {
-                            isPasswordFieldVisible = true
-
-                            self.focusedField = .password
-                        }
-
+                        actionToPerformWhenContinuingAfterEnteringEmail()
                     } else {
-                        Task {
-                            let isSignInSuccessful = await authenticationEmailViewModel.signIn()
-
-                            if isSignInSuccessful {
-                                logger.log("Yes, sign in is successful")
-
-                                router.goToRootView()
-
-                                authenticationEmailViewModel.clearAllFields()
-                            } else {
-                                logger.log("No, sign in is not successful")
-                            }
-                        }
+                        actionToPerformWhenContinuingAfterEnteringPassword()
                     }
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.accent)
-                .keyboardShortcut(.return, modifiers: [])
             }
             .padding(.horizontal)
         }
@@ -129,6 +119,38 @@ struct SignInScreen: View {
         #if os(macOS)
         .frame(maxWidth: 400)
         #endif
+    }
+
+    func actionToPerformWhenContinuingAfterEnteringEmail() {
+        authenticationEmailViewModel.error = nil
+        
+        if authenticationEmailViewModel.email.isEmpty {
+            authenticationEmailViewModel.error = AppError(title: "Email can not be empty.", description: "")
+        } else if !checkIfEmailIsCorrect(emailAddress: authenticationEmailViewModel.email) {
+            authenticationEmailViewModel.error = AppError(title: "Email is not in correct format.", description: "")
+        } else {
+            isPasswordFieldVisible = true
+
+            focusedField = .password
+        }
+    }
+
+    func actionToPerformWhenContinuingAfterEnteringPassword() {
+        authenticationEmailViewModel.error = nil
+        
+        Task {
+            let isSignInSuccessful = await authenticationEmailViewModel.signIn()
+
+            if isSignInSuccessful {
+                logger.log("Yes, sign in is successful")
+
+                router.goToRootView()
+
+                authenticationEmailViewModel.clearAllFields()
+            } else {
+                logger.log("No, sign in is not successful")
+            }
+        }
     }
 }
 
@@ -144,6 +166,10 @@ private struct SignInViewTextField: View {
         let keyboardType: UIKeyboardType
     #endif
 
+    let submitLabel: SubmitLabel
+
+    let onSubmit: () -> ()
+
     #if os(iOS)
         init(
             leftText: String,
@@ -152,7 +178,9 @@ private struct SignInViewTextField: View {
             focusedField: FocusState<SignInTextField?>,
             currentField: SignInTextField,
             textBinding: Binding<String>,
-            keyboardType: UIKeyboardType = .default
+            keyboardType: UIKeyboardType = .default,
+            submitLabel: SubmitLabel = .return,
+            onSubmit: @escaping () -> () = {}
         ) {
             self.leftText = leftText
             self.textHint = textHint
@@ -161,6 +189,8 @@ private struct SignInViewTextField: View {
             self.currentField = currentField
             self._textBinding = textBinding
             self.keyboardType = keyboardType
+            self.submitLabel = submitLabel
+            self.onSubmit = onSubmit
         }
     #else
         init(
@@ -169,7 +199,9 @@ private struct SignInViewTextField: View {
             isPasswordType: Bool,
             focusedField: FocusState<SignInTextField?>,
             currentField: SignInTextField,
-            textBinding: Binding<String>
+            textBinding: Binding<String>,
+            submitLabel: SubmitLabel = .return,
+            onSubmit: @escaping () -> () = {}
         ) {
             self.leftText = leftText
             self.textHint = textHint
@@ -177,6 +209,8 @@ private struct SignInViewTextField: View {
             self._focusedField = focusedField
             self.currentField = currentField
             self._textBinding = textBinding
+            self.submitLabel = submitLabel
+            self.onSubmit = onSubmit
         }
     #endif
 
@@ -189,6 +223,10 @@ private struct SignInViewTextField: View {
                     .multilineTextAlignment(.trailing)
                     .textFieldStyle(.plain)
                     .focused($focusedField, equals: currentField)
+                    .submitLabel(submitLabel)
+                    .onSubmit {
+                        onSubmit()
+                    }
             } else {
                 TextField(textHint, text: $textBinding)
                     .multilineTextAlignment(.trailing)
@@ -197,6 +235,10 @@ private struct SignInViewTextField: View {
                 #if os(iOS)
                     .keyboardType(keyboardType)
                 #endif
+                    .submitLabel(submitLabel)
+                    .onSubmit {
+                        onSubmit()
+                    }
             }
         }
         .padding(10)
