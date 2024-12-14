@@ -88,13 +88,14 @@ final class ActivityManager: Sendable {
         let initialContentState = KontestLiveActivityAttributes.ContentState()
         
         await runningActivity.end(
-            ActivityContent(state: initialContentState, staleDate: Date.distantFuture),
+            ActivityContent(state: initialContentState, staleDate: nil),
             dismissalPolicy: .immediate
         )
         
         await MainActor.run {
             self.activityID = nil
             self.activityToken = nil
+            self.kontest = nil
         }
     }
     
@@ -105,14 +106,15 @@ final class ActivityManager: Sendable {
             let initialContentState = KontestLiveActivityAttributes.ContentState()
             
             await activity.end(
-                ActivityContent(state: initialContentState, staleDate: Date()),
-                dismissalPolicy: .default
+                ActivityContent(state: initialContentState, staleDate: nil),
+                dismissalPolicy: .immediate
             )
         }
         
         await MainActor.run {
             activityID = nil
             activityToken = nil
+            self.kontest = nil
         }
     }
     

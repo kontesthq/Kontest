@@ -87,29 +87,36 @@ struct ButtonsView: View {
 
     let notificationsViewModel: NotificationsViewModel
 
+    let isKontestOfFutureAndStartingInLessThan24Hours: Bool
+    let isKontestRunning: Bool
+
     init(kontest: KontestModel) {
         self.kontest = kontest
         kontestStartDate = CalendarUtility.getDate(date: kontest.start_time)
         kontestEndDate = CalendarUtility.getDate(date: kontest.end_time)
         notificationsViewModel = Dependencies.instance.notificationsViewModel
+        isKontestRunning = CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate ?? Date(), kontestEndDate: kontestEndDate ?? Date()) || kontest.status == .OnGoing
+        let isKontestOfFuture = CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate ?? Date())
+        let isKontestStartingTimeLessThanADay = !(CalendarUtility.isRemainingTimeGreaterThanGivenTime(date: kontestStartDate, minutes: 0, hours: 0, days: 1))
+        isKontestOfFutureAndStartingInLessThan24Hours = isKontestOfFuture && isKontestStartingTimeLessThanADay
     }
 
     var body: some View {
         VStack {
-//            if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate ?? Date(), kontestEndDate: kontestEndDate ?? Date()) {
-            VStack {
-                Button((ActivityManager.shared.kontest == nil || ActivityManager.shared.kontest != kontest) ? "Start Live Activity" : "Stop Live Activity") {
-                    Task {
-                        if ActivityManager.shared.activityID == nil || ActivityManager.shared.kontest != kontest {
-                            await ActivityManager.shared.start(kontest: kontest)
-                        } else {
-                            await ActivityManager.shared.endActivity()
+            if isKontestOfFutureAndStartingInLessThan24Hours || isKontestRunning {
+                VStack {
+                    Button((ActivityManager.shared.kontest == nil || ActivityManager.shared.kontest != kontest) ? "Start Live Activity" : "Stop Live Activity") {
+                        Task {
+                            if ActivityManager.shared.activityID == nil || ActivityManager.shared.kontest != kontest {
+                                await ActivityManager.shared.start(kontest: kontest)
+                            } else {
+                                await ActivityManager.shared.endActivity()
+                            }
                         }
                     }
+                    .padding(.vertical)
                 }
-                .padding(.vertical)
             }
-//            }
 
             if CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate ?? Date()), notificationsViewModel.getNumberOfNotificationsWhichCanBeSettedForAKontest(kontest: kontest) > 0 {
                 SingleNotificationMenu(kontest: kontest)
