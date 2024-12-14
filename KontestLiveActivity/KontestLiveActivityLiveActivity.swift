@@ -40,7 +40,7 @@ struct KontestLiveActivityLiveActivity: Widget {
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     HStack {
-                        Image("Kontest Logo")
+                        Image(.kontestLogo)
                             .resizable()
                             .frame(width: 24, height: 24)
 
@@ -68,16 +68,12 @@ struct KontestLiveActivityLiveActivity: Widget {
                     .frame(width: 20, height: 20)
 
             } compactTrailing: {
-                if let kontestEndDate = CalendarUtility.getDate(date: context.attributes.kontest.end_time) {
-//                        Text("\(kontestEndDate, style: .relative)")
-                    
-//                    Text("\(getFormattedRelativeDate(date: kontestEndDate))")
-//                        .padding(.horizontal)
-                    
-//                    Text("\(kontestEndDate, style: .timer)")
-                    
-                    TextTimer(kontestEndDate, font: .systemFont(ofSize: 14, weight: .bold))
-                        
+                if let kontestStartDate = CalendarUtility.getDate(date: context.attributes.kontest.start_time), let kontestEndDate = CalendarUtility.getDate(date: context.attributes.kontest.end_time) {
+                    if CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate) {
+                        TextTimer(kontestStartDate, font: .systemFont(ofSize: 14, weight: .bold))
+                    } else if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate, kontestEndDate: kontestEndDate) {
+                        TextTimer(kontestEndDate, font: .systemFont(ofSize: 14, weight: .bold))
+                    }
 
                 } else {
                     Text("\(context.attributes.kontest.end_time)")
@@ -100,17 +96,18 @@ struct TextTimer: View {
         if time < 600 { // 9:99
             return "0:00"
         }
-        
+
         if time < 3600 { // 59:59
             return "00:00"
         }
-        
+
         if time < 36000 { // 9:59:59
             return "0:00:00"
         }
-        
-        return "00:00:00"// 99:59:59
+
+        return "00:00:00" // 99:59:59
     }
+
     init(_ date: Date, font: UIFont, width: CGFloat? = nil) {
         self.date = date
         self.font = font
@@ -123,12 +120,12 @@ struct TextTimer: View {
             self.width = (maxString as NSString).size(withAttributes: fontAttributes).width
         }
     }
-    
+
     let date: Date
     let font: UIFont
     let width: CGFloat
     var body: some View {
-        Text(timerInterval: Date.now...date)
+        Text(timerInterval: Date.now ... date)
             .font(Font(font))
             .frame(width: width > 0 ? width : nil)
             .minimumScaleFactor(0.5)
@@ -195,28 +192,41 @@ struct KontestLiveActivityProgressView: View {
         if let kontestEndDate = CalendarUtility.getDate(date: context.attributes.kontest.end_time),
            let kontestStartDate = CalendarUtility.getDate(date: context.attributes.kontest.start_time)
         {
-            // Progress calculation
-            let totalDuration = kontestEndDate.timeIntervalSince(kontestStartDate)
-            let elapsedTime = Date().timeIntervalSince(kontestStartDate)
-            let progress = min(max(elapsedTime / totalDuration, 0), 1) // Clamp between 0 and 1
-
-            VStack(spacing: 6) {
-                // Progress Bar
-                ProgressView(value: progress)
-                    .progressViewStyle(LinearProgressViewStyle(tint: .blue))
-                    .frame(height: 8)
-                    .cornerRadius(4)
-
-                // Time Remaining
-                HStack(spacing: 4) {
+            if CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate) {
+                HStack {
                     Image(systemName: "clock")
                         .foregroundColor(.secondary)
-                    Text("Ending in \(kontestEndDate, style: .relative)")
+                    
+                    Text("Starting in \(kontestStartDate, style: .relative)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
+            } else if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate, kontestEndDate: kontestEndDate) {
+                // Progress calculation
+                let totalDuration = kontestEndDate.timeIntervalSince(kontestStartDate)
+                let elapsedTime = Date().timeIntervalSince(kontestStartDate)
+                let progress = min(max(elapsedTime / totalDuration, 0), 1) // Clamp between 0 and 1
+
+                VStack(spacing: 6) {
+                    // Progress Bar
+                    ProgressView(value: progress)
+                        .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                        .frame(height: 8)
+                        .cornerRadius(4)
+
+                    // Time Remaining
+                    HStack(spacing: 4) {
+                        Image(systemName: "clock")
+                            .foregroundColor(.secondary)
+
+                        Text("Ending in \(kontestEndDate, style: .relative)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+
         } else {
             // Fallback if dates are missing
             Text("Ending at \(context.attributes.kontest.end_time)")

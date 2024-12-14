@@ -28,32 +28,41 @@ final class ActivityManager: Sendable {
         print("Starting new live activity...")
 
         let attributes = KontestLiveActivityAttributes(kontest: kontest)
-
-        let initialContentState = ActivityContent(state: KontestLiveActivityAttributes.ContentState(),
-                                                  staleDate: nil,
-                                                  relevanceScore: 0)
-
-        do {
-            let activity = try Activity.request(
-                attributes: attributes,
-                content: initialContentState,
-                pushType: nil
-            )
-
-            await MainActor.run {
-                activityID = activity.id
-                self.kontest = kontest
-            }
-
-            for await data in activity.pushTokenUpdates {
-                let token = data.map { String(format: "%02x", $0) }.joined()
-                print("ACTIVITY TOKEN:\n\(token)")
-                await MainActor.run { activityToken = token }
-                // HERE SEND THE TOKEN TO THE SERVER
-            }
+        
+        let initialContentState: ActivityContent<KontestLiveActivityAttributes.ContentState>
+        
+        if let kontestStartDate = CalendarUtility.getDate(date: kontest.start_time), let kontestEndDate = CalendarUtility.getDate(date: kontest.end_time) {
+//            if CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate) {
+//                initialContentState = ActivityContent(state: KontestLiveActivityAttributes.ContentState(),
+//                                                      staleDate: kontestStartDate,
+//                                                      relevanceScore: 0)
+//            } else {
+//                initialContentState = ActivityContent(state: KontestLiveActivityAttributes.ContentState(),
+//                                                      staleDate: kontestEndDate,
+//                                                      relevanceScore: 0)
+//            }
             
-        } catch {
-            print("Failed to create activity with error: \(error)")
+            initialContentState = ActivityContent(state: KontestLiveActivityAttributes.ContentState(),
+                                                  staleDate: kontestEndDate,
+                                                  relevanceScore: 0)
+            
+            do {
+                let activity = try Activity.request(
+                    attributes: attributes,
+                    content: initialContentState,
+                    pushType: nil
+                )
+
+                await MainActor.run {
+                    activityID = activity.id
+                    self.kontest = kontest
+                }
+
+            } catch {
+                print("Failed to create activity with error: \(error)")
+            }
+        } else {
+            print("Failed to create activity with error: Invalid start or end date")
         }
     }
     
