@@ -38,12 +38,12 @@ struct KontestApp: App {
                                 AllKontestsScreen(isSearchFiedFocused: _isSearchFiedFocused)
                             }
 
-                            Tab("LeetCode", systemImage: "leetcode", value: .LeetCodeGraphView) {
-                                LeetcodeChartView()
-                            }
-
                             Tab("CodeForces", systemImage: "codeforces", value: .CodeForcesGraphView) {
                                 CodeForcesChartView()
+                            }
+
+                            Tab("LeetCode", systemImage: "leetcode", value: .LeetCodeGraphView) {
+                                LeetcodeChartView()
                             }
 
                             Tab("CodeChef", systemImage: "codechef", value: .CodeChefGraphView) {
