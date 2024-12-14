@@ -29,9 +29,23 @@ struct SignUpScreen: View {
 
                 TextField("first", text: Bindable(authenticationEmailViewModel).firstName)
                     .focused($focusedField, equals: .firstName)
+                    .submitLabel(.next)
+                    .onSubmit {
+                        if authenticationEmailViewModel.firstName.isEmpty {
+                            authenticationEmailViewModel.error = AppError(title: "First name can not be empty.", description: "")
+                        }
+                        focusedField = .lastName
+                    }
 
                 TextField("last", text: Bindable(authenticationEmailViewModel).lastName)
                     .focused($focusedField, equals: .lastName)
+                    .submitLabel(.next)
+                    .onSubmit {
+                        if authenticationEmailViewModel.lastName.isEmpty {
+                            authenticationEmailViewModel.error = AppError(title: "Last name can not be empty.", description: "")
+                        }
+                        focusedField = .email
+                    }
             }
 
             HStack {
@@ -43,6 +57,15 @@ struct SignUpScreen: View {
                     .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
                 #endif
+                    .submitLabel(.next)
+                    .onSubmit {
+                        if authenticationEmailViewModel.email.isEmpty {
+                            authenticationEmailViewModel.error = AppError(title: "Email can not be empty.", description: "")
+                        } else if !checkIfEmailIsCorrect(emailAddress: authenticationEmailViewModel.email) {
+                            authenticationEmailViewModel.error = AppError(title: "Email is not in correct format.", description: "")
+                        }
+                        focusedField = .password
+                    }
             }
             .padding(.vertical)
 
@@ -118,9 +141,22 @@ struct SignUpScreen: View {
                 VStack(alignment: .leading) {
                     SecureField("required", text: Bindable(authenticationEmailViewModel).password)
                         .focused($focusedField, equals: .password)
+                        .submitLabel(.next)
+                        .onSubmit {
+                            if authenticationEmailViewModel.password.isEmpty {
+                                authenticationEmailViewModel.error = AppError(title: "Password can not be empty.", description: "")
+                            } else if !checkIfPasswordIsCorrect(password: authenticationEmailViewModel.password) {
+                                authenticationEmailViewModel.error = AppError(title: "Password not complying with requirements.", description: "")
+                            }
+                            focusedField = .confirmPassword
+                        }
 
                     SecureField("verify", text: Bindable(authenticationEmailViewModel).confirmPassword)
                         .focused($focusedField, equals: .confirmPassword)
+                        .submitLabel(.continue)
+                        .onSubmit {
+                            actionToPerformWhenContinuingAfterEnteringVerifyPassword()
+                        }
 
                     Text("Your password must be at least 8 characters long and include a number, an uppercase letter and a lowercase letter.")
                 }
@@ -170,47 +206,14 @@ struct SignUpScreen: View {
                 }
 
                 Button {
-                    authenticationEmailViewModel.error = nil
-
-                    authenticationEmailViewModel.firstName = authenticationEmailViewModel.firstName.trimmingCharacters(in: .whitespacesAndNewlines)
-                    authenticationEmailViewModel.lastName = authenticationEmailViewModel.lastName.trimmingCharacters(in: .whitespacesAndNewlines)
-
-                    if authenticationEmailViewModel.firstName.isEmpty {
-                        authenticationEmailViewModel.error = AppError(title: "First name can not be empty.", description: "")
-                    } else if authenticationEmailViewModel.lastName.isEmpty {
-                        authenticationEmailViewModel.error = AppError(title: "Last name can not be empty.", description: "")
-                    } else if authenticationEmailViewModel.email.isEmpty {
-                        authenticationEmailViewModel.error = AppError(title: "Email can not be empty.", description: "")
-                    } else if !checkIfEmailIsCorrect(emailAddress: authenticationEmailViewModel.email) {
-                        authenticationEmailViewModel.error = AppError(title: "Email is not in correct format.", description: "")
-                    } else if authenticationEmailViewModel.password.isEmpty {
-                        authenticationEmailViewModel.error = AppError(title: "Password can not be empty.", description: "")
-                    } else if !checkIfPasswordIsCorrect(password: authenticationEmailViewModel.password) {
-                        authenticationEmailViewModel.error = AppError(title: "Password not complying with requirements.", description: "")
-                    } else if authenticationEmailViewModel.password != authenticationEmailViewModel.confirmPassword {
-                        authenticationEmailViewModel.error = AppError(title: "The passwords you entered do not match.", description: "")
-                    } else {
-                        Task {
-                            let isSignUpSuccessful = await authenticationEmailViewModel.signUp()
-
-                            if isSignUpSuccessful {
-                                print("Yes, sign up is successful")
-
-                                router.goToRootView()
-
-                                authenticationEmailViewModel.clearAllFields()
-                            } else {
-                                print("No, sign up is not successful")
-                            }
-                        }
-                    }
+                    actionToPerformWhenContinuingAfterEnteringVerifyPassword()
                 } label: {
                     Text("Sign Up")
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.accent)
                 .disabled(false)
-                .keyboardShortcut(.return, modifiers: [])
+                
             }
         }
         #if os(macOS)
@@ -225,6 +228,43 @@ struct SignUpScreen: View {
 
             authenticationEmailViewModel.firstName = authenticationEmailViewModel.firstName.trimmingCharacters(in: .whitespacesAndNewlines)
             authenticationEmailViewModel.lastName = authenticationEmailViewModel.lastName.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+
+    func actionToPerformWhenContinuingAfterEnteringVerifyPassword() {
+        authenticationEmailViewModel.error = nil
+
+        authenticationEmailViewModel.firstName = authenticationEmailViewModel.firstName.trimmingCharacters(in: .whitespacesAndNewlines)
+        authenticationEmailViewModel.lastName = authenticationEmailViewModel.lastName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if authenticationEmailViewModel.firstName.isEmpty {
+            authenticationEmailViewModel.error = AppError(title: "First name can not be empty.", description: "")
+        } else if authenticationEmailViewModel.lastName.isEmpty {
+            authenticationEmailViewModel.error = AppError(title: "Last name can not be empty.", description: "")
+        } else if authenticationEmailViewModel.email.isEmpty {
+            authenticationEmailViewModel.error = AppError(title: "Email can not be empty.", description: "")
+        } else if !checkIfEmailIsCorrect(emailAddress: authenticationEmailViewModel.email) {
+            authenticationEmailViewModel.error = AppError(title: "Email is not in correct format.", description: "")
+        } else if authenticationEmailViewModel.password.isEmpty {
+            authenticationEmailViewModel.error = AppError(title: "Password can not be empty.", description: "")
+        } else if !checkIfPasswordIsCorrect(password: authenticationEmailViewModel.password) {
+            authenticationEmailViewModel.error = AppError(title: "Password not complying with requirements.", description: "")
+        } else if authenticationEmailViewModel.password != authenticationEmailViewModel.confirmPassword {
+            authenticationEmailViewModel.error = AppError(title: "The passwords you entered do not match.", description: "")
+        } else {
+            Task {
+                let isSignUpSuccessful = await authenticationEmailViewModel.signUp()
+
+                if isSignUpSuccessful {
+                    print("Yes, sign up is successful")
+
+                    router.goToRootView()
+
+                    authenticationEmailViewModel.clearAllFields()
+                } else {
+                    print("No, sign up is not successful")
+                }
+            }
         }
     }
 }
