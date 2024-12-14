@@ -23,11 +23,17 @@ struct AccountInformationScreen: View {
         VStack {
             VStack {
                 if let email = accountInformationViewModel.user?.email {
-                    Text("Email")
+                    HStack {
+                        Text("Email")
+                        
+                        Spacer()
+                        
+                        Text(email)
+                    }
                     
-                    Spacer()
-                    
-                    Text(email)
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundStyle(.gray.opacity(0.3))
                 }
                 
                 HStack {
@@ -164,10 +170,10 @@ struct ChangeNameSheetView: View {
             }
             .padding(.horizontal)
             
-            Rectangle()
-                .frame(height: 1)
-                .foregroundStyle(.gray.opacity(0.3))
-                .padding(.vertical)
+//            Rectangle()
+//                .frame(height: 1)
+//                .foregroundStyle(.gray.opacity(0.3))
+//                .padding(.vertical)
             
             HStack {
                 Spacer()

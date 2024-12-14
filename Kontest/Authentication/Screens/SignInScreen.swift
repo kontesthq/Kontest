@@ -32,6 +32,9 @@ struct SignInScreen: View {
                     keyboardType: .emailAddress
                 )
                 .padding(.horizontal)
+                .onChange(of: authenticationEmailViewModel.email) {
+                    isPasswordFieldVisible = false
+                }
             #else
                 SignInViewTextField(
                     leftText: "Email ID:",
@@ -42,6 +45,9 @@ struct SignInScreen: View {
                     textBinding: Bindable(authenticationEmailViewModel).email
                 )
                 .padding(.horizontal)
+                .onChange(of: authenticationEmailViewModel.email) {
+                    isPasswordFieldVisible = false
+                }
             #endif
 
             if isPasswordFieldVisible {
