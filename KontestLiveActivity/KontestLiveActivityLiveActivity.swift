@@ -83,7 +83,7 @@ struct KontestLiveActivityLiveActivity: Widget {
                     .resizable()
                     .frame(width: 20, height: 20)
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
+            .widgetURL(URL(string: "https://www.apple.com"))
             .keylineTint(Color.red)
         }
     }
@@ -181,7 +181,7 @@ private extension KontestLiveActivityAttributes {
 //                name: "DIU Take-OFF Programming Contest Fall-24 [Preliminary - A Slot]",
                 url: "http://www.apple.com",
                 start_time: "December 15, 2024 03:50:00",
-                end_time: "December 15, 2024 04:55:00",
+                end_time: "December 16, 2024 04:55:00",
                 duration: "2 hours",
                 site: "codechef.com",
                 in_24_hours: "2 hours",
@@ -207,7 +207,7 @@ struct KontestLiveActivityProgressView: View {
 
                     HStack(spacing: 0) {
                         Text("Starting in ")
-                        Text(kontestStartDate, style: .relative)
+                        Text(timerInterval: .now ... kontestStartDate)
                             .foregroundColor(KontestModel.getColorForIdentifier(siteAbbreviation: context.attributes.kontest.siteAbbreviation))
                     }
                     .font(.subheadline)
@@ -229,7 +229,7 @@ struct KontestLiveActivityProgressView: View {
 
                         HStack(spacing: 0) {
                             Text("Ending in ")
-                            Text(kontestEndDate, style: .relative)
+                            Text(timerInterval: kontestStartDate ... kontestEndDate)
                                 .foregroundColor(KontestModel.getColorForIdentifier(siteAbbreviation: context.attributes.kontest.siteAbbreviation))
                         }
                         .font(.subheadline)
