@@ -5,10 +5,13 @@
 //  Created by Ayush Singhal on 12/08/23.
 //
 
+import OSLog
 import SwiftUI
 import WidgetKit
 
 struct AllKontestsScreen: View {
+    private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "AllKontestsScreen")
+
     let isInDevelopmentMode = false
 
     @Environment(AllKontestsViewModel.self) private var allKontestsViewModel
@@ -388,6 +391,12 @@ struct AllKontestsScreen: View {
         }
         #if !os(macOS)
         .searchable(text: Bindable(allKontestsViewModel).searchText)
+        #endif
+        #if os(iOS)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            logger.debug("App became active")
+            allKontestsViewModel.filterKontests()
+        }
         #endif
     }
 
