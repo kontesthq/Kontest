@@ -69,9 +69,9 @@ struct KontestLiveActivityLiveActivity: Widget {
             } compactTrailing: {
                 if let kontestStartDate = CalendarUtility.getDate(date: context.attributes.kontest.start_time), let kontestEndDate = CalendarUtility.getDate(date: context.attributes.kontest.end_time) {
                     if CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate) {
-                        TextTimer(kontestStartDate, font: .systemFont(ofSize: 14, weight: .bold))
+                        TextTimer(kontestStartDate, font: .systemFont(ofSize: 14, weight: .bold), siteAbbreviation: context.attributes.kontest.siteAbbreviation)
                     } else if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate, kontestEndDate: kontestEndDate) {
-                        TextTimer(kontestEndDate, font: .systemFont(ofSize: 14, weight: .bold))
+                        TextTimer(kontestEndDate, font: .systemFont(ofSize: 14, weight: .bold), siteAbbreviation: context.attributes.kontest.siteAbbreviation)
                     }
 
                 } else {
@@ -107,9 +107,21 @@ struct TextTimer: View {
         return "00:00:00" // 99:59:59
     }
 
-    init(_ date: Date, font: UIFont, width: CGFloat? = nil) {
+    let date: Date
+    let font: UIFont
+    let width: CGFloat
+    let siteAbbreviation: String
+
+    init(
+        _ date: Date,
+        font: UIFont,
+        width: CGFloat? = nil,
+        siteAbbreviation: String
+    ) {
         self.date = date
         self.font = font
+        self.siteAbbreviation = siteAbbreviation
+
         if let width {
             self.width = width
         } else {
@@ -120,15 +132,13 @@ struct TextTimer: View {
         }
     }
 
-    let date: Date
-    let font: UIFont
-    let width: CGFloat
     var body: some View {
         Text(timerInterval: Date.now ... date)
             .font(Font(font))
             .frame(width: width > 0 ? width : nil)
             .minimumScaleFactor(0.5)
             .lineLimit(1)
+            .foregroundStyle(KontestModel.getColorForIdentifier(siteAbbreviation: siteAbbreviation))
     }
 }
 
@@ -195,9 +205,12 @@ struct KontestLiveActivityProgressView: View {
                     Image(systemName: "clock")
                         .foregroundColor(.secondary)
 
-                    Text("Starting in \(kontestStartDate, style: .relative)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    HStack(spacing: 0) {
+                        Text("Starting in ")
+                        Text(kontestStartDate, style: .relative)
+                            .foregroundColor(KontestModel.getColorForIdentifier(siteAbbreviation: context.attributes.kontest.siteAbbreviation))
+                    }
+                    .font(.subheadline)
                 }
             } else if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate, kontestEndDate: kontestEndDate) {
                 // Progress Bar
@@ -214,9 +227,12 @@ struct KontestLiveActivityProgressView: View {
                         Image(systemName: "clock")
                             .foregroundColor(.secondary)
 
-                        Text("Ending in \(kontestEndDate, style: .relative)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        HStack(spacing: 0) {
+                            Text("Ending in ")
+                            Text(kontestEndDate, style: .relative)
+                                .foregroundColor(KontestModel.getColorForIdentifier(siteAbbreviation: context.attributes.kontest.siteAbbreviation))
+                        }
+                        .font(.subheadline)
                     }
                 }
                 .padding(.horizontal)
