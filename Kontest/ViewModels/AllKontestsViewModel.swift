@@ -166,6 +166,10 @@ final class AllKontestsViewModel: Sendable {
             self.allKontests = []
         }
     }
+    
+    func getAllKontestsPubic() async {
+        await getAllKontests()
+    }
 
     func filterKontestsByTime() {
         self.allKontests = self.allFetchedKontests

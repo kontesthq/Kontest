@@ -24,6 +24,10 @@ struct AllKontestsScreen: View {
     @State private var isAddAllKontestsToCalendarIconAnimating = false
     @State private var isRemoveAllKontestsFromCalendarIconAnimating = false
 
+    #if os(macOS)
+    @State private var isRefreshing = false
+    #endif
+
     @FocusState var isSearchFiedFocused: Bool
 
     let notificationsViewModel = Dependencies.instance.notificationsViewModel
@@ -98,6 +102,11 @@ struct AllKontestsScreen: View {
                                     }
                                 }
                             }
+                            #if !os(macOS)
+                            .refreshable {
+                                await refreshData()
+                            }
+                            #endif
                         }
                         #if os(macOS)
                         .searchable(text: Bindable(allKontestsViewModel).searchText)
@@ -281,6 +290,24 @@ struct AllKontestsScreen: View {
                                 .help("Remove all events from Calendar") // Tooltip text
                             }
                         }
+
+                        #if os(macOS)
+                        ToolbarItem(placement: .automatic) {
+                            Button {
+                                if !isRefreshing {
+                                    Task {
+                                        isRefreshing = true
+                                        await refreshData()
+                                        isRefreshing = false
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: isRefreshing ? "progress.indicator" : "arrow.clockwise")
+                                    .contentTransition(.symbolEffect(.replace))
+                            }
+                            .help("Refresh")
+                        }
+                        #endif
                     }
 
                     ToolbarItem(placement: .automatic) {
@@ -381,6 +408,22 @@ struct AllKontestsScreen: View {
             }
         } header: {
             Text(title)
+        }
+    }
+
+    func refreshData() async {
+        await allKontestsViewModel.getAllKontestsPubic()
+
+        if Dependencies.instance.codeChefViewModel.error != nil {
+            Dependencies.instance.changeCodeChefUsername(codeChefUsername: changeUsernameViewModel.codeChefUsername)
+        }
+
+        if Dependencies.instance.codeForcesViewModel.error != nil {
+            Dependencies.instance.changeCodeForcesUsername(codeForcesUsername: changeUsernameViewModel.codeForcesUsername)
+        }
+
+        if Dependencies.instance.leetCodeGraphQLViewModel.error != nil {
+            Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: changeUsernameViewModel.leetcodeUsername)
         }
     }
 }
