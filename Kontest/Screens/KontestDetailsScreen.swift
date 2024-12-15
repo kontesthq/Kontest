@@ -331,7 +331,7 @@ struct RemainingTimeView: View {
 
             Text("Ends in \(remainingTimeInEndingOfRunningKontest)")
                 .font(Font.title2.monospacedDigit())
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(countsDown: true))
                 .animation(.easeInOut, value: remainingTimeInEndingOfRunningKontest)
         }
 
@@ -343,7 +343,7 @@ struct RemainingTimeView: View {
 
             Text("Starting in \(remainingTimeInStartingOfFutureKontest)")
                 .font(Font.title2.monospacedDigit())
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(countsDown: true))
                 .animation(.easeInOut, value: remainingTimeInStartingOfFutureKontest)
         }
     }
@@ -356,7 +356,7 @@ struct RemainingTimeView: View {
 //    let endTime = "2023-08-21 17:43:00 UTC"
 
     let startTime = "2024-10-30 00:00:00 UTC"
-    let endTime = "2024-11-30 23:59:00 UTC"
+    let endTime = "2024-12-30 23:59:00 UTC"
 
 //    return KontestDetailsScreen(kontest: KontestModel.from(dto: KontestDTO(name: "ProjectEuler+", url: "https://hackerrank.com/contests/projecteuler", start_time: startTime, end_time: endTime, duration: "1020.0", site: "HackerRank", in_24_hours: "No", status: "CODING")))
 //        .environment(AllKontestsViewModel())
