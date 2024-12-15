@@ -27,6 +27,7 @@ struct KontestLiveActivityLiveActivity: Widget {
                 // Progress Bar and Ending Time
                 KontestLiveActivityProgressView(context: context)
             }
+            .padding()
 
         } dynamicIsland: { context in
             DynamicIsland {
@@ -36,7 +37,7 @@ struct KontestLiveActivityLiveActivity: Widget {
                     Image(KontestModel.getLogo(siteAbbreviation: context.attributes.kontest.siteAbbreviation, colorScheme: .dark))
                         .resizable()
                         .frame(width: 24, height: 24)
-                        .padding(.leading)
+                        .padding(.leading, 4)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     HStack {
@@ -58,9 +59,7 @@ struct KontestLiveActivityLiveActivity: Widget {
                         // Progress Bar and Ending Time
                         KontestLiveActivityProgressView(context: context)
                     }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .cornerRadius(12)
+                    .padding(.vertical)
                 }
             } compactLeading: {
                 Image(KontestModel.getLogo(siteAbbreviation: context.attributes.kontest.siteAbbreviation, colorScheme: .dark))
@@ -171,10 +170,10 @@ private extension KontestLiveActivityAttributes {
                 name: "Kon Name",
 //                name: "DIU Take-OFF Programming Contest Fall-24 [Preliminary - A Slot]",
                 url: "http://www.apple.com",
-                start_time: "November 29, 2024 05:00:00",
-                end_time: "November 29, 2024 07:00:00",
+                start_time: "December 15, 2024 03:50:00",
+                end_time: "December 15, 2024 04:55:00",
                 duration: "2 hours",
-                site: "codeforces.com",
+                site: "codechef.com",
                 in_24_hours: "2 hours",
                 status: KontestStatus.OnGoing,
                 logo: "logo"
@@ -183,7 +182,6 @@ private extension KontestLiveActivityAttributes {
     }
 }
 
-// create a view
 struct KontestLiveActivityProgressView: View {
     let context: ActivityViewContext<KontestLiveActivityAttributes>
 
@@ -196,23 +194,20 @@ struct KontestLiveActivityProgressView: View {
                 HStack {
                     Image(systemName: "clock")
                         .foregroundColor(.secondary)
-                    
+
                     Text("Starting in \(kontestStartDate, style: .relative)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
             } else if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate, kontestEndDate: kontestEndDate) {
-                // Progress calculation
-                let totalDuration = kontestEndDate.timeIntervalSince(kontestStartDate)
-                let elapsedTime = Date().timeIntervalSince(kontestStartDate)
-                let progress = min(max(elapsedTime / totalDuration, 0), 1) // Clamp between 0 and 1
-
+                // Progress Bar
                 VStack(spacing: 6) {
-                    // Progress Bar
-                    ProgressView(value: progress)
-                        .progressViewStyle(LinearProgressViewStyle(tint: .blue))
-                        .frame(height: 8)
-                        .cornerRadius(4)
+                    ProgressView(
+                        timerInterval: kontestStartDate ... kontestEndDate,
+                        countsDown: false,
+                        label: { EmptyView() },
+                        currentValueLabel: { EmptyView() }
+                    )
 
                     // Time Remaining
                     HStack(spacing: 4) {
