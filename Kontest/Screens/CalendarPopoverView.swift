@@ -51,6 +51,27 @@ struct CalendarPopoverView: View {
             if let selectedCalendarIndex {
                 self._selectedCalendarIndex = State(initialValue: selectedCalendarIndex)
             }
+        } else {
+            // Choose the default calendar of device
+            let defaultCalendar = CalendarUtility.getDefaultCalendarOfDevice()
+
+            let selectedAccountIndex = calendarsArray.firstIndex { calendar in
+                calendar.1.contains(defaultCalendar)
+            }
+
+            if let selectedAccountIndex {
+                self._selectedAccountIndex = State(initialValue: selectedAccountIndex)
+
+                let allCalendarsOfSelectedAccount = calendarsArray[selectedAccountIndex].1
+
+                let selectedCalendarIndex = allCalendarsOfSelectedAccount.firstIndex { calendar in
+                    calendar == defaultCalendar
+                }
+
+                if let selectedCalendarIndex {
+                    self._selectedCalendarIndex = State(initialValue: selectedCalendarIndex)
+                }
+            }
         }
 
         self._selectedDate = State(initialValue: date)

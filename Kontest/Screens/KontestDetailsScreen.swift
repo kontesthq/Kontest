@@ -163,6 +163,8 @@ struct ButtonsView: View {
 
                                                         kontest.isCalendarEventAdded = false
                                                         kontest.calendarEventDate = nil
+                                                        kontest.selectedCalendarName = nil
+                                                        kontest.selectedCalendarAccount = nil
                                                     } catch {
                                                         errorState.errorWrapper = ErrorWrapper(error: error, guidance: "Check that you have given Kontest the Calendar Permission (Full Access)")
                                                     }
