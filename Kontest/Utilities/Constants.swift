@@ -12,10 +12,12 @@ enum Constants {
     static let maximumDurationOfAKontestInMinutes = 12 * 60
     static let minimumDurationOfAKontestInMinutes = 0
     #if os(macOS)
-        static let userDefaultsGroupID = "R2Z9FDM5M6.com.ayushsinghal.kontest"
+        static let userDefaultsGroupID = "QU6F7R6MZS.com.ayush.kontest"
     #else
-        static let userDefaultsGroupID = "group.com.ayushsinghal.kontest"
+        static let userDefaultsGroupID = "group.com.ayush.kontest"
     #endif
+    static let keychainAuthTokensServiceName = "com.ayush.kontest.authenticationTokens"
+    
     static let codeforcesNotAvailableErrorResponseMessage = "Codeforces is temporarily unavailable"
     
     static let maximumDurationOfAKontestInMinutesKey = "maximumDurationOfAKontestInMinutesKey"
@@ -91,6 +93,4 @@ enum Constants {
             return "\(mySiteBaseURL)\(userService)"
         }
     }
-    
-    static let keychainAuthTokensServiceName = "com.ayushsinghal.Kontest.authenticationTokens"
 }

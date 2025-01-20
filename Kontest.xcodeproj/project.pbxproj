@@ -244,7 +244,7 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		07CFEBB22AB02DCC00291484 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
@@ -1362,13 +1362,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R2Z9FDM5M6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.KontestTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayush.kontestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -1384,13 +1385,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R2Z9FDM5M6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.KontestTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayush.kontestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -1410,7 +1412,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KontestLiveActivity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = KontestLiveActivity;
@@ -1423,7 +1425,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest.KontestLiveActivity;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayush.kontest.KontestLiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1443,7 +1445,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KontestLiveActivity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = KontestLiveActivity;
@@ -1456,7 +1458,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest.KontestLiveActivity;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayush.kontest.KontestLiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1628,7 +1630,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Kontest/Preview Content\"";
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kontest/Info.plist;
@@ -1646,7 +1648,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayush.kontest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -1670,7 +1672,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Kontest/Preview Content\"";
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kontest/Info.plist;
@@ -1688,7 +1690,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ayushsinghal.Kontest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ayush.kontest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -1709,7 +1711,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Upcoming Kontest iOS WidgetExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Upcoming Kontest iOS Widget/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Upcoming Kontest iOS Widget";
@@ -1720,7 +1722,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ayushsinghal.Kontest.Upcoming-Kontest-iOS-Widget";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ayush.kontest.Upcoming-Kontest-iOS-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1740,7 +1742,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Upcoming Kontest iOS WidgetExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Upcoming Kontest iOS Widget/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Upcoming Kontest iOS Widget";
@@ -1751,7 +1753,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ayushsinghal.Kontest.Upcoming-Kontest-iOS-Widget";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ayush.kontest.Upcoming-Kontest-iOS-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1772,7 +1774,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Upcoming Kontest macOS Widget/Info.plist";
@@ -1785,7 +1787,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ayushsinghal.Kontest.Upcoming-Kontest-macOS-Widget";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ayush.kontest.Upcoming-Kontest-macOS-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1803,7 +1805,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = R2Z9FDM5M6;
+				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Upcoming Kontest macOS Widget/Info.plist";
@@ -1816,7 +1818,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ayushsinghal.Kontest.Upcoming-Kontest-macOS-Widget";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ayush.kontest.Upcoming-Kontest-macOS-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
