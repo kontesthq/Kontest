@@ -39,19 +39,19 @@ private struct AllSettingsButtonsView: View {
             router.appendScreen(screen: Screen.SettingsScreenType(.FilterWebsitesScreen))
         }
 
-        Button(AuthenticationManager.isAuthenticated ? "Account Information" : "Sign In/ Sign Up") {
-            if AuthenticationManager.isAuthenticated {
-                router.appendScreen(screen: Screen.SettingsScreenType(.AuthenticationScreenType(.AccountInformationScreen)))
-            } else {
-                router.appendScreen(screen: Screen.SettingsScreenType(.AuthenticationScreenType(.SignInScreen)))
-            }
-        }
-        
-        if AuthenticationManager.isAuthenticated {
-            Button("Change Password") {
-                router.appendScreen(screen: Screen.SettingsScreenType(.ChangePasswordScreen))
-            }
-        }
+//        Button(AuthenticationManager.isAuthenticated ? "Account Information" : "Sign In/ Sign Up") {
+//            if AuthenticationManager.isAuthenticated {
+//                router.appendScreen(screen: Screen.SettingsScreenType(.AuthenticationScreenType(.AccountInformationScreen)))
+//            } else {
+//                router.appendScreen(screen: Screen.SettingsScreenType(.AuthenticationScreenType(.SignInScreen)))
+//            }
+//        }
+//        
+//        if AuthenticationManager.isAuthenticated {
+//            Button("Change Password") {
+//                router.appendScreen(screen: Screen.SettingsScreenType(.ChangePasswordScreen))
+//            }
+//        }
 
         Button("About Me!") {
             router.appendScreen(screen: Screen.SettingsScreenType(.RotatingMapScreen))
