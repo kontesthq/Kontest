@@ -12,10 +12,13 @@ class GetKontests {
     private static let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "GetKontests")
 
     static func getKontests() async -> (fetchedKontests: [KontestModel], error: (any Error)?) {
-        let repository = MultipleRepositories(repositories: [KontestNewAPIRepository(), KontestNewRepository()])
+        let repositories = MultipleRepositories(repos: [
+            AnyFetcher(KontestNewAPIRepository()),
+            AnyFetcher(KontestNewRepository())
+        ])
 
         do {
-            let fetchedKontests = try await repository.getAllKontests()
+            let fetchedKontests = try await repositories.fetchAllData()
             let allEvents = try await CalendarUtility.getAllEvents()
 
             return (fetchedKontests

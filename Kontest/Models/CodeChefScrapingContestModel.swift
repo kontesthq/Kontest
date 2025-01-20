@@ -11,19 +11,19 @@ struct CodeChefScrapingContestModel: Codable, Identifiable {
     let id: UUID
 
     let code: String
-    let year: String
-    let month: String
-    let day: String
+    let year: Int
+    let month: Int
+    let day: Int
     let reason: String?
-    let penalised_in: String?
-    let rating: String
-    let rank: String
+    let penalised_in: Bool
+    let rating: Int
+    let rank: Int
     let name: String
     let endDate: String
     let color: String
     var hasAnimated: Bool = true
 
-    init(id: UUID = UUID(), code: String, year: String, month: String, day: String, reason: String?, penalised_in: String?, rating: String, rank: String, name: String, endDate: String, color: String) {
+    init(id: UUID = UUID(), code: String, year: Int, month: Int, day: Int, reason: String?, penalised_in: Bool, rating: Int, rank: Int, name: String, endDate: String, color: String) {
         self.id = id
         self.code = code
         self.year = year
@@ -40,7 +40,7 @@ struct CodeChefScrapingContestModel: Codable, Identifiable {
 }
 
 extension CodeChefScrapingContestModel {
-    static func from(dto: CodeChefScrapingContestDTO) -> CodeChefScrapingContestModel {
+    static func from(dto: CodeChefContestInfoDTO) -> CodeChefScrapingContestModel {
         return CodeChefScrapingContestModel(
             code: dto.code,
             year: dto.getyear,
@@ -51,7 +51,7 @@ extension CodeChefScrapingContestModel {
             rating: dto.rating,
             rank: dto.rank,
             name: dto.name,
-            endDate: dto.end_date,
+            endDate: dto.endDate,
             color: dto.color
         )
     }

@@ -19,6 +19,7 @@ enum SettingsScreens: Hashable {
     case FilterWebsitesScreen
     case RotatingMapScreen
     case AuthenticationScreenType(AuthenticationScreens)
+    case ChangePasswordScreen
 }
 
 enum AuthenticationScreens {

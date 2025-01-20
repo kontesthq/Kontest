@@ -35,9 +35,9 @@ class AccountInformationViewModel {
                 self.isLoading = true
                 
                 do {
-                    let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+                    let authDataResult = await AuthenticationManager.shared.getAuthenticatedUser()
                     
-                    self.user = try await UserManager.shared.getUser(userId: authDataResult.email ?? authDataResult.uid)
+                    self.user = try await UserManager.shared.getUser()
                     
                     setProperties()
                 } catch {
@@ -58,29 +58,22 @@ class AccountInformationViewModel {
         self.fullCollegeName = (self.user?.selectedCollege ?? "") + ", " + (self.user?.selectedCollegeState ?? "")
     }
     
-    func updateName(firstName: String, lastName: String) {
-        UserManager.shared.updateName(firstName: firstName, lastName: lastName, completion: { error in
-            
-            if let error {
-                print("Error in updating name: \(error)")
-                self.logger.log("Error in updating name: \(error)")
-                
-            } else {
-                self.getAuthenticatedUser()
-            }
-        })
+    func updateName(firstName: String, lastName: String) async throws {
+        try await UserManager.shared.updateUserDetails(
+            firstName: firstName,
+            lastName: lastName
+        )
+        
+        self.getAuthenticatedUser()
     }
-    
-    func updateCollege(collegeStateName: String, collegeName: String) {
-        UserManager.shared.updateCollege(collegeStateName: collegeStateName, collegeName: collegeName, completion: { error in
-            if let error {
-                print("Error in updating college name: \(error)")
-                self.logger.log("Error in updating college name: \(error)")
-                
-            } else {
-                self.getAuthenticatedUser()
-            }
-        })
+
+    func updateCollege(collegeStateName: String, collegeName: String) async throws {
+        try await UserManager.shared.updateUserDetails(
+            selectedCollegeState: collegeStateName,
+            selectedCollege: collegeName
+        )
+        
+        self.getAuthenticatedUser()
     }
     
     func clearAllFields() {

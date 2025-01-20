@@ -12,8 +12,7 @@ import OSLog
 final class CodeChefViewModel: Sendable {
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "CodeChefViewModel")
 
-    let codeChefAPIRepository = CodeChefAPIRepository()
-    let codeChefScrapingAPIRepository = CodeChefScrapingAPIRepository()
+    let codeChefAPIRepository: any CodeChefFetcher
 
     let username: String
     var codeChefProfile: CodeChefAPIModel?
@@ -24,9 +23,10 @@ final class CodeChefViewModel: Sendable {
 
     var error: (any Error)?
 
-    init(username: String) {
+    init(username: String, codeChefAPIRepository: any CodeChefFetcher) {
         self.isLoading = true
         self.username = username
+        self.codeChefAPIRepository = codeChefAPIRepository
 
         self.sortedDates = []
 
@@ -64,7 +64,7 @@ final class CodeChefViewModel: Sendable {
 
     private func getCodeChefRatings(username: String) async {
         do {
-            let fetchedCodeChefRatings = try await codeChefScrapingAPIRepository.getUserKontests(username: username)
+            let fetchedCodeChefRatings = try await codeChefAPIRepository.getUserKontests(username: username)
 
             attendedKontests.append(contentsOf:
                 fetchedCodeChefRatings.map {

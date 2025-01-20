@@ -12,7 +12,7 @@ import OSLog
 final class LeetCodeGraphQLViewModel: Sendable {
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "FilterWebsitesViewModel")
 
-    let repository = LeetCodeAPIGraphQLRepository()
+    let repository: any LeetCodeGraphQLAPIFetcher
     let username: String
 
     var leetCodeUserProfileGraphQLAPIModel: LeetCodeUserProfileGraphQLAPIModel?
@@ -24,11 +24,12 @@ final class LeetCodeGraphQLViewModel: Sendable {
     var isFetchingUserData: Bool = false
     var isFetchingUserRankings: Bool = false
 
-    init(username: String) {
+    init(username: String, repository: any LeetCodeGraphQLAPIFetcher) {
         self.username = username
         self.isFetchingUserData = true
         self.isFetchingUserRankings = true
         self.isLoading = true
+        self.repository = repository
 
         self.sortedDates = []
 

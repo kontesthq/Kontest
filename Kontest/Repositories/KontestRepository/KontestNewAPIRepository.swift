@@ -14,22 +14,25 @@ private struct APIType: Codable {
     let url: String
 }
 
-final class KontestNewAPIRepository: KontestFetcher {
+final class KontestNewAPIRepository: Fetcher, KontestFetcher {
+    func getData() async throws -> [KontestDTO] {
+        return try await getAllKontests()
+    }
+    
+    typealias DataType = KontestDTO
+    
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "KontestNewAPIRepository")
     
     func getAllKontests() async throws -> [KontestDTO] {
         
         do {
-            let mainUrl = URL(string: "https://kontest-api.ayushsinghal.tech")!
+            let mainUrl = URL(string: Constants.Endpoints.kontestsURL)!
             
-            let version = "v1"
             let page = 1
             let perPage = 10000
             
             let endpointURL = mainUrl
-                .appendingPathComponent("api")
-                .appendingPathComponent(version)
-                .appendingPathComponent("get_kontests")
+                .appendingPathComponent("kontests")
                 .appending(queryItems: [
                     .init(name: "page", value: String(page)),
                     .init(name: "per_page", value: String(perPage))
@@ -52,6 +55,7 @@ final class KontestNewAPIRepository: KontestFetcher {
     private func decodeKontests(from data: Data) throws -> [KontestDTO] {
         // Create a JSONDecoder instance
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         // Decode the raw JSON data into an array of dictionaries
         let rawKontests = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] ?? []

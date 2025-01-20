@@ -5,6 +5,7 @@
 //  Created by Ayush Singhal on 09/09/23.
 //
 
+import OSLog
 import SwiftUI
 
 struct ChangeUsernameScreen: View {
@@ -22,6 +23,8 @@ struct ChangeUsernameScreen: View {
 }
 
 struct MainChangeUsernameView: View {
+    private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "MainChangeUsernameView")
+
     let changeUsernameViewModel: ChangeUsernameViewModel = Dependencies.instance.changeUsernameViewModel
 
     @State private var leetcodeUsername: String = ""
@@ -39,58 +42,72 @@ struct MainChangeUsernameView: View {
     }
 
     var body: some View {
-        //        TextField("Enter CodeForces Username", text: Bindable(changeUsernameViewModel).codeForcesUsername)
-        //        TextField("Enter Leetcode Username", text: Bindable(changeUsernameViewModel).leetcodeUsername)
+        SettingsTextFieldView(
+            lightModeImage: Image(.codeForcesLogo),
+            darkModeImage: Image(.codeForcesLogo),
+            title: "Enter CodeForces Username",
+            boundaryColor: .accent,
+            submitLabel: .next,
+            textBinding: $codeForcesUsername,
+            fieldID: SettingsTextField.CodeForces,
+            focusedField: _focusedField,
+            onPressingNext: {
+                focusedField = .LeetCode
+            }
+        )
 
-        SettingsTextFieldView(lightModeImage: .codeForcesLogo,
-                              darkModeImage: .codeForcesLogo,
-                              title: "Enter CodeForces Username",
-                              boundryColor: KontestModel.getColorForIdentifier(siteAbbreviation: "CodeForces"),
-                              submitLabel: .next,
-                              usernameBinding: $codeForcesUsername,
-                              focusedField: _focusedField,
-                              currentField: .CodeForces,
-                              onPressingNext: {})
+        SettingsTextFieldView(
+            lightModeImage: Image(.leetCodeLightLogo),
+            darkModeImage: Image(.leetCodeDarkLogo),
+            title: "Enter LeetCode Username",
+            boundaryColor: KontestModel.getColorForIdentifier(
+                siteAbbreviation: "LeetCode"
+            ),
+            submitLabel: .next,
+            textBinding: $leetcodeUsername,
+            fieldID: SettingsTextField.LeetCode,
+            focusedField: _focusedField,
+            onPressingNext: {
+                focusedField = .CodeChef
+            }
+        )
 
-        SettingsTextFieldView(lightModeImage: .leetCodeLightLogo,
-                              darkModeImage: .leetCodeDarkLogo,
-                              title: "Enter LeetCode Username",
-                              boundryColor: KontestModel.getColorForIdentifier(
-                                  siteAbbreviation: "LeetCode"
-                              ),
-                              submitLabel: .next,
-                              usernameBinding: $leetcodeUsername,
-                              focusedField: _focusedField,
-                              currentField: .LeetCode,
-                              onPressingNext: {})
+        SettingsTextFieldView(
+            lightModeImage: Image(.codeChefLogo),
+            darkModeImage: Image(.codeChefLogo),
+            title: "Enter CodeChef Username",
+            boundaryColor: KontestModel.getColorForIdentifier(siteAbbreviation: "CodeChef"),
+            submitLabel: .return,
+            textBinding: $codeChefUsername,
+            fieldID: SettingsTextField.CodeChef,
+            focusedField: _focusedField,
+            onPressingNext: {
+                focusedField = nil
 
-        SettingsTextFieldView(lightModeImage: .codeChefLogo,
-                              darkModeImage: .codeChefLogo,
-                              title: "Enter CodeChef Username",
-                              boundryColor: KontestModel.getColorForIdentifier(siteAbbreviation: "CodeChef"),
-                              submitLabel: .return,
-                              usernameBinding: $codeChefUsername,
-                              focusedField: _focusedField,
-                              currentField: .CodeChef,
-                              onPressingNext: {
-                                  completeForm()
-                              })
+                Task {
+                    await completeForm()
+                }
+            }
+        )
 
         Button("Save") {
-            completeForm()
+            Task {
+                await completeForm()
+            }
         }
-        .keyboardShortcut(.return)
     }
 
-    func completeForm() {
-        UserManager.shared.updateUserUsernames(
-            oldLeetcodeUsername: changeUsernameViewModel.leetcodeUsername,
-            newLeetcodeUsername: leetcodeUsername,
-            oldCodeForcesUsername: changeUsernameViewModel.codeForcesUsername,
-            newCodeForcesUsername: codeForcesUsername,
-            oldCodeChefUsername: changeUsernameViewModel.codeChefUsername,
-            newCodeChefUsername: codeChefUsername
-        )
+    func completeForm() async {
+        do {
+            try await UserManager.shared.updateUserDetails(
+                leetcodeUsername: leetcodeUsername,
+                codeForcesUsername: codeForcesUsername,
+                codeChefUsername: codeChefUsername
+            )
+        }
+        catch {
+            logger.error("Error in uploading usernames to server: \(error.localizedDescription)")
+        }
 
         changeUsernameViewModel.setCodeForcesUsername(newCodeForcesUsername: codeForcesUsername)
         changeUsernameViewModel.setLeetcodeUsername(newLeetcodeUsername: leetcodeUsername)
@@ -100,36 +117,45 @@ struct MainChangeUsernameView: View {
     }
 }
 
-struct SettingsTextFieldView: View {
-    let lightModeImage: ImageResource
-    let darkModeImage: ImageResource
+struct SettingsTextFieldView<ID: Hashable>: View {
+    let lightModeImage: Image
+    let darkModeImage: Image
     let title: String
-    let boundryColor: Color
+    let boundaryColor: Color
     let submitLabel: SubmitLabel
-    @Binding var usernameBinding: String
-    @FocusState private var focusedField: SettingsTextField?
-    let currentField: SettingsTextField
-    let onPressingNext: () -> ()
+    @Binding var textBinding: String
+    let fieldID: ID // Generic field identifier
+    @FocusState var focusedField: ID? // Use the generic type directly
+    let imageSize: CGSize
+    var isPasswordType: Bool
+    let onChangeofText: (_ oldValue: String, _ newValue: String) -> Void
+    let onPressingNext: () -> Void
 
     init(
-        lightModeImage: ImageResource,
-        darkModeImage: ImageResource,
+        lightModeImage: Image,
+        darkModeImage: Image,
         title: String,
-        boundryColor: Color,
+        boundaryColor: Color,
         submitLabel: SubmitLabel,
-        usernameBinding: Binding<String>,
-        focusedField: FocusState<SettingsTextField?>,
-        currentField: SettingsTextField,
-        onPressingNext: @escaping () -> ()
+        textBinding: Binding<String>,
+        fieldID: ID,
+        focusedField: FocusState<ID?>,
+        imageSize: CGSize = .init(width: 30, height: 30),
+        isPasswordType: Bool = false,
+        onChangeofText: @escaping (String, String) -> Void = {_,_ in },
+        onPressingNext: @escaping () -> Void = {}
     ) {
         self.lightModeImage = lightModeImage
         self.darkModeImage = darkModeImage
         self.title = title
-        self.boundryColor = boundryColor
+        self.boundaryColor = boundaryColor
         self.submitLabel = submitLabel
-        self._usernameBinding = usernameBinding
+        self._textBinding = textBinding
+        self.fieldID = fieldID
         self._focusedField = focusedField
-        self.currentField = currentField
+        self.imageSize = imageSize
+        self.isPasswordType = isPasswordType
+        self.onChangeofText = onChangeofText
         self.onPressingNext = onPressingNext
     }
 
@@ -137,41 +163,51 @@ struct SettingsTextFieldView: View {
 
     var body: some View {
         HStack {
-            Image(colorScheme == .light ? lightModeImage : darkModeImage)
-                .resizable()
-                .frame(width: 30, height: 30)
+            if colorScheme == .light {
+                lightModeImage
+                    .resizable()
+                    .frame(width: imageSize.width, height: imageSize.height)
+            }
+            else {
+                darkModeImage
+                    .resizable()
+                    .frame(width: imageSize.width, height: imageSize.height)
+            }
 
-            TextField(title, text: $usernameBinding)
-                .textFieldStyle(.plain)
-                .submitLabel(submitLabel)
-                .focused($focusedField, equals: currentField)
-            #if os(iOS)
-                .textInputAutocapitalization(.never)
-            #endif
-        }
-        .padding(5)
-        .overlay( // apply a rounded border
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(boundryColor, lineWidth: 1)
-        )
-        #if os(macOS)
-        .frame(maxWidth: 400)
-        #endif
-        .onSubmit {
-            onPressingNext()
-            switch currentField {
-            case .CodeForces:
-                focusedField = .LeetCode
-            case .LeetCode:
-                focusedField = .CodeChef
-            case .CodeChef:
-                focusedField = nil
+            if isPasswordType {
+                SecureField(title, text: $textBinding)
+                    .textFieldStyle(.plain)
+                    .submitLabel(submitLabel)
+                    .focused($focusedField, equals: fieldID) // Bind focus to the generic field ID
+                    .onChange(of: textBinding) { oldText, newText in
+                        onChangeofText(oldText, newText)
+                    }
+                    .onSubmit {
+                        onPressingNext()
+                    }
+            }
+            else {
+                TextField(title, text: $textBinding)
+                    .textFieldStyle(.plain)
+                    .submitLabel(submitLabel)
+                    .focused($focusedField, equals: fieldID) // Bind focus to the generic field ID
+                    .onChange(of: textBinding) { oldText, newText in
+                        onChangeofText(oldText, newText)
+                    }
+                    .onSubmit {
+                        onPressingNext()
+                    }
             }
         }
+        .padding(5)
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(boundaryColor))
+        #if os(macOS)
+            .frame(maxWidth: 400)
+        #endif
     }
 }
 
-enum SettingsTextField {
+enum SettingsTextField: Hashable {
     case CodeForces
     case LeetCode
     case CodeChef

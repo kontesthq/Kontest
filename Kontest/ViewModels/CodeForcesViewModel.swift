@@ -12,7 +12,7 @@ import SwiftUI
 final class CodeForcesViewModel: Sendable {
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "CodeForcesViewModel")
     
-    let codeForcesAPIRepository = CodeForcesAPIRepository()
+    let repository: any CodeForcesFetcher
     
     let username: String
     var codeForcesRatings: CodeForcesUserRatingAPIModel?
@@ -23,9 +23,10 @@ final class CodeForcesViewModel: Sendable {
     
     var error: (any Error)?
     
-    init(username: String) {
+    init(username: String, repository: any CodeForcesFetcher) {
         self.error = nil
         self.username = username
+        self.repository = repository
         self.isLoading = true
         
         self.sortedDates = []
@@ -61,7 +62,7 @@ final class CodeForcesViewModel: Sendable {
     
     private func getCodeForcesRatings(username: String) async {
         do {
-            let fetchedCodeForcesRatings = try await codeForcesAPIRepository.getUserRating(username: username)
+            let fetchedCodeForcesRatings = try await repository.getUserRating(username: username)
 //            logger.info("\("\(fetchedCodeForcesRatings)")")
             
             codeForcesRatings = CodeForcesUserRatingAPIModel.from(dto: fetchedCodeForcesRatings)
@@ -101,7 +102,7 @@ final class CodeForcesViewModel: Sendable {
     
     private func getCodeForcesUserInfo(username: String) async {
         do {
-            let fetchedCodeForcesUserInfo = try await codeForcesAPIRepository.getUserInfo(username: username)
+            let fetchedCodeForcesUserInfo = try await repository.getUserInfo(username: username)
 //            logger.info("\("\(fetchedCodeForcesUserInfo)")")
             
             codeForcesUserInfos = CodeForcesUserInfoAPIModel.from(dto: fetchedCodeForcesUserInfo)

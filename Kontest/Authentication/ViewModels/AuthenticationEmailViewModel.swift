@@ -50,7 +50,7 @@ final class AuthenticationEmailViewModel: Sendable {
             logger.log("Success in logging in with email - password")
             logger.log("returnedUserData: \("\(returnedUserData)")")
 
-            let uid = returnedUserData.email ?? returnedUserData.uid
+            let uid = returnedUserData.email
 
             try await setDownloadedUsernamesAsLocalUsernames(userId: uid)
 
@@ -113,12 +113,14 @@ final class AuthenticationEmailViewModel: Sendable {
 
             self.isLoading = false
 
-            try UserManager.shared.createNewUser(
-                auth: returnedUserData,
+            try await UserManager.shared.updateUserDetails(
                 firstName: self.firstName,
                 lastName: self.lastName,
                 selectedCollegeState: self.selectedState,
-                selectedCollege: self.selectedCollege
+                selectedCollege: self.selectedCollege,
+                leetcodeUsername: Dependencies.instance.changeUsernameViewModel.leetcodeUsername,
+                codeForcesUsername: Dependencies.instance.changeUsernameViewModel.codeForcesUsername,
+                codeChefUsername: Dependencies.instance.changeUsernameViewModel.codeChefUsername
             )
 
             return true
@@ -181,12 +183,35 @@ final class AuthenticationEmailViewModel: Sendable {
     }
 
     func setDownloadedUsernamesAsLocalUsernames(userId: String) async throws {
-        let data = try await UserManager.shared.getUser(userId: userId)
+        let data = try await UserManager.shared.getUser()
 
         let changeUsernameViewModel: ChangeUsernameViewModel = Dependencies.instance.changeUsernameViewModel
         changeUsernameViewModel.setLeetcodeUsername(newLeetcodeUsername: data.leetcodeUsername == "" ? changeUsernameViewModel.leetcodeUsername : data.leetcodeUsername)
         changeUsernameViewModel.setCodeChefUsername(newCodeChefUsername: data.codeChefUsername == "" ? changeUsernameViewModel.codeChefUsername : data.codeChefUsername)
         changeUsernameViewModel.setCodeForcesUsername(newCodeForcesUsername: data.codeForcesUsername == "" ? changeUsernameViewModel.codeForcesUsername : data.codeForcesUsername)
+    }
+
+    func setNewPassword() async {
+        if password.isEmpty {
+            self.error = AppError(title: "Password cannot be empty", description: "Password cannot be empty")
+            return
+        }
+        
+        if password != confirmPassword {
+            self.error = AppError(title: "Passwords do not match", description: "Passwords do not match")
+            return
+        }
+
+        if !checkIfPasswordIsCorrect(password: password) {
+            self.error = AppError(title: "Password is not strong enough", description: "Password is not strong enough")
+            return
+        }
+
+        do {
+            try await AuthenticationManager.shared.changePassword(newPassword: password)
+        } catch {
+            self.error = error
+        }
     }
 }
 

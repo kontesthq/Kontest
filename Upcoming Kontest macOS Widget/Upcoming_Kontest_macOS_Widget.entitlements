@@ -6,7 +6,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>R2Z9FDM5M6.com.ayushsinghal.kontest</string>
+		<string>$(TeamIdentifierPrefix)com.ayush.kontest</string>
 	</array>
 	<key>com.apple.security.network.client</key>
 	<true/>

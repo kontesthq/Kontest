@@ -1,122 +1,238 @@
+
+
+
+
+
+
+
+
+
+# My Schema
+
+type ACSubmissionNum {
+  count: Int
+  difficulty: String
+}
+type Badge {
+  name: String
+}
+" Object representing a CodeChef user's information"
+type CodeChefUser {
+  countryFlag: String!
+  countryName: String!
+  countryRank: Int!
+  currentRating: Int!
+  globalRank: Int!
+  heatMap: [HeatMapEntry!]!
+  highestRating: Int!
+  name: String!
+  profile: String!
+  stars: String!
+  success: Boolean!
+}
+"""
+Codeforces API schema
+Object representing a CodeForces user's information
+"""
+type CodeForcesUser {
+  result: CodeForcesUserInfo
+}
+" Object representing basic information about a CodeForces user"
+type CodeForcesUserBasicInfo {
+  avatar: String!
+  contribution: Int!
+  friendOfCount: Int!
+  handle: String!
+  lastOnlineTimeSeconds: Int!
+  maxRank: String
+  maxRating: Int
+  rank: String
+  rating: Int
+  registrationTimeSeconds: Int!
+  titlePhoto: String!
+}
+" Object representing each result in the CodeForces user info response"
+type CodeForcesUserInfo {
+  basicInfo: CodeForcesUserBasicInfo
+  " Basic information about the user"
+  ratings: [CodeForcesUserRating!]
+}
+" Object representing a CodeForces user rating update"
+type CodeForcesUserRating {
+  contestId: Int!
+  contestName: String!
+  handle: String!
+  newRating: Int!
+  oldRating: Int!
+  rank: Int!
+  ratingUpdateTimeSeconds: Int!
+}
+type Contest {
+  startTime: String
+  title: String
+}
+type ContestBadge {
+  expired: Boolean
+  hoverText: String
+  icon: String
+  name: String
+}
 type DailyCodingChallengeQuestion {
   date: String
-  userStatus: String
   link: String
   question: Question
+  userStatus: String
+}
+" Object representing each entry in the heat map"
+type HeatMapEntry {
+  date: String!
+  " The date of the heat map entry"
+  value: Int!
+}
+type Kontest {
+  endTime: String
+  location: String
+  name: String
+  startTime: String
+  url: String
+}
+type KontestError {
+  message: String
+}
+type KontestQuery {
+  health: String
+  kontests(page: Int!, perPage: Int!, sites: [String]): KontestsResult
+  supportedSites: [String]
+}
+type Kontests {
+  kontests: [Kontest]
+}
+type LanguageProblemCount {
+  languageName: String
+  problemsSolved: Int
+}
+type LeetcodeQuery {
+  activeDailyCodingChallengeQuestion: DailyCodingChallengeQuestion
+  matchedUser(username: String!): MatchedUser
+  userContestRanking(username: String!): UserContestRanking
+  userContestRankingHistory(username: String!): [UserContestRankingHistory]
+}
+type MatchedUser {
+  contestBadge: ContestBadge
+  githubUrl: String
+  languageProblemCount: [LanguageProblemCount]
+  linkedinUrl: String
+  problemsSolvedBeatsStats: [ProblemSolvedBeatsStats]
+  profile: UserProfile
+  submitStatsGlobal: SubmitStatsGlobal
+  twitterUrl: String
+  username: String
+}
+type Mutation {
+  purge: String
+}
+type ProblemSolvedBeatsStats {
+  difficulty: String
+  percentage: Float
+}
+type Query {
+  kontestQuery: KontestQuery
+  codeChefQuery: CodeChefQuery
+  
+  " Query to fetch CodeForces user data by username"
+  getCodeForcesUser(username: String!): CodeForcesUser
+  
+  leetcodeQuery: LeetcodeQuery
+}
+
+type CodeChefQuery {
+    getCodeChefUser(username: String!): CodeChefUser
+    getUserKontestHistory(username: String!): [CodeChefContest]
+}
+
+type CodeChefContest {
+    code: String!
+    year: Int!
+    month: Int!
+    day: Int!
+    reason: String
+    penalisedIn: Boolean!
+    rating: Int!
+    rank: Int!
+    name: String!
+    endDate: String!
+    color: String!
 }
 
 type Question {
   acRate: Float
   difficulty: String
   freqBar: String
-  questionFrontendId: String
+  hasSolution: Boolean
+  hasVideoSolution: Boolean
   isFavor: Boolean
   isPaidOnly: Boolean
+  questionFrontendId: String
   status: String
   title: String
   titleSlug: String
-  hasVideoSolution: Boolean
-  hasSolution: Boolean
   topicTags: [TopicTag]
 }
-
-type TopicTag {
-  name: String
-  id: String
-  slug: String
-}
-
-type UserContestRanking {
-  attendedContestsCount: Int
-  rating: Float
-  globalRanking: Int
-  totalParticipants: Int
-  topPercentage: Float
-  badge: Badge
-}
-
-type Badge {
-  name: String
-}
-
-type UserContestRankingHistory {
-  attended: Boolean
-  trendDirection: String
-  problemsSolved: Int
-  totalProblems: Int
-  finishTimeInSeconds: Int
-  rating: Float
-  ranking: Int
-  contest: Contest
-}
-
-type Contest {
-  title: String
-  startTime: String
-}
-
-type MatchedUser {
-    languageProblemCount: [LanguageProblemCount]
-    contestBadge: ContestBadge
-    username: String
-    githubUrl: String
-    twitterUrl: String
-    linkedinUrl: String
-    profile: UserProfile
-    problemsSolvedBeatsStats: [ProblemSolvedBeatsStats]
-    submitStatsGlobal: SubmitStatsGlobal
-}
-
-type LanguageProblemCount {
-    languageName: String
-    problemsSolved: Int
-}
-
-type ContestBadge {
-    name: String
-    expired: Boolean
-    hoverText: String
-    icon: String
-}
-
-type UserProfile {
-    ranking: Int
-    userAvatar: String
-    realName: String
-    aboutMe: String
-    school: String
-    websites: [String]
-    countryName: String
-    company: String
-    jobTitle: String
-    skillTags: [String]
-    postViewCount: Int
-    postViewCountDiff: Int
-    reputation: Int
-    reputationDiff: Int
-    solutionCount: Int
-    solutionCountDiff: Int
-    categoryDiscussCount: Int
-    categoryDiscussCountDiff: Int
-}
-
-type ProblemSolvedBeatsStats {
-  difficulty: String
-  percentage: Float
-}
-
 type SubmitStatsGlobal {
   acSubmissionNum: [ACSubmissionNum]
 }
-
-type ACSubmissionNum {
-  difficulty: String
-  count: Int
+type TopicTag {
+  id: String
+  name: String
+  slug: String
 }
+type UserContestRanking {
+  attendedContestsCount: Int
+  badge: Badge
+  globalRanking: Int
+  rating: Float
+  topPercentage: Float
+  totalParticipants: Int
+}
+type UserContestRankingHistory {
+  attended: Boolean
+  contest: Contest
+  finishTimeInSeconds: Int
+  problemsSolved: Int
+  ranking: Int
+  rating: Float
+  totalProblems: Int
+  trendDirection: String
+}
+type UserProfile {
+  aboutMe: String
+  categoryDiscussCount: Int
+  categoryDiscussCountDiff: Int
+  company: String
+  countryName: String
+  jobTitle: String
+  postViewCount: Int
+  postViewCountDiff: Int
+  ranking: Int
+  realName: String
+  reputation: Int
+  reputationDiff: Int
+  school: String
+  skillTags: [String]
+  solutionCount: Int
+  solutionCountDiff: Int
+  userAvatar: String
+  websites: [String]
+}
+union KontestsResult = KontestError | Kontests
 
-type Query {
+
+
+
+
+extend type Query {
     activeDailyCodingChallengeQuestion: DailyCodingChallengeQuestion
+    matchedUser(username: String!): MatchedUser
     userContestRanking(username: String!): UserContestRanking
     userContestRankingHistory(username: String!): [UserContestRankingHistory]
-    matchedUser(username: String!): MatchedUser
 }

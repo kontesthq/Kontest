@@ -14,7 +14,7 @@ struct AccountInformationScreen: View {
     @Environment(Router.self) private var router
     
     let accountInformationViewModel = AccountInformationViewModel.shared
-    @State private var isAuthenticated: Bool = AuthenticationManager.shared.isSignedIn()
+    @State private var isAuthenticated: Bool = false
     
     @State private var isNameChangeSheetPresented: Bool = false
     @State private var isCollegeChangeSheetPresented: Bool = false
@@ -22,6 +22,20 @@ struct AccountInformationScreen: View {
     var body: some View {
         VStack {
             VStack {
+                if let email = accountInformationViewModel.user?.email {
+                    HStack {
+                        Text("Email")
+                        
+                        Spacer()
+                        
+                        Text(email)
+                    }
+                    
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundStyle(.gray.opacity(0.3))
+                }
+                
                 HStack {
                     Text("Name")
                     
@@ -61,7 +75,9 @@ struct AccountInformationScreen: View {
             
             Button("Sign Out") {
                 do {
-                    try AuthenticationManager.shared.signOut()
+                    Task {
+                        try await AuthenticationManager.shared.signOut()
+                    }
                     
                     accountInformationViewModel.clearAllFields()
                     
@@ -70,7 +86,9 @@ struct AccountInformationScreen: View {
                     logger.log("Error in Signing out: \(error)")
                 }
 
-                isAuthenticated = AuthenticationManager.shared.isSignedIn()
+                Task {
+                    isAuthenticated = await AuthenticationManager.shared.checkAuthenticationStatus()
+                }
             }
             
             if accountInformationViewModel.isLoading {
@@ -152,10 +170,10 @@ struct ChangeNameSheetView: View {
             }
             .padding(.horizontal)
             
-            Rectangle()
-                .frame(height: 1)
-                .foregroundStyle(.gray.opacity(0.3))
-                .padding(.vertical)
+//            Rectangle()
+//                .frame(height: 1)
+//                .foregroundStyle(.gray.opacity(0.3))
+//                .padding(.vertical)
             
             HStack {
                 Spacer()
@@ -174,7 +192,13 @@ struct ChangeNameSheetView: View {
                     isLastNameErrorShown = lastName.isEmpty
                     
                     if !firstName.isEmpty && !lastName.isEmpty {
-                        accountInformationViewModel.updateName(firstName: self.firstName, lastName: self.lastName)
+                        Task {
+                            do {
+                                try await accountInformationViewModel.updateName(firstName: self.firstName, lastName: self.lastName)
+                            } catch {
+                                print("Error in updating name: \(error.localizedDescription)")
+                            }
+                        }
                     
                         dismiss()
                     }
@@ -296,7 +320,13 @@ struct ChangeCollegeSheetView: View {
                 }
                 
                 Button {
-                    accountInformationViewModel.updateCollege(collegeStateName: selectedState, collegeName: selectedCollege)
+                    Task {
+                        do {
+                            try await accountInformationViewModel.updateCollege(collegeStateName: selectedState, collegeName: selectedCollege)
+                        } catch {
+                            print("Error in updating college: \(error.localizedDescription)")
+                        }
+                    }
                     
                     dismiss()
                 } label: {

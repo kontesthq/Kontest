@@ -115,7 +115,7 @@ struct CodeChefChart: View {
 
                 let rating = Int(attendedKontest.rating)
 
-                if let date, let rating {
+                if let date {
                     PointMark(x: .value("Time", date, unit: .day), y: .value("Ratings", attendedKontest.hasAnimated ? rating : 0))
                         .opacity(0)
                         .annotation(position: .top) {
@@ -162,9 +162,7 @@ struct CodeChefChart: View {
                         .padding()
                     }
 
-                if let rating = Int(kontest.rating) {
-                    PointMark(x: .value("selectedDate", selectedDate, unit: .day), y: .value("", rating))
-                }
+                PointMark(x: .value("selectedDate", selectedDate, unit: .day), y: .value("", kontest.rating))
             }
         }
         .chartYScale(domain: 0 ... 2000)

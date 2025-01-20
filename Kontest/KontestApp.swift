@@ -38,15 +38,15 @@ struct KontestApp: App {
                                 AllKontestsScreen(isSearchFiedFocused: _isSearchFiedFocused)
                             }
 
-                            Tab("LeetCode", systemImage: "leetcode", value: .LeetCodeGraphView) {
-                                LeetcodeChartView()
-                            }
-
-                            Tab("CodeForces", systemImage: "codeforces", value: .CodeForcesGraphView) {
+                            Tab("CodeForces", image: "CodeForces Logo Small", value: .CodeForcesGraphView) {
                                 CodeForcesChartView()
                             }
 
-                            Tab("CodeChef", systemImage: "codechef", value: .CodeChefGraphView) {
+                            Tab("LeetCode", image: "LeetCode Logo Small", value: .LeetCodeGraphView) {
+                                LeetcodeChartView()
+                            }
+
+                            Tab("CodeChef", image: "CodeChef Small Logo", value: .CodeChefGraphView) {
                                 CodeChefChartView()
                             }
                         }
@@ -54,6 +54,10 @@ struct KontestApp: App {
                         ContentView(panelSelection: $panelSelection)
                     }
                 }
+                .onAppear(perform: {
+                    print("deviceId: \(KeychainHelper.getUniqueDeviceIdentifier())")
+                    print("deviceId sha512: \(CryptoKitUtility.sha512(for: KeychainHelper.getUniqueDeviceIdentifier()))")
+                })
                 .environment(allKontestsViewModel)
                 .environment(router)
                 .environment(networkMonitor)

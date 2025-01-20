@@ -13,7 +13,6 @@ import OSLog
 final class AllKontestsViewModel: Sendable {
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "AllKontestsViewModel")
 
-    let repository: any KontestFetcher
     let notificationsViewModel: any NotificationsViewModelProtocol
     let filterWebsitesViewModel: any FilterWebsitesViewModelProtocol
 
@@ -43,8 +42,10 @@ final class AllKontestsViewModel: Sendable {
 
     var isLoading = false
 
-    init(notificationsViewModel: any NotificationsViewModelProtocol, filterWebsitesViewModel: any FilterWebsitesViewModelProtocol, repository: any KontestFetcher) {
-        self.repository = repository
+    let repositories: MultipleRepositories<KontestDTO>
+
+    init(notificationsViewModel: any NotificationsViewModelProtocol, filterWebsitesViewModel: any FilterWebsitesViewModelProtocol, repos: MultipleRepositories<KontestDTO>) {
+        self.repositories = repos
         self.notificationsViewModel = notificationsViewModel
         self.filterWebsitesViewModel = filterWebsitesViewModel
         hasFullAccessToCalendar = UserDefaults(suiteName: Constants.userDefaultsGroupID)!.bool(forKey: "shouldFetchAllEventsFromCalendar")
@@ -62,15 +63,7 @@ final class AllKontestsViewModel: Sendable {
         }
         #endif
 
-        Task {
-            do {
-                let authenticatedUser = try AuthenticationManager.shared.getAuthenticatedUser()
-
-                if let userEmail = authenticatedUser.email {
-                    try await AuthenticationEmailViewModel.shared.setDownloadedUsernamesAsLocalUsernames(userId: userEmail)
-                }
-            } catch {}
-        }
+        _ = AuthenticationManager.shared // To initialize the AuthenticationManager
     }
 
     func fetchAllKontests() {
@@ -143,7 +136,7 @@ final class AllKontestsViewModel: Sendable {
 
     private func getAllKontests() async {
         do {
-            let fetchedKontests = try await repository.getAllKontests()
+            let fetchedKontests = try await repositories.fetchAllData()
 
             print("fetchedKontests: \(fetchedKontests)")
 
@@ -172,6 +165,10 @@ final class AllKontestsViewModel: Sendable {
 
             self.allKontests = []
         }
+    }
+    
+    func getAllKontestsPubic() async {
+        await getAllKontests()
     }
 
     func filterKontestsByTime() {

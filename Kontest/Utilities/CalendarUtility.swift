@@ -141,9 +141,8 @@ enum CalendarUtility {
         let totalMinutes = (dateComponents.hour ?? 0) * 60 + (dateComponents.minute ?? 0)
 
         let minimumDurationOfAKontestInMins = minimumDuration ?? UserDefaults(suiteName: Constants.userDefaultsGroupID)!.float(forKey: Constants.minimumDurationOfAKontestInMinutesKey)
-        
-        let maximumDurationOfAKontestInMins = maximumDuration ?? UserDefaults(suiteName: Constants.userDefaultsGroupID)!.float(forKey: Constants.maximumDurationOfAKontestInMinutesKey)
 
+        let maximumDurationOfAKontestInMins = maximumDuration ?? UserDefaults(suiteName: Constants.userDefaultsGroupID)!.float(forKey: Constants.maximumDurationOfAKontestInMinutesKey)
 
         let ans = ((totalMinutes <= Int(maximumDurationOfAKontestInMins)) && (totalMinutes >= Int(minimumDurationOfAKontestInMins))) ? formatter.string(from: dateComponents) : nil // It verifies that kontest duration is in between minimum and maximum range, and if it is not in range then returns nil. If it is nil then in "AllKontestsViewModel", during filtering it removes that kontest entry.
 
@@ -594,6 +593,14 @@ enum CalendarUtility {
             return calendarName
         } else {
             return nil
+        }
+    }
+
+    static func getDefaultCalendarOfDevice() -> EKCalendar {
+        if let defaultCalendar = eventStore.defaultCalendarForNewEvents {
+            return defaultCalendar
+        } else {
+            return eventStore.calendars(for: .event).first!
         }
     }
 }

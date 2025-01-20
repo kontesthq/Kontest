@@ -151,7 +151,6 @@ final class CollegesRepository: Sendable {
                     let dict = document.data()
 
                     let user = DBUser(
-                        userId: document.documentID,
                         firstName: dict["first_name"] as? String ?? "",
                         lastName: dict["last_name"] as? String ?? "",
                         email: dict["email"] as? String ?? "",
@@ -173,7 +172,6 @@ final class CollegesRepository: Sendable {
 
             let newUsers = users.map { dbUser in
                 DBUser(
-                    userId: dbUser.email,
                     firstName: dbUser.firstName,
                     lastName: dbUser.lastName,
                     email: dbUser.email,
@@ -198,24 +196,5 @@ final class CollegesRepository: Sendable {
                 logger.log("\(error)")
             }
         }
-    }
-
-    func testFunc() {
-        do {
-            try UserManager.shared.createNewUser(
-                user: DBUser(
-                    userId: "ankushsingh20000003@gmail.com",
-                    firstName: "Ankush",
-                    lastName: "Singh",
-                    email: "ankushsingh20000003@gmail.com",
-                    selectedCollegeState: "Delhi",
-                    selectedCollege: "Delhi College of Engineering (DCE)",
-                    leetcodeUsername: "ankush920",
-                    codeForcesUsername: "ankush920",
-                    codeChefUsername: "ankushsingh200",
-                    dateCreated: .now
-                )
-            )
-        } catch {}
     }
 }

@@ -87,15 +87,37 @@ struct ButtonsView: View {
 
     let notificationsViewModel: NotificationsViewModel
 
+    let isKontestOfFutureAndStartingInLessThan24Hours: Bool
+    let isKontestRunning: Bool
+
     init(kontest: KontestModel) {
         self.kontest = kontest
         kontestStartDate = CalendarUtility.getDate(date: kontest.start_time)
         kontestEndDate = CalendarUtility.getDate(date: kontest.end_time)
         notificationsViewModel = Dependencies.instance.notificationsViewModel
+        isKontestRunning = CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate ?? Date(), kontestEndDate: kontestEndDate ?? Date()) || kontest.status == .OnGoing
+        let isKontestOfFuture = CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate ?? Date())
+        let isKontestStartingTimeLessThanADay = !(CalendarUtility.isRemainingTimeGreaterThanGivenTime(date: kontestStartDate, minutes: 0, hours: 0, days: 1))
+        isKontestOfFutureAndStartingInLessThan24Hours = isKontestOfFuture && isKontestStartingTimeLessThanADay
     }
 
     var body: some View {
         VStack {
+            if isKontestOfFutureAndStartingInLessThan24Hours || isKontestRunning {
+                VStack {
+                    Button((ActivityManager.shared.kontest == nil || ActivityManager.shared.kontest != kontest) ? "Start Live Activity" : "Stop Live Activity") {
+                        Task {
+                            if ActivityManager.shared.activityID == nil || ActivityManager.shared.kontest != kontest {
+                                await ActivityManager.shared.start(kontest: kontest)
+                            } else {
+                                await ActivityManager.shared.endActivity()
+                            }
+                        }
+                    }
+                    .padding(.vertical)
+                }
+            }
+
             if CalendarUtility.isKontestOfFuture(kontestStartDate: kontestStartDate ?? Date()), notificationsViewModel.getNumberOfNotificationsWhichCanBeSettedForAKontest(kontest: kontest) > 0 {
                 SingleNotificationMenu(kontest: kontest)
                     .controlSize(.large)
@@ -122,7 +144,7 @@ struct ButtonsView: View {
                         }
 
                     } label: {
-                        Text("Add to Calendar")
+                        Text(kontest.isCalendarEventAdded ? "Update in Calendar" : "Add to Calendar")
                             .frame(maxWidth: .infinity)
                     }
                     .controlSize(.large)
@@ -141,6 +163,8 @@ struct ButtonsView: View {
 
                                                         kontest.isCalendarEventAdded = false
                                                         kontest.calendarEventDate = nil
+                                                        kontest.selectedCalendarName = nil
+                                                        kontest.selectedCalendarAccount = nil
                                                     } catch {
                                                         errorState.errorWrapper = ErrorWrapper(error: error, guidance: "Check that you have given Kontest the Calendar Permission (Full Access)")
                                                     }
@@ -309,7 +333,7 @@ struct RemainingTimeView: View {
 
             Text("Ends in \(remainingTimeInEndingOfRunningKontest)")
                 .font(Font.title2.monospacedDigit())
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(countsDown: true))
                 .animation(.easeInOut, value: remainingTimeInEndingOfRunningKontest)
         }
 
@@ -321,7 +345,7 @@ struct RemainingTimeView: View {
 
             Text("Starting in \(remainingTimeInStartingOfFutureKontest)")
                 .font(Font.title2.monospacedDigit())
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(countsDown: true))
                 .animation(.easeInOut, value: remainingTimeInStartingOfFutureKontest)
         }
     }
@@ -334,7 +358,7 @@ struct RemainingTimeView: View {
 //    let endTime = "2023-08-21 17:43:00 UTC"
 
     let startTime = "2024-10-30 00:00:00 UTC"
-    let endTime = "2024-11-30 23:59:00 UTC"
+    let endTime = "2024-12-30 23:59:00 UTC"
 
 //    return KontestDetailsScreen(kontest: KontestModel.from(dto: KontestDTO(name: "ProjectEuler+", url: "https://hackerrank.com/contests/projecteuler", start_time: startTime, end_time: endTime, duration: "1020.0", site: "HackerRank", in_24_hours: "No", status: "CODING")))
 //        .environment(AllKontestsViewModel())

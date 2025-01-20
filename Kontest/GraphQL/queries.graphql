@@ -100,3 +100,499 @@ query userPublicProfile($username: String!) {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+query LeetcodeQuestionOfTheDayQuery {
+	leetcodeQuery {
+		activeDailyCodingChallengeQuestion {
+			date
+			link
+			userStatus
+			question {
+				acRate
+				difficulty
+				freqBar
+				hasSolution
+				hasVideoSolution
+				isFavor
+				isPaidOnly
+				questionFrontendId
+				status
+				title
+				titleSlug
+				topicTags {
+					id
+					name
+					slug
+				}
+			}
+		}
+	}
+}
+
+query LeetcodeMatchedUserQuery($username: String!) {
+	leetcodeQuery {
+		matchedUser(username: $username) {
+			githubUrl
+			linkedinUrl
+			twitterUrl
+			username
+			contestBadge {
+				expired
+				hoverText
+				icon
+				name
+			}
+			languageProblemCount {
+				languageName
+				problemsSolved
+			}
+			problemsSolvedBeatsStats {
+				difficulty
+				percentage
+			}
+			profile {
+				aboutMe
+				categoryDiscussCount
+				categoryDiscussCountDiff
+				company
+				countryName
+				jobTitle
+				postViewCount
+				postViewCountDiff
+				ranking
+				realName
+				reputation
+				reputationDiff
+				school
+				skillTags
+				solutionCount
+				solutionCountDiff
+				userAvatar
+				websites
+			}
+			submitStatsGlobal {
+				acSubmissionNum {
+					count
+					difficulty
+				}
+			}
+		}
+	}
+}
+
+query LeetcodeUserContestRankingQuery($username: String!) {
+	leetcodeQuery {
+		userContestRanking(username: $username) {
+			attendedContestsCount
+			globalRanking
+			rating
+			topPercentage
+			totalParticipants
+			badge {
+				name
+			}
+		}
+	}
+}
+
+query LeetcodeUserContestRankingHistoryQuery($username: String!) {
+	leetcodeQuery {
+		userContestRankingHistory(username: $username) {
+			attended
+			finishTimeInSeconds
+			problemsSolved
+			ranking
+			rating
+			totalProblems
+			trendDirection
+			contest {
+				startTime
+				title
+			}
+		}
+	}
+}
+
+query LeetcodeUserContestRankingInfo($username: String!) {
+	leetcodeQuery {
+		userContestRanking(username: $username) {
+			attendedContestsCount
+			rating
+			globalRanking
+			totalParticipants
+			topPercentage
+			badge {
+				name
+			}
+		}
+		userContestRankingHistory(username: $username) {
+			attended
+			trendDirection
+			problemsSolved
+			totalProblems
+			finishTimeInSeconds
+			rating
+			ranking
+			contest {
+				title
+				startTime
+			}
+		}
+	}
+}
+
+
+
+query CompleteLeetcodeQuery($username: String!) {
+	leetcodeQuery {
+		activeDailyCodingChallengeQuestion {
+			date
+			link
+			question {
+				acRate
+				difficulty
+				freqBar
+				hasSolution
+				hasVideoSolution
+				isFavor
+				isPaidOnly
+				questionFrontendId
+				status
+				title
+				titleSlug
+				topicTags {
+					id
+					name
+					slug
+				}
+			}
+			userStatus
+		}
+		matchedUser(username: $username) {
+			githubUrl
+			linkedinUrl
+			twitterUrl
+			username
+			contestBadge {
+				expired
+				hoverText
+				icon
+				name
+			}
+			languageProblemCount {
+				languageName
+				problemsSolved
+			}
+			problemsSolvedBeatsStats {
+				difficulty
+				percentage
+			}
+			profile {
+				aboutMe
+				categoryDiscussCount
+				categoryDiscussCountDiff
+				company
+				countryName
+				jobTitle
+				postViewCount
+				postViewCountDiff
+				ranking
+				realName
+				reputation
+				reputationDiff
+				school
+				skillTags
+				solutionCount
+				solutionCountDiff
+				userAvatar
+				websites
+			}
+			submitStatsGlobal {
+				acSubmissionNum {
+					count
+					difficulty
+				}
+			}
+		}
+		userContestRanking(username: $username) {
+			attendedContestsCount
+			globalRanking
+			rating
+			topPercentage
+			totalParticipants
+			badge {
+				name
+			}
+		}
+		userContestRankingHistory(username: $username) {
+			attended
+			finishTimeInSeconds
+			problemsSolved
+			ranking
+			rating
+			totalProblems
+			trendDirection
+			contest {
+				startTime
+				title
+			}
+		}
+	}
+}
+
+
+
+query CodeChefUserInfoQuery($username: String!) {
+	codeChefQuery {
+		getCodeChefUser(username: $username) {
+			success
+			profile
+			name
+			currentRating
+			highestRating
+			countryFlag
+			countryName
+			globalRank
+			countryRank
+			stars
+		}
+	}
+}
+
+
+query CodeChefUserKontestHistoryQuery($username: String!) {
+	codeChefQuery {
+		getUserKontestHistory(username: $username) {
+			code
+			year
+			month
+			day
+			reason
+			penalisedIn
+			rating
+			rank
+			name
+			endDate
+			color
+		}
+	}
+}
+
+
+
+query AllThings {
+	kontestQuery {
+		health
+		supportedSites
+		kontests(page: 1, perPage: 10) {
+			... on Kontests {
+				kontests {
+					endTime
+					location
+					name
+					startTime
+					url
+				}
+			}
+			... on KontestError {
+				message
+			}
+		}
+	}
+	codeChefQuery {
+		getCodeChefUser(username: "ayushs_2k4") {
+			success
+			profile
+			name
+			currentRating
+			highestRating
+			countryFlag
+			countryName
+			globalRank
+			countryRank
+			stars
+			heatMap {
+				date
+				value
+			}
+		}
+		getUserKontestHistory(username: "ayushs_2k4") {
+			code
+			year
+			month
+			day
+			reason
+			penalisedIn
+			rating
+			rank
+			name
+			endDate
+			color
+		}
+	}
+	getCodeForcesUser(username: "ayushsinghals") {
+		result {
+			ratings {
+				contestId
+				contestName
+				handle
+				newRating
+				oldRating
+				rank
+				ratingUpdateTimeSeconds
+			}
+			basicInfo {
+				avatar
+				contribution
+				friendOfCount
+				handle
+				lastOnlineTimeSeconds
+				maxRank
+				maxRating
+				rank
+				rating
+				registrationTimeSeconds
+				titlePhoto
+			}
+		}
+	}
+	leetcodeQuery {
+		activeDailyCodingChallengeQuestion {
+			date
+			link
+			userStatus
+			question {
+				acRate
+				difficulty
+				freqBar
+				hasSolution
+				hasVideoSolution
+				isFavor
+				isPaidOnly
+				questionFrontendId
+				status
+				title
+				titleSlug
+				topicTags {
+					id
+					name
+					slug
+				}
+			}
+		}
+		matchedUser(username: "ayushs_2k4") {
+			githubUrl
+			linkedinUrl
+			twitterUrl
+			username
+			contestBadge {
+				expired
+				hoverText
+				icon
+				name
+			}
+			languageProblemCount {
+				languageName
+				problemsSolved
+			}
+			problemsSolvedBeatsStats {
+				difficulty
+				percentage
+			}
+			submitStatsGlobal {
+				acSubmissionNum {
+					count
+					difficulty
+				}
+			}
+			profile {
+				aboutMe
+				categoryDiscussCount
+				categoryDiscussCountDiff
+				company
+				countryName
+				jobTitle
+				postViewCount
+				postViewCountDiff
+				ranking
+				realName
+				reputation
+				reputationDiff
+				school
+				skillTags
+				solutionCount
+				solutionCountDiff
+				userAvatar
+				websites
+			}
+		}
+		userContestRanking(username: "ayushs_2k4") {
+			attendedContestsCount
+			globalRanking
+			rating
+			topPercentage
+			totalParticipants
+			badge {
+				name
+			}
+		}
+		userContestRankingHistory(username: "ayushs_2k4") {
+			attended
+			finishTimeInSeconds
+			problemsSolved
+			ranking
+			rating
+			totalProblems
+			trendDirection
+			contest {
+				startTime
+				title
+			}
+		}
+	}
+}
+
+query CodeForcesBasicInfoQuery($username: String!) {
+	getCodeForcesUser(username: $username) {
+		result {
+			basicInfo {
+				contribution
+				lastOnlineTimeSeconds
+				friendOfCount
+				titlePhoto
+				handle
+				avatar
+				registrationTimeSeconds
+				rating
+				maxRating
+				rank
+				maxRank
+			}
+		}
+	}
+}
+
+query CodeForcesRatingsInfoQuery($username: String!) {
+	getCodeForcesUser(username: $username) {
+		result {
+			ratings {
+				contestId
+				contestName
+				handle
+				rank
+				ratingUpdateTimeSeconds
+				oldRating
+				newRating
+			}
+		}
+	}
+}

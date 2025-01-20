@@ -5,17 +5,146 @@
 //  Created by Ayush Singhal on 1/14/24.
 //
 
-@preconcurrency import FirebaseFirestore
-import FirebaseFirestoreSwift
 import Foundation
-import OSLog
+
+actor UserManager {
+    static var shared = UserManager()
+    
+    private init() {}
+    
+    func updateUserDetails(
+        firstName: String? = nil,
+        lastName: String? = nil,
+        selectedCollegeState: String? = nil,
+        selectedCollege: String? = nil,
+        leetcodeUsername: String? = nil,
+        codeForcesUsername: String? = nil,
+        codeChefUsername: String? = nil
+    ) async throws {
+        // Retrieve JWT token
+        guard let jwtToken = await AuthenticationManager.shared.getJWTToken() else {
+            throw AppError(title: "Authentication Error", description: "Unable to retrieve JWT token.")
+        }
+        
+        // Construct the URL
+        let url = URL(string: Constants.Endpoints.userServiceURL)!.appendingPathComponent("user_info")
+        
+        // Create the URL request
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT" // Assuming you are using PUT method to update user details
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("\(jwtToken)", forHTTPHeaderField: "Authorization")
+        
+        // Prepare the request body
+        var body: [String: Any] = [:]
+        
+        if let firstName = firstName {
+            body["first_name"] = firstName
+        }
+        if let lastName = lastName {
+            body["last_name"] = lastName
+        }
+        if let selectedCollegeState = selectedCollegeState {
+            body["college_state"] = selectedCollegeState
+        }
+        if let selectedCollege = selectedCollege {
+            body["college_name"] = selectedCollege
+        }
+        if let leetcodeUsername = leetcodeUsername {
+            body["leetcode_username"] = leetcodeUsername
+        }
+        if let codeForcesUsername = codeForcesUsername {
+            body["codeforces_username"] = codeForcesUsername
+        }
+        if let codeChefUsername = codeChefUsername {
+            body["codechef_username"] = codeChefUsername
+        }
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        
+        // Perform the network request
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        // Ensure the response is successful
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        // Handle the response if needed
+        // For example, decode the response if there's any data to process
+        let responseData = String(data: data, encoding: .utf8)
+        print("User details updated successfully. Response: \(responseData ?? "No response data")")
+    }
+    
+    func getUser() async throws -> DBUser {
+        guard let jwtToken = await AuthenticationManager.shared.getJWTToken() else { throw AppError(title: "JWT Token is missing", description: "JWT Token is missing") }
+        
+        guard let authenticatedUser = await AuthenticationManager.shared.getAuthenticatedUser() else {
+            throw AppError(title: "Authenticated user is missing", description: "Authenticated user is missing")
+        }
+        
+        let url = URL(string: Constants.Endpoints.userServiceURL)!.appending(components: "user_info")
+        
+        // Create the URL request
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("\(jwtToken)", forHTTPHeaderField: "Authorization")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        let decodedData = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS" // For microseconds
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX") // Use POSIX locale for fixed date format
+        dateFormatter.timeZone = TimeZone(abbreviation: "IST")
+        
+        // Ensure that the createdAt string is parsed correctly into a Date object
+        if let dateCreatedString = decodedData["createdAt"] as? String {
+            print("dateCreatedString: \(dateCreatedString)")
+            
+            if let dateCreated = dateFormatter.date(from: dateCreatedString) {
+                // Create the DBUser object
+                return DBUser(
+                    firstName: decodedData["firstName"] as! String,
+                    lastName: decodedData["lastName"] as! String,
+                    email: authenticatedUser.email,
+                    selectedCollegeState: decodedData["college_state"] as! String,
+                    selectedCollege: decodedData["college_name"] as! String,
+                    leetcodeUsername: decodedData["leetcodeUsername"] as! String,
+                    codeForcesUsername: decodedData["codeforcesUsername"] as! String,
+                    codeChefUsername: decodedData["codechefUsername"] as! String,
+                    dateCreated: dateCreated // Use the parsed date here
+                )
+            } else {
+                throw AppError(title: "Date Parsing Error", description: "Unable to parse the createdAt field.")
+            }
+        } else {
+//            throw AppError(title: "Invalid Data", description: "createdAt field is missing.")
+            return DBUser(
+                firstName: decodedData["first_name"] as! String,
+                lastName: decodedData["last_name"] as! String,
+                email: decodedData["email"] as! String,
+                selectedCollegeState: decodedData["college_state"] as! String,
+                selectedCollege: decodedData["college_name"] as! String,
+                leetcodeUsername: decodedData["leetcode_username"] as! String,
+                codeForcesUsername: decodedData["codeforces_username"] as! String,
+                codeChefUsername: decodedData["codechef_username"] as! String,
+                dateCreated: .now
+            )
+        }
+    }
+}
 
 struct DBUser: Codable {
-    let userId, firstName, lastName, email, selectedCollegeState, selectedCollege, leetcodeUsername, codeForcesUsername, codeChefUsername: String
+    let firstName, lastName, email, selectedCollegeState, selectedCollege, leetcodeUsername, codeForcesUsername, codeChefUsername: String
     let dateCreated: Date
-
-    init(userId: String, firstName: String, lastName: String, email: String, selectedCollegeState: String, selectedCollege: String, leetcodeUsername: String, codeForcesUsername: String, codeChefUsername: String, dateCreated: Date) {
-        self.userId = userId
+    
+    init(firstName: String, lastName: String, email: String, selectedCollegeState: String, selectedCollege: String, leetcodeUsername: String, codeForcesUsername: String, codeChefUsername: String, dateCreated: Date) {
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
@@ -26,137 +155,16 @@ struct DBUser: Codable {
         self.codeChefUsername = codeChefUsername
         self.dateCreated = dateCreated
     }
-}
-
-final class UserManager: Sendable {
-    private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "UserManager")
-
-    static let shared = UserManager()
-
-    private init() {}
-
-    private let userCollection = Firestore.firestore().collection("users")
-
-    private let firestoreEncoder: Firestore.Encoder = {
-        let encoder = Firestore.Encoder()
-
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-
-        return encoder
-    }()
-
-    private let firstoreDecoder: Firestore.Decoder = {
-        let decoder = Firestore.Decoder()
-
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-
-        return decoder
-    }()
-
-    private func userDocument(userId: String) -> DocumentReference {
-        return userCollection.document(userId)
-    }
-
-    func createNewUser(user: DBUser) throws {
-        try userDocument(userId: user.userId).setData(from: user, merge: false, encoder: firestoreEncoder)
-    }
-
-    func createNewUser(auth: AuthDataResultModel, firstName: String, lastName: String, selectedCollegeState: String, selectedCollege: String) throws {
-        let changeUsernameViewModel = Dependencies.instance.changeUsernameViewModel
-
-        let leetcodeUsername: String = changeUsernameViewModel.leetcodeUsername
-        let codeForcesUsername: String = changeUsernameViewModel.codeForcesUsername
-        let codeChefUsername: String = changeUsernameViewModel.codeChefUsername
-
-        try createNewUser(
-            user: DBUser(
-                userId: auth.email ?? auth.uid,
-                firstName: firstName,
-                lastName: lastName,
-                email: auth.email ?? "No Email",
-                selectedCollegeState: selectedCollegeState,
-                selectedCollege: selectedCollege,
-                leetcodeUsername: leetcodeUsername,
-                codeForcesUsername: codeForcesUsername,
-                codeChefUsername: codeChefUsername,
-                dateCreated: Date()
-            )
-        )
-    }
-
-    func getUser(userId: String) async throws -> DBUser {
-        let snapshot = try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: firstoreDecoder)
-
-        return snapshot
-    }
-
-    func updateUserUsernames(oldLeetcodeUsername: String, newLeetcodeUsername: String, oldCodeForcesUsername: String, newCodeForcesUsername: String, oldCodeChefUsername: String, newCodeChefUsername: String) {
-        if AuthenticationManager.shared.isSignedIn() {
-            let finalLeetcodeUsername = newLeetcodeUsername == "" ? oldLeetcodeUsername : newLeetcodeUsername
-            let finalCodeForcesUsername = newCodeForcesUsername == "" ? oldCodeForcesUsername : newCodeForcesUsername
-            let finalCodeChefUsername = newCodeChefUsername == "" ? oldCodeChefUsername : newCodeChefUsername
-
-            do {
-                let userId = try AuthenticationManager.shared.getAuthenticatedUser().email ?? AuthenticationManager.shared.getAuthenticatedUser().uid
-
-                userDocument(userId: userId).updateData([
-                    "leetcode_username": finalLeetcodeUsername,
-                    "code_chef_username": finalCodeChefUsername,
-                    "code_forces_username": finalCodeForcesUsername
-                ])
-            } catch {
-                logger.log("Error in updating usernames: \(error)")
-            }
-        }
-    }
-
-    func updateName(firstName: String, lastName: String, completion: @escaping ((any Error)?) -> ()) {
-        if AuthenticationManager.shared.isSignedIn() {
-            do {
-                let userId = try AuthenticationManager.shared.getAuthenticatedUser().email ?? AuthenticationManager.shared.getAuthenticatedUser().uid
-
-                userDocument(userId: userId).updateData([
-                    "first_name": firstName,
-                    "last_name": lastName
-                ]) { error in
-                    if let error {
-                        print("Error in updating name: \(error)")
-                        self.logger.log("Error in updating name: \(error)")
-                        completion(error)
-                    } else {
-                        print("Successfully updated name")
-                        completion(nil)
-                    }
-                }
-            } catch {
-                logger.log("Error in updating name: \(error)")
-                completion(error)
-            }
-        }
-    }
-
-    func updateCollege(collegeStateName: String, collegeName: String, completion: @escaping ((any Error)?) -> ()) {
-        if AuthenticationManager.shared.isSignedIn() {
-            do {
-                let userId = try AuthenticationManager.shared.getAuthenticatedUser().email ?? AuthenticationManager.shared.getAuthenticatedUser().uid
-
-                userDocument(userId: userId).updateData([
-                    "selected_college_state": collegeStateName,
-                    "selected_college": collegeName
-                ]) { error in
-                    if let error {
-                        print("Error in updating college: \(error)")
-                        self.logger.log("Error in updating college: \(error)")
-                        completion(error)
-                    } else {
-                        print("Successfully updated college")
-                        completion(nil)
-                    }
-                }
-            } catch {
-                logger.log("Error in updating college: \(error)")
-                completion(error)
-            }
-        }
-    }
+    
+    static let temp = DBUser(
+        firstName: "",
+        lastName: "",
+        email: "",
+        selectedCollegeState: "",
+        selectedCollege: "",
+        leetcodeUsername: "",
+        codeForcesUsername: "",
+        codeChefUsername: "",
+        dateCreated: .now
+    )
 }

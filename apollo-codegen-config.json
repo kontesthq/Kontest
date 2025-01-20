@@ -1,5 +1,5 @@
 {
-  "schemaNamespace" : "LeetCodeSchema",
+  "schemaNamespace" : "KontestGraphQLSchema",
   "input" : {
     "operationSearchPaths" : [
       "**/*.graphql"
@@ -14,7 +14,7 @@
       }
     },
     "schemaTypes" : {
-      "path" : "./LeetCodeSchema",
+      "path" : "./KontestGraphQLSchema",
       "moduleType" : {
         "swiftPackageManager" : {
         }

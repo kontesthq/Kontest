@@ -13,6 +13,11 @@ final class Dependencies: Sendable {
     let filterWebsitesViewModel: FilterWebsitesViewModel
     let allKontestsViewModel: AllKontestsViewModel
     let changeUsernameViewModel: ChangeUsernameViewModel
+
+    let leetCodeRepository: any LeetCodeGraphQLAPIFetcher = MultipleLeetCodeRepostories(repositories: [LeetCodeNewAPIGraphQLRepository(), LeetCodeAPIGraphQLRepository()])
+    let codeForcesRepository: any CodeForcesFetcher = MultipleCodeForcesRepostories(repositories: [CodeForcesNewAPIRepository(), CodeForcesAPIRepository()])
+    let codeChefRepository: any CodeChefFetcher = MultipleCodeChefRepostories(repositories: [CodeChefNewAPIRepository(), CodeChefAPIRepository()])
+
     private(set) var leetCodeGraphQLViewModel: LeetCodeGraphQLViewModel
     private(set) var codeChefViewModel: CodeChefViewModel
     private(set) var codeForcesViewModel: CodeForcesViewModel
@@ -24,34 +29,41 @@ final class Dependencies: Sendable {
 
         self.notificationsViewModel = NotificationsViewModel()
         self.filterWebsitesViewModel = FilterWebsitesViewModel()
-        self.allKontestsViewModel = AllKontestsViewModel(notificationsViewModel: notificationsViewModel, filterWebsitesViewModel: filterWebsitesViewModel, repository: MultipleRepositories(repositories: [KontestNewAPIRepository(), KontestNewRepository()]))
+        self.allKontestsViewModel = AllKontestsViewModel(
+            notificationsViewModel: notificationsViewModel,
+            filterWebsitesViewModel: filterWebsitesViewModel,
+            repos: MultipleRepositories(repos: [
+                AnyFetcher(KontestNewAPIRepository()),
+                AnyFetcher(KontestNewRepository())
+            ])
+        )
         self.changeUsernameViewModel = ChangeUsernameViewModel()
-        self.leetCodeGraphQLViewModel = LeetCodeGraphQLViewModel(username: changeUsernameViewModel.leetcodeUsername)
-        self.codeChefViewModel = CodeChefViewModel(username: changeUsernameViewModel.codeChefUsername)
-        self.codeForcesViewModel = CodeForcesViewModel(username: changeUsernameViewModel.codeForcesUsername)
+        self.leetCodeGraphQLViewModel = LeetCodeGraphQLViewModel(username: changeUsernameViewModel.leetcodeUsername, repository: leetCodeRepository)
+        self.codeChefViewModel = CodeChefViewModel(username: changeUsernameViewModel.codeChefUsername, codeChefAPIRepository: codeChefRepository)
+        self.codeForcesViewModel = CodeForcesViewModel(username: changeUsernameViewModel.codeForcesUsername, repository: codeForcesRepository)
     }
 
     func changeLeetcodeUsername(leetCodeUsername: String) {
-        leetCodeGraphQLViewModel = LeetCodeGraphQLViewModel(username: leetCodeUsername)
+        leetCodeGraphQLViewModel = LeetCodeGraphQLViewModel(username: leetCodeUsername, repository: leetCodeRepository)
     }
 
     func changeCodeChefUsername(codeChefUsername: String) {
-        codeChefViewModel = CodeChefViewModel(username: codeChefUsername)
+        codeChefViewModel = CodeChefViewModel(username: codeChefUsername, codeChefAPIRepository: codeChefRepository)
     }
 
     func changeCodeForcesUsername(codeForcesUsername: String) {
-        codeForcesViewModel = CodeForcesViewModel(username: codeForcesUsername)
+        codeForcesViewModel = CodeForcesViewModel(username: codeForcesUsername, repository: codeForcesRepository)
     }
 
     func reloadLeetcodeUsername() {
-        leetCodeGraphQLViewModel = LeetCodeGraphQLViewModel(username: changeUsernameViewModel.leetcodeUsername)
+        leetCodeGraphQLViewModel = LeetCodeGraphQLViewModel(username: changeUsernameViewModel.leetcodeUsername, repository: leetCodeRepository)
     }
 
     func reloadCodeChefUsername() {
-        codeChefViewModel = CodeChefViewModel(username: changeUsernameViewModel.codeChefUsername)
+        codeChefViewModel = CodeChefViewModel(username: changeUsernameViewModel.codeChefUsername, codeChefAPIRepository: codeChefRepository)
     }
 
     func reloadCodeForcesUsername() {
-        codeForcesViewModel = CodeForcesViewModel(username: changeUsernameViewModel.codeForcesUsername)
+        codeForcesViewModel = CodeForcesViewModel(username: changeUsernameViewModel.codeForcesUsername, repository: codeForcesRepository)
     }
 }

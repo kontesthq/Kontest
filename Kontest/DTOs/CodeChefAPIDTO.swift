@@ -18,4 +18,17 @@ struct CodeChefAPIDTO: Codable {
     let countryName: String
     let globalRank, countryRank: Int
     let stars: String
+    
+    enum CodingKeys: CodingKey {
+        case success
+        case profile
+        case name
+        case currentRating
+        case highestRating
+        case countryFlag
+        case countryName
+        case globalRank
+        case countryRank
+        case stars
+    }
 }
