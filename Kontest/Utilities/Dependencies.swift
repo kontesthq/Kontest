@@ -8,6 +8,7 @@
 import FirebaseCore
 import Foundation
 
+@Observable
 final class Dependencies: Sendable {
     let notificationsViewModel: NotificationsViewModel
     let filterWebsitesViewModel: FilterWebsitesViewModel
