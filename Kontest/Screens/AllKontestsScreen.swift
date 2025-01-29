@@ -396,6 +396,7 @@ struct AllKontestsScreen: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             logger.debug("App became active")
             allKontestsViewModel.filterKontests()
+            LocalNotificationManager.instance.setBadgeCountTo0()
         }
         #endif
     }
@@ -434,6 +435,8 @@ struct AllKontestsScreen: View {
         if Dependencies.instance.leetCodeGraphQLViewModel.error != nil {
             Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: changeUsernameViewModel.leetcodeUsername)
         }
+        
+        await allKontestsViewModel.addAutomaticEventsToCalendarAndNotifications()
     }
 }
 

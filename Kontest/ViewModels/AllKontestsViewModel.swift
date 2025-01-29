@@ -78,16 +78,7 @@ final class AllKontestsViewModel: Sendable {
             checkNotificationAuthorization()
             filterKontests()
 
-            // Adding automatic calendar events
-            let automaticNotificationsViewModel = AutomaticNotificationsViewModel.instance
-            if hasFullAccessToCalendar {
-                await automaticNotificationsViewModel.addAutomaticCalendarEventToEligibleSites(kontests: self.toShowKontests)
-            }
-
-            let notificationAuthorizationLevel = await LocalNotificationManager.instance.getNotificationsAuthorizationLevel()
-            if notificationAuthorizationLevel.authorizationStatus == .authorized {
-                await automaticNotificationsViewModel.addAutomaticNotificationToEligibleSites(kontests: self.toShowKontests)
-            }
+            await addAutomaticEventsToCalendarAndNotifications()
 
             // Doing this here (after splitting kontests into categories initially)
             nextDateToRefresh = CalendarUtility.getNextDateToRefresh(
@@ -131,6 +122,20 @@ final class AllKontestsViewModel: Sendable {
                         }
                     }
                 }
+        }
+    }
+    
+    public func addAutomaticEventsToCalendarAndNotifications() async {
+        // Adding automatic calendar events
+        let automaticNotificationsViewModel = AutomaticNotificationsViewModel.instance
+        if hasFullAccessToCalendar {
+            await automaticNotificationsViewModel.addAutomaticCalendarEventToEligibleSites(kontests: self.toShowKontests)
+        }
+
+        // Adding automatic notifications
+        let notificationAuthorizationLevel = await LocalNotificationManager.instance.getNotificationsAuthorizationLevel()
+        if notificationAuthorizationLevel.authorizationStatus == .authorized {
+            await automaticNotificationsViewModel.addAutomaticNotificationToEligibleSites(kontests: self.toShowKontests)
         }
     }
 
