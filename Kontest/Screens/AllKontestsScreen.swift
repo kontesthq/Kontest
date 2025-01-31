@@ -50,13 +50,13 @@ struct AllKontestsScreen: View {
                         ProgressView()
                     } else if allKontestsViewModel.allFetchedKontests.isEmpty { // No Kontests Downloaded
                         List {
-                            RatingsView(
-                                codeForcesUsername: changeUsernameViewModel.codeForcesUsername,
-                                leetCodeUsername: changeUsernameViewModel.leetcodeUsername,
-                                codeChefUsername: changeUsernameViewModel.codeChefUsername
-                            )
-                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .listRowSeparator(.hidden)
+//                            RatingsView(
+//                                codeForcesUsername: changeUsernameViewModel.codeForcesUsername,
+//                                leetCodeUsername: changeUsernameViewModel.leetcodeUsername,
+//                                codeChefUsername: changeUsernameViewModel.codeChefUsername
+//                            )
+//                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+//                            .listRowSeparator(.hidden)
 
                             HStack {
                                 Spacer()
@@ -68,9 +68,9 @@ struct AllKontestsScreen: View {
                     } else { // There are some kontests downloaded
                         TimelineView(.periodic(from: .now, by: 1)) { timelineViewDefaultContext in
                             List {
-                                RatingsView(codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetCodeUsername: changeUsernameViewModel.leetcodeUsername, codeChefUsername: changeUsernameViewModel.codeChefUsername)
-                                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowSeparator(.hidden)
+//                                RatingsView(codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetCodeUsername: changeUsernameViewModel.leetcodeUsername, codeChefUsername: changeUsernameViewModel.codeChefUsername)
+//                                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+//                                    .listRowSeparator(.hidden)
 
                                 if allKontestsViewModel.backupKontests.isEmpty { // There are some kontests but they are hidden due to KontestFilters
                                     NoKontestsDueToFiltersScreen()
