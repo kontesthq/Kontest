@@ -11,6 +11,8 @@ import SwiftUI
 
 @main
 struct KontestApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "KontestApp")
 
     init() {
@@ -108,6 +110,13 @@ struct KontestApp: App {
 .defaultAppStorage(defaults)
             } else {
                 Text("Failed to load user defaults")
+            }
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase == .background {
+#if os(macOS)
+                NSApplication.shared.terminate(nil)
+#endif
             }
         }
         .commands {
