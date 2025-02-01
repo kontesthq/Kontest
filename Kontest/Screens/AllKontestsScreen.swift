@@ -50,13 +50,15 @@ struct AllKontestsScreen: View {
                         ProgressView()
                     } else if allKontestsViewModel.allFetchedKontests.isEmpty { // No Kontests Downloaded
                         List {
-//                            RatingsView(
-//                                codeForcesUsername: changeUsernameViewModel.codeForcesUsername,
-//                                leetCodeUsername: changeUsernameViewModel.leetcodeUsername,
-//                                codeChefUsername: changeUsernameViewModel.codeChefUsername
-//                            )
-//                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                            .listRowSeparator(.hidden)
+                            #if os(macOS)
+                            RatingsView(
+                                codeForcesUsername: changeUsernameViewModel.codeForcesUsername,
+                                leetCodeUsername: changeUsernameViewModel.leetcodeUsername,
+                                codeChefUsername: changeUsernameViewModel.codeChefUsername
+                            )
+                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .listRowSeparator(.hidden)
+                            #endif
 
                             HStack {
                                 Spacer()
@@ -68,9 +70,11 @@ struct AllKontestsScreen: View {
                     } else { // There are some kontests downloaded
                         TimelineView(.periodic(from: .now, by: 1)) { timelineViewDefaultContext in
                             List {
-//                                RatingsView(codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetCodeUsername: changeUsernameViewModel.leetcodeUsername, codeChefUsername: changeUsernameViewModel.codeChefUsername)
-//                                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                                    .listRowSeparator(.hidden)
+                                #if os(macOS)
+                                RatingsView(codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetCodeUsername: changeUsernameViewModel.leetcodeUsername, codeChefUsername: changeUsernameViewModel.codeChefUsername)
+                                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .listRowSeparator(.hidden)
+                                #endif
 
                                 if allKontestsViewModel.backupKontests.isEmpty { // There are some kontests but they are hidden due to KontestFilters
                                     NoKontestsDueToFiltersScreen()
@@ -435,7 +439,7 @@ struct AllKontestsScreen: View {
         if Dependencies.instance.leetCodeGraphQLViewModel.error != nil {
             Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: changeUsernameViewModel.leetcodeUsername)
         }
-        
+
         await allKontestsViewModel.addAutomaticEventsToCalendarAndNotifications()
     }
 }
