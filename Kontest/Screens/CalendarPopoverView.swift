@@ -14,7 +14,7 @@ struct CalendarPopoverView: View {
     @State private var selectedDate: Date
     let isAlreadySetted: Bool
 
-    let calendarsArray: [(String, [EKCalendar])]
+    var calendarsArray: [(String, [EKCalendar])]
 
     @State private var selectedAccountIndex = 0
     @State private var selectedCalendarIndex = 0
@@ -34,10 +34,34 @@ struct CalendarPopoverView: View {
         self.date = date
         self.kontestStartDate = kontestStartDate
         self.isAlreadySetted = isAlreadySetted
-        
-        (calendarsArray, selectedAccountIndex, selectedCalendarIndex) = CalendarUtility.getAllCalendarsWithSelectedCalendarIndices()
 
-        self._selectedDate = State(initialValue: date)
+        calendarsArray = CalendarUtility.getAllCalendarsWithSelectedCalendarIndices().0
+
+        let selectedAccountIndex = calendarsArray.firstIndex { calendar in
+            calendar.0 == calendarAccount
+        }
+
+        if let selectedAccountIndex {
+            _selectedAccountIndex = State(initialValue: selectedAccountIndex)
+
+            let allCalendarsOfSelectedAccount = calendarsArray[selectedAccountIndex].1
+
+            let selectedCalendarIndex = allCalendarsOfSelectedAccount.firstIndex { calendar in
+                calendar.title == calendarName
+            }
+
+            if let selectedCalendarIndex {
+                _selectedCalendarIndex = State(initialValue: selectedCalendarIndex)
+            }
+        } else {
+            let allCalendarsWithSelectedCalendarIndices = CalendarUtility.getAllCalendarsWithSelectedCalendarIndices()
+            
+            calendarsArray = allCalendarsWithSelectedCalendarIndices.0
+            _selectedAccountIndex = State(initialValue: allCalendarsWithSelectedCalendarIndices.1)
+            _selectedCalendarIndex = State(initialValue: allCalendarsWithSelectedCalendarIndices.2)
+        }
+
+        _selectedDate = State(initialValue: date)
         self.onPressDelete = onPressDelete
         self.onPressSet = onPressSet
     }

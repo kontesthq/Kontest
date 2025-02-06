@@ -127,6 +127,7 @@ struct ButtonsView: View {
                         let authorizationStatus = CalendarUtility.getAuthorizationStatus()
 
                         if authorizationStatus == .fullAccess {
+                            print("\(kontest)")
                             isCalendarPopoverVisible = true
                         } else {
                             Task {
