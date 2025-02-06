@@ -87,7 +87,7 @@ struct FilterWebsitesScreen: View {
                 VStack(alignment: .leading) {
                     Text("Select default Calendar to Add Events")
 
-                    PickerView(arr: allCalendars, selectedAccountIndex: $selectedAccountIndex, selectedCalendarIndex: $selectedCalendarIndex, onchangeOfSelectedAccountIndex: {
+                    PickerView(arr: allCalendars, selectedAccountIndex: $selectedAccountIndex, selectedCalendarIndex: $selectedCalendarIndex, alignment: .leading, onchangeOfSelectedAccountIndex: {
                         let selectedCalendar = allCalendars[selectedAccountIndex].1[selectedCalendarIndex]
 
                         CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
@@ -97,6 +97,9 @@ struct FilterWebsitesScreen: View {
                         CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
                     })
                 }
+                .padding()
+                .background(Color.secondary.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .frame(maxWidth: 400)
             }
 

@@ -105,12 +105,14 @@ struct PickerView: View {
 
     @Binding var selectedAccountIndex: Int
     @Binding var selectedCalendarIndex: Int
+    
+    var alignment: HorizontalAlignment = .center
 
     var onchangeOfSelectedAccountIndex: () -> Void = {}
     var onchangeOfSelectedCalendarIndex: () -> Void = {}
 
     var body: some View {
-        VStack {
+        VStack(alignment: alignment) {
             Picker("Select Account", selection: $selectedAccountIndex) {
                 ForEach(arr.indices, id: \.self) { index in
                     Text(arr[index].0)
