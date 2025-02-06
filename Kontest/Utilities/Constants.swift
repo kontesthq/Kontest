@@ -18,6 +18,8 @@ enum Constants {
     #endif
     static let keychainAuthTokensServiceName = "com.ayush.kontest.authenticationTokens"
     
+    static let defaultCalendarKey = "DEFAULT_CALENDAR"
+    
     static let codeforcesNotAvailableErrorResponseMessage = "Codeforces is temporarily unavailable"
     
     static let maximumDurationOfAKontestInMinutesKey = "maximumDurationOfAKontestInMinutesKey"

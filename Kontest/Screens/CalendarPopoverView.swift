@@ -119,6 +119,9 @@ struct PickerView: View {
     @Binding var selectedAccountIndex: Int
     @Binding var selectedCalendarIndex: Int
 
+    var onchangeOfSelectedAccountIndex: () -> Void = {}
+    var onchangeOfSelectedCalendarIndex: () -> Void = {}
+
     var body: some View {
         VStack {
             Picker("Select Account", selection: $selectedAccountIndex) {
@@ -142,9 +145,11 @@ struct PickerView: View {
         }
         .onChange(of: selectedAccountIndex) {
             selectedCalendarIndex = 0
+            onchangeOfSelectedAccountIndex()
         }
         .onChange(of: selectedCalendarIndex) { oldValue, newValue in
             print("Changed selected calendar index from \(oldValue) to \(newValue)")
+            onchangeOfSelectedCalendarIndex()
         }
     }
 }

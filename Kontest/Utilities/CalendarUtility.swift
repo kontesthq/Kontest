@@ -603,4 +603,44 @@ enum CalendarUtility {
             return eventStore.calendars(for: .event).first!
         }
     }
+
+    static func setSelectedCalendar(calendar: EKCalendar) {
+        print("Changing selected calendar to: \(calendar)")
+        UserDefaults(suiteName: Constants.userDefaultsGroupID)!.set(calendar.calendarIdentifier, forKey: Constants.defaultCalendarKey)
+    }
+
+    static func getSelectedCalendar() -> EKCalendar {
+        let setCalendarIdentifier = UserDefaults(suiteName: Constants.userDefaultsGroupID)!.string(forKey: Constants.defaultCalendarKey)
+
+        if let setCalendarIdentifier {
+            if let calendar = eventStore.calendar(withIdentifier: setCalendarIdentifier) {
+                return calendar
+            } else {
+                return getDefaultCalendarOfDevice()
+            }
+        } else {
+            return getDefaultCalendarOfDevice()
+        }
+    }
+    
+    static func getAllCalendarsWithSelectedCalendarIndices() -> ([(String, [EKCalendar])], Int, Int) {
+        let allCalendars = try! getChangableCalendarsByTheirSources()
+        
+        let selectedCalendar = getSelectedCalendar()
+        
+        var selectedAccountIndex = 0
+        var selectedCalendarIndex = 0;
+        
+        for (accountIndex, account) in allCalendars.enumerated() {
+            for (calendarIndex, calendar) in account.1.enumerated() {
+                if calendar.calendarIdentifier == selectedCalendar.calendarIdentifier {
+                    selectedAccountIndex = accountIndex
+                    selectedCalendarIndex = calendarIndex
+                    break
+                }
+            }
+        }
+        
+        return (allCalendars, selectedAccountIndex, selectedCalendarIndex)
+    }
 }

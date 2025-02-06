@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WidgetKit
+import EventKit
 
 struct FilterWebsitesScreen: View {
     let allKontestsViewModel = Dependencies.instance.allKontestsViewModel
@@ -43,6 +44,11 @@ struct FilterWebsitesScreen: View {
 
     @AppStorage(Constants.minimumDurationOfAKontestInMinutesKey, store: UserDefaults(suiteName: Constants.userDefaultsGroupID)) var minimumDurationOfAKontestInMinutesKey = Double(Constants.minimumLimitOfMinutesOfKontest)
 
+    @State private var selectedCalendar = CalendarUtility.getSelectedCalendar()
+    let allCalendars: [(String, [EKCalendar])]
+    @State private var selectedAccountIndex: Int
+    @State private var selectedCalendarIndex: Int
+
     @Environment(\.colorScheme) private var colorScheme
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -62,10 +68,25 @@ struct FilterWebsitesScreen: View {
         columns = [GridItem(.flexible()),
                    GridItem(.flexible())]
         #endif
+        
+        (allCalendars, selectedAccountIndex, selectedCalendarIndex) = CalendarUtility.getAllCalendarsWithSelectedCalendarIndices()
     }
 
     var body: some View {
         ScrollView {
+            if CalendarUtility.getAuthorizationStatus() == .fullAccess {
+                PickerView(arr: allCalendars, selectedAccountIndex: $selectedAccountIndex, selectedCalendarIndex: $selectedCalendarIndex, onchangeOfSelectedAccountIndex: {
+                    let selectedCalendar = allCalendars[selectedAccountIndex].1[selectedCalendarIndex]
+                    
+                    CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
+                }, onchangeOfSelectedCalendarIndex: {
+                    let selectedCalendar = allCalendars[selectedAccountIndex].1[selectedCalendarIndex]
+                    
+                    CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
+                })
+                
+            }
+
             if deviceType == .macOS || horizontalSizeClass == .regular {
                 LazyVGrid(columns: columns,
                           content: {
@@ -299,7 +320,6 @@ struct FilterWebsitesScreen: View {
                             isSelected: $yukiCoderKey
                         )
                     }
-                        
                 )
             }
 
