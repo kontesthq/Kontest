@@ -14,7 +14,7 @@ struct CalendarPopoverView: View {
     @State private var selectedDate: Date
     let isAlreadySetted: Bool
 
-    let calendarsArray = getAllCalendarsArray()
+    let calendarsArray: [(String, [EKCalendar])]
 
     @State private var selectedAccountIndex = 0
     @State private var selectedCalendarIndex = 0
@@ -34,45 +34,8 @@ struct CalendarPopoverView: View {
         self.date = date
         self.kontestStartDate = kontestStartDate
         self.isAlreadySetted = isAlreadySetted
-
-        let selectedAccountIndex = calendarsArray.firstIndex { calendar in
-            calendar.0 == calendarAccount
-        }
-
-        if let selectedAccountIndex {
-            self._selectedAccountIndex = State(initialValue: selectedAccountIndex)
-
-            let allCalendarsOfSelectedAccount = calendarsArray[selectedAccountIndex].1
-
-            let selectedCalendarIndex = allCalendarsOfSelectedAccount.firstIndex { calendar in
-                calendar.title == calendarName
-            }
-
-            if let selectedCalendarIndex {
-                self._selectedCalendarIndex = State(initialValue: selectedCalendarIndex)
-            }
-        } else {
-            // Choose the default calendar of device
-            let defaultCalendar = CalendarUtility.getDefaultCalendarOfDevice()
-
-            let selectedAccountIndex = calendarsArray.firstIndex { calendar in
-                calendar.1.contains(defaultCalendar)
-            }
-
-            if let selectedAccountIndex {
-                self._selectedAccountIndex = State(initialValue: selectedAccountIndex)
-
-                let allCalendarsOfSelectedAccount = calendarsArray[selectedAccountIndex].1
-
-                let selectedCalendarIndex = allCalendarsOfSelectedAccount.firstIndex { calendar in
-                    calendar == defaultCalendar
-                }
-
-                if let selectedCalendarIndex {
-                    self._selectedCalendarIndex = State(initialValue: selectedCalendarIndex)
-                }
-            }
-        }
+        
+        (calendarsArray, selectedAccountIndex, selectedCalendarIndex) = CalendarUtility.getAllCalendarsWithSelectedCalendarIndices()
 
         self._selectedDate = State(initialValue: date)
         self.onPressDelete = onPressDelete
