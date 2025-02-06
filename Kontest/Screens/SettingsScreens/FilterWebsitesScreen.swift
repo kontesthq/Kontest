@@ -5,9 +5,9 @@
 //  Created by Ayush Singhal on 09/09/23.
 //
 
+import EventKit
 import SwiftUI
 import WidgetKit
-import EventKit
 
 struct FilterWebsitesScreen: View {
     let allKontestsViewModel = Dependencies.instance.allKontestsViewModel
@@ -44,7 +44,7 @@ struct FilterWebsitesScreen: View {
 
     @AppStorage(Constants.minimumDurationOfAKontestInMinutesKey, store: UserDefaults(suiteName: Constants.userDefaultsGroupID)) var minimumDurationOfAKontestInMinutesKey = Double(Constants.minimumLimitOfMinutesOfKontest)
 
-    @State private var selectedCalendar = CalendarUtility.getSelectedCalendar()
+    @State private var selectedCalendar: EKCalendar?
     let allCalendars: [(String, [EKCalendar])]
     @State private var selectedAccountIndex: Int
     @State private var selectedCalendarIndex: Int
@@ -68,23 +68,36 @@ struct FilterWebsitesScreen: View {
         columns = [GridItem(.flexible()),
                    GridItem(.flexible())]
         #endif
-        
-        (allCalendars, selectedAccountIndex, selectedCalendarIndex) = CalendarUtility.getAllCalendarsWithSelectedCalendarIndices()
+
+        if CalendarUtility.getAuthorizationStatus() == .fullAccess {
+            _selectedCalendar = State(initialValue: CalendarUtility.getSelectedCalendar())
+
+            (allCalendars, selectedAccountIndex, selectedCalendarIndex) = CalendarUtility.getAllCalendarsWithSelectedCalendarIndices()
+        }
+        else {
+            allCalendars = []
+            selectedAccountIndex = 0
+            selectedCalendarIndex = 0
+        }
     }
 
     var body: some View {
         ScrollView {
             if CalendarUtility.getAuthorizationStatus() == .fullAccess {
-                PickerView(arr: allCalendars, selectedAccountIndex: $selectedAccountIndex, selectedCalendarIndex: $selectedCalendarIndex, onchangeOfSelectedAccountIndex: {
-                    let selectedCalendar = allCalendars[selectedAccountIndex].1[selectedCalendarIndex]
-                    
-                    CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
-                }, onchangeOfSelectedCalendarIndex: {
-                    let selectedCalendar = allCalendars[selectedAccountIndex].1[selectedCalendarIndex]
-                    
-                    CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
-                })
-                
+                VStack(alignment: .leading) {
+                    Text("Select default Calendar to Add Events")
+
+                    PickerView(arr: allCalendars, selectedAccountIndex: $selectedAccountIndex, selectedCalendarIndex: $selectedCalendarIndex, onchangeOfSelectedAccountIndex: {
+                        let selectedCalendar = allCalendars[selectedAccountIndex].1[selectedCalendarIndex]
+
+                        CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
+                    }, onchangeOfSelectedCalendarIndex: {
+                        let selectedCalendar = allCalendars[selectedAccountIndex].1[selectedCalendarIndex]
+
+                        CalendarUtility.setSelectedCalendar(calendar: selectedCalendar)
+                    })
+                }
+                .frame(maxWidth: 400)
             }
 
             if deviceType == .macOS || horizontalSizeClass == .regular {

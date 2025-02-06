@@ -44,13 +44,15 @@ final class AutomaticNotificationsViewModel: Sendable {
     }
 
     func addAutomaticCalendarEventToEligibleSites(kontests: [KontestModel]) async {
-        let userDefaults = UserDefaults(suiteName: Constants.userDefaultsGroupID)!
+        if CalendarUtility.getAuthorizationStatus() == .fullAccess {
+            let userDefaults = UserDefaults(suiteName: Constants.userDefaultsGroupID)!
 
-        for siteAbbreviation in getAllSiteAbbreviations() {
-            let newKey = siteAbbreviation + Constants.automaticCalendarEventSuffix
+            for siteAbbreviation in getAllSiteAbbreviations() {
+                let newKey = siteAbbreviation + Constants.automaticCalendarEventSuffix
 
-            if userDefaults.bool(forKey: newKey) == true {
-                await addAutomaticCalendarEvent(kontests: kontests, siteAbbreviation: siteAbbreviation)
+                if userDefaults.bool(forKey: newKey) == true {
+                    await addAutomaticCalendarEvent(kontests: kontests, siteAbbreviation: siteAbbreviation)
+                }
             }
         }
     }
