@@ -338,7 +338,7 @@ enum CalendarUtility {
         return isGranted
     }
 
-    static func addEvent(startDate: Date, endDate: Date, title: String, notes: String, url: URL?, alarmAbsoluteDate: Date, calendar: EKCalendar? = eventStore.defaultCalendarForNewEvents) async throws -> Bool {
+    static func addEvent(startDate: Date, endDate: Date, title: String, notes: String, url: URL?, alarmAbsoluteDate: Date, calendar: EKCalendar = getSelectedCalendar()) async throws -> Bool {
         // Check the authorization status for calendar events
         let authorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
 
