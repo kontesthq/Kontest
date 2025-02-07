@@ -1628,7 +1628,7 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = Kontest/KontestMacOS.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Kontest/Preview Content\"";
 				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				ENABLE_PREVIEWS = YES;
@@ -1670,7 +1670,7 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = Kontest/KontestMacOS.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Kontest/Preview Content\"";
 				DEVELOPMENT_TEAM = QU6F7R6MZS;
 				ENABLE_PREVIEWS = YES;
