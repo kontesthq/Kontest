@@ -113,7 +113,7 @@ struct PickerView: View {
 
     var body: some View {
         VStack(alignment: alignment) {
-            Picker("Select Account", selection: $selectedAccountIndex) {
+            Picker("Select Account ", selection: $selectedAccountIndex) {
                 ForEach(arr.indices, id: \.self) { index in
                     Text(arr[index].0)
                         .tag(index)

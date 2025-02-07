@@ -98,9 +98,9 @@ struct FilterWebsitesScreen: View {
                     })
                 }
                 .padding()
+                .frame(maxWidth: 400, alignment: .leading)
                 .background(Color.secondary.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
-                .frame(maxWidth: 400)
             }
 
             if deviceType == .macOS || horizontalSizeClass == .regular {
