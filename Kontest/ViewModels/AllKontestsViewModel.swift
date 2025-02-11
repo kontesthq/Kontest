@@ -71,7 +71,7 @@ final class AllKontestsViewModel: Sendable {
         Task {
             await getAllKontests()
 
-            await removeThoseContestsWhichAreNotGonnaHappenAnymoreFromCalendarAndNotificationCentre(allKontests: allKontests)
+            await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
 
             await MainActor.run {
                 sortAllKontests()
@@ -174,10 +174,6 @@ final class AllKontestsViewModel: Sendable {
         }
     }
 
-    func getAllKontestsPubic() async {
-        await getAllKontests()
-    }
-
     func filterKontestsByTime() {
         allKontests = allFetchedKontests
             .filter { kontest in
@@ -232,19 +228,7 @@ final class AllKontestsViewModel: Sendable {
     }
 
     func filterKontests() {
-        toShowKontests = allKontests.filter {
-            let isKontestWebsiteInAllowedWebsites = allowedWebsites.contains($0.site)
-
-            return isKontestWebsiteInAllowedWebsites
-        }
-
-//        toShowKontests = allKontests.filter { konModel in
-//            let isKontestWebsiteInAllowedWebsites = allowedWebsites.contains { allowedWebsite in
-//                konModel.site.lowercased().contains(allowedWebsite.lowercased())
-//            }
-//
-//            return isKontestWebsiteInAllowedWebsites
-//        }
+        toShowKontests = allKontests.filter { allowedWebsites.contains($0.site) }
 
         backupKontests = toShowKontests
         splitKontestsIntoDifferentCategories()
@@ -303,7 +287,7 @@ final class AllKontestsViewModel: Sendable {
         }
     }
 
-    private func removeThoseContestsWhichAreNotGonnaHappenAnymoreFromCalendarAndNotificationCentre(allKontests: [KontestModel]) async {
+    private func cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: [KontestModel]) async {
         if CalendarUtility.getAuthorizationStatus() == .fullAccess {
             let allKontestEvents = await CalendarUtility.getAllKontestEvents()
 
@@ -336,6 +320,34 @@ final class AllKontestsViewModel: Sendable {
                 localNotificationManager.removeNotification(withID: notification.identifier)
             }
         }
+    }
+
+    #if os(iOS)
+    func toPerformWheniOSAppBecomeActive(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) {
+        Task {
+            await refreshKontests()
+            LocalNotificationManager.instance.setBadgeCountTo0()
+            await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
+        }
+    }
+    #endif
+
+    func refreshData(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) async {
+        Task {
+            await refreshKontests()
+        }
+
+        Dependencies.instance.changeCodeChefUsername(codeChefUsername: codeChefUsername)
+
+        Dependencies.instance.changeCodeForcesUsername(codeForcesUsername: codeForcesUsername)
+
+        Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: leetcodeUsername)
+    }
+
+    func refreshKontests() async {
+        await getAllKontests()
+        filterKontests()
+        await addAutomaticEventsToCalendarAndNotifications()
     }
 
     #if os(macOS)

@@ -107,7 +107,7 @@ struct AllKontestsScreen: View {
                             }
                             #if !os(macOS)
                             .refreshable {
-                                await refreshData()
+                                await allKontestsViewModel.refreshData(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
                             }
                             #endif
                         }
@@ -300,7 +300,7 @@ struct AllKontestsScreen: View {
                                 if !isRefreshing {
                                     Task {
                                         isRefreshing = true
-                                        await refreshData()
+                                        await allKontestsViewModel.refreshData(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
                                         isRefreshing = false
                                     }
                                 }
@@ -395,8 +395,7 @@ struct AllKontestsScreen: View {
         #if os(iOS)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             logger.debug("App became active")
-            allKontestsViewModel.filterKontests()
-            LocalNotificationManager.instance.setBadgeCountTo0()
+            allKontestsViewModel.toPerformWheniOSAppBecomeActive()
         }
         #endif
     }
@@ -419,24 +418,6 @@ struct AllKontestsScreen: View {
         } header: {
             Text(title)
         }
-    }
-
-    func refreshData() async {
-        await allKontestsViewModel.getAllKontestsPubic()
-
-        if Dependencies.instance.codeChefViewModel.error != nil {
-            Dependencies.instance.changeCodeChefUsername(codeChefUsername: changeUsernameViewModel.codeChefUsername)
-        }
-
-        if Dependencies.instance.codeForcesViewModel.error != nil {
-            Dependencies.instance.changeCodeForcesUsername(codeForcesUsername: changeUsernameViewModel.codeForcesUsername)
-        }
-
-        if Dependencies.instance.leetCodeGraphQLViewModel.error != nil {
-            Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: changeUsernameViewModel.leetcodeUsername)
-        }
-
-        await allKontestsViewModel.addAutomaticEventsToCalendarAndNotifications()
     }
 }
 
