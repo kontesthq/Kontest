@@ -127,7 +127,9 @@ struct AllKontestsScreen: View {
                 }
                 .navigationTitle("Kontest")
                 .onAppear {
+                    #if os(macOS)
                     allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
+                    #endif
                 }
                 .toolbar {
                     if isInDevelopmentMode {
