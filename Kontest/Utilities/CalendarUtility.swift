@@ -339,6 +339,8 @@ enum CalendarUtility {
     }
 
     static func addEvent(startDate: Date, endDate: Date, title: String, notes: String, url: URL?, alarmAbsoluteDate: Date, calendar: EKCalendar = getSelectedCalendar()) async throws -> Bool {
+        var notes = notes.appending("- Kontest")
+        
         // Check the authorization status for calendar events
         let authorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
 
@@ -656,7 +658,7 @@ enum CalendarUtility {
         let allEvents = try? await getAllEvents()
         
         let allKontestEvents = allEvents?.filter { event in
-            event.notes?.contains("Kontest") ?? false
+            event.notes?.lowercased().contains("kontest") ?? false
         }
         
         return allKontestEvents

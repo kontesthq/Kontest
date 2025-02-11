@@ -309,14 +309,13 @@ final class AllKontestsViewModel: Sendable {
 
             if let allKontestEvents {
                 for kontestEvent in allKontestEvents {
-                    if allKontests.contains(where: { $0.name == kontestEvent.title && $0.start_time == CalendarUtility.formatDateToString(kontestEvent.startDate) && $0.end_time == CalendarUtility.formatDateToString(kontestEvent.endDate) }) {
-                        print(kontestEvent)
-                        continue
-                    }
+                    if kontestEvent.startDate > .now { // remove only those events which are not gonna happen in future
+                        if allKontests.contains(where: { $0.name == kontestEvent.title && CalendarUtility.getDate(date: $0.start_time) == kontestEvent.startDate && CalendarUtility.getDate(date: $0.end_time) == kontestEvent.endDate }) {
+                            continue
+                        }
 
-                    do {
-                        try await CalendarUtility.removeEvent(event: kontestEvent)
-                    } catch {}
+                        try? await CalendarUtility.removeEvent(event: kontestEvent)
+                    }
                 }
             }
         }
