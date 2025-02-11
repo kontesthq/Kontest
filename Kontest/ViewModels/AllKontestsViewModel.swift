@@ -325,7 +325,6 @@ final class AllKontestsViewModel: Sendable {
     func toPerformWhenAppBecomeActive(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) {
         Task {
             await refreshKontests()
-            await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
         }
 
         LocalNotificationManager.instance.setBadgeCountTo0()
@@ -343,6 +342,7 @@ final class AllKontestsViewModel: Sendable {
         await getAllKontests()
         filterKontests()
         await addAutomaticEventsToCalendarAndNotifications()
+        await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
     }
 
     #if os(macOS)
