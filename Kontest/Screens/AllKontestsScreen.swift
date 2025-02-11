@@ -127,7 +127,7 @@ struct AllKontestsScreen: View {
                 }
                 .navigationTitle("Kontest")
                 .onAppear {
-                    LocalNotificationManager.instance.setBadgeCountTo0()
+                    allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
                 }
                 .toolbar {
                     if isInDevelopmentMode {
@@ -395,7 +395,7 @@ struct AllKontestsScreen: View {
         #if os(iOS)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             logger.debug("App became active")
-            allKontestsViewModel.toPerformWheniOSAppBecomeActive()
+            allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
         }
         #endif
     }

@@ -322,26 +322,21 @@ final class AllKontestsViewModel: Sendable {
         }
     }
 
-    #if os(iOS)
-    func toPerformWheniOSAppBecomeActive(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) {
+    func toPerformWhenAppBecomeActive(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) {
         Task {
             await refreshKontests()
-            LocalNotificationManager.instance.setBadgeCountTo0()
             await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
         }
+
+        LocalNotificationManager.instance.setBadgeCountTo0()
     }
-    #endif
 
     func refreshData(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) async {
-        Task {
-            await refreshKontests()
-        }
-
         Dependencies.instance.changeCodeChefUsername(codeChefUsername: codeChefUsername)
-
         Dependencies.instance.changeCodeForcesUsername(codeForcesUsername: codeForcesUsername)
-
         Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: leetcodeUsername)
+        
+        await refreshKontests()
     }
 
     func refreshKontests() async {
