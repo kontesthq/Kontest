@@ -107,7 +107,7 @@ struct AllKontestsScreen: View {
                             }
                             #if !os(macOS)
                             .refreshable {
-                                await refreshData()
+                                await allKontestsViewModel.refreshData(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
                             }
                             #endif
                         }
@@ -127,7 +127,9 @@ struct AllKontestsScreen: View {
                 }
                 .navigationTitle("Kontest")
                 .onAppear {
-                    LocalNotificationManager.instance.setBadgeCountTo0()
+                    #if os(macOS)
+                    allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
+                    #endif
                 }
                 .toolbar {
                     if isInDevelopmentMode {
@@ -300,7 +302,7 @@ struct AllKontestsScreen: View {
                                 if !isRefreshing {
                                     Task {
                                         isRefreshing = true
-                                        await refreshData()
+                                        await allKontestsViewModel.refreshData(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
                                         isRefreshing = false
                                     }
                                 }
@@ -308,6 +310,7 @@ struct AllKontestsScreen: View {
                                 Image(systemName: isRefreshing ? "progress.indicator" : "arrow.clockwise")
                                     .contentTransition(.symbolEffect(.replace))
                             }
+                            .keyboardShortcut("r", modifiers: .command)
                             .help("Refresh")
                         }
                         #endif
@@ -395,8 +398,7 @@ struct AllKontestsScreen: View {
         #if os(iOS)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             logger.debug("App became active")
-            allKontestsViewModel.filterKontests()
-            LocalNotificationManager.instance.setBadgeCountTo0()
+            allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
         }
         #endif
     }
@@ -419,24 +421,6 @@ struct AllKontestsScreen: View {
         } header: {
             Text(title)
         }
-    }
-
-    func refreshData() async {
-        await allKontestsViewModel.getAllKontestsPubic()
-
-        if Dependencies.instance.codeChefViewModel.error != nil {
-            Dependencies.instance.changeCodeChefUsername(codeChefUsername: changeUsernameViewModel.codeChefUsername)
-        }
-
-        if Dependencies.instance.codeForcesViewModel.error != nil {
-            Dependencies.instance.changeCodeForcesUsername(codeForcesUsername: changeUsernameViewModel.codeForcesUsername)
-        }
-
-        if Dependencies.instance.leetCodeGraphQLViewModel.error != nil {
-            Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: changeUsernameViewModel.leetcodeUsername)
-        }
-
-        await allKontestsViewModel.addAutomaticEventsToCalendarAndNotifications()
     }
 }
 

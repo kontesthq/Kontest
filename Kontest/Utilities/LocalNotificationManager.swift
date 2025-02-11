@@ -141,7 +141,7 @@ final class LocalNotificationManager: Sendable {
     func removePendingNotifications(identifiers: [String]) {
         center.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
-    
+
     func removeNotification(withID id: String) {
         UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [id])
     }
@@ -161,5 +161,16 @@ final class LocalNotificationManager: Sendable {
 
     func getNotificationID(kontestID: String, minutesBefore: Int, hoursBefore: Int, daysBefore: Int) -> String {
         return kontestID + "\(minutesBefore)\(hoursBefore)\(daysBefore)"
+    }
+
+    func getAllNotificationIDsForAKontest(kontestID: String) -> [String] {
+        var ans: [String] = []
+
+        ans.append(getNotificationID(kontestID: kontestID, minutesBefore: 10, hoursBefore: 0, daysBefore: 0))
+        ans.append(getNotificationID(kontestID: kontestID, minutesBefore: 30, hoursBefore: 0, daysBefore: 0))
+        ans.append(getNotificationID(kontestID: kontestID, minutesBefore: 0, hoursBefore: 1, daysBefore: 0))
+        ans.append(getNotificationID(kontestID: kontestID, minutesBefore: 0, hoursBefore: 6, daysBefore: 0))
+
+        return ans
     }
 }

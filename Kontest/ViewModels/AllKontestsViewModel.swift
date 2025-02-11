@@ -45,7 +45,7 @@ final class AllKontestsViewModel: Sendable {
     let repositories: MultipleRepositories<KontestDTO>
 
     init(notificationsViewModel: any NotificationsViewModelProtocol, filterWebsitesViewModel: any FilterWebsitesViewModelProtocol, repos: MultipleRepositories<KontestDTO>) {
-        self.repositories = repos
+        repositories = repos
         self.notificationsViewModel = notificationsViewModel
         self.filterWebsitesViewModel = filterWebsitesViewModel
         hasFullAccessToCalendar = UserDefaults(suiteName: Constants.userDefaultsGroupID)!.bool(forKey: "shouldFetchAllEventsFromCalendar")
@@ -70,6 +70,8 @@ final class AllKontestsViewModel: Sendable {
         isLoading = true
         Task {
             await getAllKontests()
+
+            await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
 
             await MainActor.run {
                 sortAllKontests()
@@ -124,18 +126,18 @@ final class AllKontestsViewModel: Sendable {
                 }
         }
     }
-    
+
     public func addAutomaticEventsToCalendarAndNotifications() async {
         // Adding automatic calendar events
         let automaticNotificationsViewModel = AutomaticNotificationsViewModel.instance
         if hasFullAccessToCalendar {
-            await automaticNotificationsViewModel.addAutomaticCalendarEventToEligibleSites(kontests: self.toShowKontests)
+            await automaticNotificationsViewModel.addAutomaticCalendarEventToEligibleSites(kontests: toShowKontests)
         }
 
         // Adding automatic notifications
         let notificationAuthorizationLevel = await LocalNotificationManager.instance.getNotificationsAuthorizationLevel()
         if notificationAuthorizationLevel.authorizationStatus == .authorized {
-            await automaticNotificationsViewModel.addAutomaticNotificationToEligibleSites(kontests: self.toShowKontests)
+            await automaticNotificationsViewModel.addAutomaticNotificationToEligibleSites(kontests: toShowKontests)
         }
     }
 
@@ -149,7 +151,7 @@ final class AllKontestsViewModel: Sendable {
 
             let allEvents = hasFullAccessToCalendar ? try await CalendarUtility.getAllEvents() : []
 
-            self.allFetchedKontests = fetchedKontests
+            allFetchedKontests = fetchedKontests
                 .map { dto in
                     let kontest = KontestModel.from(dto: dto)
                     // Load Reminder status
@@ -168,16 +170,12 @@ final class AllKontestsViewModel: Sendable {
         } catch {
             logger.error("error in fetching all Kontests: \(error)")
 
-            self.allKontests = []
+            allKontests = []
         }
-    }
-    
-    func getAllKontestsPubic() async {
-        await getAllKontests()
     }
 
     func filterKontestsByTime() {
-        self.allKontests = self.allFetchedKontests
+        allKontests = allFetchedKontests
             .filter { kontest in
                 let kontestDuration = CalendarUtility.getFormattedDuration(fromSeconds: kontest.duration) ?? ""
                 let kontestEndDate = CalendarUtility.getDate(date: kontest.end_time)
@@ -188,11 +186,11 @@ final class AllKontestsViewModel: Sendable {
     }
 
     func sortAllKontests() {
-        self.allKontests.sort { CalendarUtility.getDate(date: $0.start_time) ?? Date() < CalendarUtility.getDate(date: $1.start_time) ?? Date() }
+        allKontests.sort { CalendarUtility.getDate(date: $0.start_time) ?? Date() < CalendarUtility.getDate(date: $1.start_time) ?? Date() }
     }
 
     private func filterKontestsUsingSearchText() {
-        let filteredKontests = self.backupKontests
+        let filteredKontests = backupKontests
             .filter { kontest in
                 kontest.name.localizedCaseInsensitiveContains(searchText) || kontest.siteAbbreviation.localizedCaseInsensitiveContains(searchText) || kontest.url.localizedCaseInsensitiveContains(searchText)
             }
@@ -230,19 +228,7 @@ final class AllKontestsViewModel: Sendable {
     }
 
     func filterKontests() {
-        toShowKontests = allKontests.filter {
-            let isKontestWebsiteInAllowedWebsites = allowedWebsites.contains($0.site)
-
-            return isKontestWebsiteInAllowedWebsites
-        }
-
-//        toShowKontests = allKontests.filter { konModel in
-//            let isKontestWebsiteInAllowedWebsites = allowedWebsites.contains { allowedWebsite in
-//                konModel.site.lowercased().contains(allowedWebsite.lowercased())
-//            }
-//
-//            return isKontestWebsiteInAllowedWebsites
-//        }
+        toShowKontests = allKontests.filter { allowedWebsites.contains($0.site) }
 
         backupKontests = toShowKontests
         splitKontestsIntoDifferentCategories()
@@ -299,6 +285,64 @@ final class AllKontestsViewModel: Sendable {
                 }
             }
         }
+    }
+
+    private func cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: [KontestModel]) async {
+        if CalendarUtility.getAuthorizationStatus() == .fullAccess {
+            let allKontestEvents = await CalendarUtility.getAllKontestEvents()
+
+            if let allKontestEvents {
+                for kontestEvent in allKontestEvents {
+                    if kontestEvent.startDate > .now { // remove only those events which are not gonna happen in future
+                        if allKontests.contains(where: { $0.name == kontestEvent.title && CalendarUtility.getDate(date: $0.start_time) == kontestEvent.startDate && CalendarUtility.getDate(date: $0.end_time) == kontestEvent.endDate }) {
+                            continue
+                        }
+
+                        try? await CalendarUtility.removeEvent(event: kontestEvent)
+                    }
+                }
+            }
+        }
+
+        if hasFullAccessToCalendar {
+            let notificationVM = Dependencies.instance.notificationsViewModel
+            let localNotificationManager = LocalNotificationManager.instance
+
+            let allPendingNotifications = notificationVM.pendingNotifications
+
+            for notification in allPendingNotifications {
+                if allKontests.contains(where: { kontestModel in
+                    localNotificationManager.getAllNotificationIDsForAKontest(kontestID: kontestModel.id).contains(notification.identifier)
+                }) {
+                    continue
+                }
+
+                localNotificationManager.removeNotification(withID: notification.identifier)
+            }
+        }
+    }
+
+    func toPerformWhenAppBecomeActive(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) {
+        Task {
+            await refreshKontests()
+            await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
+        }
+
+        LocalNotificationManager.instance.setBadgeCountTo0()
+    }
+
+    func refreshData(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) async {
+        Dependencies.instance.changeCodeChefUsername(codeChefUsername: codeChefUsername)
+        Dependencies.instance.changeCodeForcesUsername(codeForcesUsername: codeForcesUsername)
+        Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: leetcodeUsername)
+        
+        await refreshKontests()
+    }
+
+    func refreshKontests() async {
+        await getAllKontests()
+        filterKontests()
+        await addAutomaticEventsToCalendarAndNotifications()
     }
 
     #if os(macOS)

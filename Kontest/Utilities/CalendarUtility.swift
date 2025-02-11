@@ -339,6 +339,8 @@ enum CalendarUtility {
     }
 
     static func addEvent(startDate: Date, endDate: Date, title: String, notes: String, url: URL?, alarmAbsoluteDate: Date, calendar: EKCalendar = getSelectedCalendar()) async throws -> Bool {
+        var notes = notes.appending("- Kontest")
+        
         // Check the authorization status for calendar events
         let authorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
 
@@ -443,6 +445,14 @@ enum CalendarUtility {
             }
         } catch {
             throw error
+        }
+    }
+    
+    static func removeEvent(event: EKEvent) async throws {
+        do {
+            try eventStore.remove(event, span: .thisEvent)
+        } catch {
+            logger.error("Error in removing event: \(error)")
         }
     }
 
@@ -642,5 +652,15 @@ enum CalendarUtility {
         }
         
         return (allCalendars, selectedAccountIndex, selectedCalendarIndex)
+    }
+    
+    static func getAllKontestEvents() async -> [EKEvent]? {
+        let allEvents = try? await getAllEvents()
+        
+        let allKontestEvents = allEvents?.filter { event in
+            event.notes?.lowercased().contains("kontest") ?? false
+        }
+        
+        return allKontestEvents
     }
 }
