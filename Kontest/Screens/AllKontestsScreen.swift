@@ -308,6 +308,7 @@ struct AllKontestsScreen: View {
                                 Image(systemName: isRefreshing ? "progress.indicator" : "arrow.clockwise")
                                     .contentTransition(.symbolEffect(.replace))
                             }
+                            .keyboardShortcut("r", modifiers: .command)
                             .help("Refresh")
                         }
                         #endif
