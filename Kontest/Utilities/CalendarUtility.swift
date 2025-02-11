@@ -445,6 +445,14 @@ enum CalendarUtility {
             throw error
         }
     }
+    
+    static func removeEvent(event: EKEvent) async throws {
+        do {
+            try eventStore.remove(event, span: .thisEvent)
+        } catch {
+            logger.error("Error in removing event: \(error)")
+        }
+    }
 
     static func isEventPresentInCalendar(allEventsOfCalendar: [EKEvent], startDate: Date, endDate: Date, title: String, url: URL?) -> Bool {
         return allEventsOfCalendar.contains { event in
@@ -642,5 +650,15 @@ enum CalendarUtility {
         }
         
         return (allCalendars, selectedAccountIndex, selectedCalendarIndex)
+    }
+    
+    static func getAllKontestEvents() async -> [EKEvent]? {
+        let allEvents = try? await getAllEvents()
+        
+        let allKontestEvents = allEvents?.filter { event in
+            event.notes?.contains("Kontest") ?? false
+        }
+        
+        return allKontestEvents
     }
 }
