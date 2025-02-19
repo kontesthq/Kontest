@@ -13,7 +13,7 @@ struct DetailColumn: View {
     var body: some View {
         switch panelSelection {
         case .AllKontestScreen:
-            AllKontestsScreen()
+            AllKontestsScreen(panelSelection: $panelSelection)
 
         case .LeetCodeGraphView:
             LeetcodeChartView()

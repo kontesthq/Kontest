@@ -37,7 +37,7 @@ struct KontestApp: App {
                     if #available(macOS 15.0, iOS 18.0, *) {
                         TabView(selection: $panelSelection) {
                             Tab("All Kontests", systemImage: "list.bullet", value: .AllKontestScreen) {
-                                AllKontestsScreen(isSearchFiedFocused: _isSearchFiedFocused)
+                                AllKontestsScreen(isSearchFiedFocused: _isSearchFiedFocused, panelSelection: $panelSelection)
                             }
 
                             Tab("CodeForces", image: "CodeForces Logo Small", value: .CodeForcesGraphView) {

@@ -36,12 +36,12 @@ struct ContentView: View {
 }
 
 struct iOSVeiw: View {
-    @State private var panelSelection: Panel = .AllKontestScreen // we are making a new panelSelection and using it from @Binding, because in iOS, panelSelection is not changing (KontestApp.swift) when we are changing tabs, but it works perfectly fine in macOS.
+    @State private var panelSelection: Panel? = .AllKontestScreen // we are making a new panelSelection and using it from @Binding, because in iOS, panelSelection is not changing (KontestApp.swift) when we are changing tabs, but it works perfectly fine in macOS.
     let path = Router.instance.path
 
     var body: some View {
         TabView(selection: $panelSelection) {
-            AllKontestsScreen()
+            AllKontestsScreen(panelSelection: $panelSelection)
                 .tabItem {
                     Label("All Kontests", systemImage: "chart.bar")
                 }

@@ -32,6 +32,7 @@ struct AllKontestsScreen: View {
 #endif
     
     @FocusState var isSearchFiedFocused: Bool
+    @Binding var panelSelection: Panel?
     
     let notificationsViewModel = Dependencies.instance.notificationsViewModel
     
@@ -330,7 +331,7 @@ struct AllKontestsScreen: View {
                     case .screen(let screen):
                         switch screen {
                         case .AllKontestScreen:
-                            AllKontestsScreen()
+                            AllKontestsScreen(panelSelection: $panelSelection)
                             
                         case Screen.SettingsScreen:
                             SettingsScreen()
@@ -469,6 +470,7 @@ struct AllKontestsScreen: View {
         if let matchedKontest {
             logger.debug("matchedKontest: \("\(matchedKontest)")")
 #if os(iOS)
+            panelSelection = .AllKontestScreen
             router.goToRootView()
             router.openKontestScreen(kontestModel: matchedKontest)
 #endif
@@ -599,7 +601,7 @@ extension AllKontestsScreen {
 #Preview {
     let networkMonitor = NetworkMonitor.shared
     
-    return AllKontestsScreen()
+    return AllKontestsScreen(panelSelection: .constant(.AllKontestScreen))
         .environment(networkMonitor)
         .environment(Dependencies.instance.allKontestsViewModel)
         .environment(Router.instance)
