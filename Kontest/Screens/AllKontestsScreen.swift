@@ -11,35 +11,35 @@ import WidgetKit
 
 struct AllKontestsScreen: View {
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "AllKontestsScreen")
-
+    
     let isInDevelopmentMode = false
-
+    
     @Environment(AllKontestsViewModel.self) private var allKontestsViewModel
     @Environment(NetworkMonitor.self) private var networkMonitor
     @Environment(\.openURL) var openURL
     @Environment(ErrorState.self) private var errorState
     @Environment(Router.self) private var router
-
+    
     @State var showRemoveAllNotificationsAlert = false
     @State var showNotificationForAllKontestsAlert = false
     @State private var showAddAllKontestToCalendarAlert = false
     @State private var isNoNotificationIconAnimating = false
     @State private var isAddAllKontestsToCalendarIconAnimating = false
     @State private var isRemoveAllKontestsFromCalendarIconAnimating = false
-
-    #if os(macOS)
+    
+#if os(macOS)
     @State private var isRefreshing = false
-    #endif
-
+#endif
+    
     @FocusState var isSearchFiedFocused: Bool
-
+    
     let notificationsViewModel = Dependencies.instance.notificationsViewModel
-
+    
     let changeUsernameViewModel = Dependencies.instance.changeUsernameViewModel
-
+    
     let userDefaults = UserDefaults(suiteName: Constants.userDefaultsGroupID)
     @State private var text: String = ""
-
+    
     var body: some View {
         NavigationStack(path: Bindable(router).path) {
             if networkMonitor.currentStatus == .initialPhase {
@@ -57,32 +57,32 @@ struct AllKontestsScreen: View {
                             )
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                             .listRowSeparator(.hidden)
-
+                            
                             HStack {
                                 Spacer()
                                 NoKontestsDownloadedScreen()
                                 Spacer()
                             }
                         }
-
+                        
                     } else { // There are some kontests downloaded
                         TimelineView(.periodic(from: .now, by: 1)) { timelineViewDefaultContext in
                             List {
                                 RatingsView(codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetCodeUsername: changeUsernameViewModel.leetcodeUsername, codeChefUsername: changeUsernameViewModel.codeChefUsername)
                                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                                     .listRowSeparator(.hidden)
-
+                                
                                 if allKontestsViewModel.backupKontests.isEmpty { // There are some kontests but they are hidden due to KontestFilters
                                     NoKontestsDueToFiltersScreen()
                                 } else {
                                     let ongoingKontests = allKontestsViewModel.ongoingKontests
-
+                                    
                                     let laterTodayKontests = allKontestsViewModel.laterTodayKontests
-
+                                    
                                     let tomorrowKontests = allKontestsViewModel.tomorrowKontests
-
+                                    
                                     let laterKontests = allKontestsViewModel.laterKontests
-
+                                    
                                     if allKontestsViewModel.toShowKontests.isEmpty && !allKontestsViewModel.searchText.isEmpty {
                                         ContentUnavailableView.search
                                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -90,28 +90,28 @@ struct AllKontestsScreen: View {
                                         if ongoingKontests.count > 0 {
                                             createSection(title: "Live Now - \(ongoingKontests.count)", kontests: ongoingKontests, timelineViewDefaultContext: timelineViewDefaultContext)
                                         }
-
+                                        
                                         if laterTodayKontests.count > 0 {
                                             createSection(title: "Later Today - \(laterTodayKontests.count)", kontests: laterTodayKontests, timelineViewDefaultContext: timelineViewDefaultContext)
                                         }
-
+                                        
                                         if tomorrowKontests.count > 0 {
                                             createSection(title: "Tomorrow - \(tomorrowKontests.count)", kontests: tomorrowKontests, timelineViewDefaultContext: timelineViewDefaultContext)
                                         }
-
+                                        
                                         if laterKontests.count > 0 {
                                             createSection(title: "Upcoming - \(laterKontests.count)", kontests: laterKontests, timelineViewDefaultContext: timelineViewDefaultContext)
                                         }
                                     }
                                 }
                             }
-                            #if !os(macOS)
+#if !os(macOS)
                             .refreshable {
                                 await allKontestsViewModel.refreshData(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
                             }
-                            #endif
+#endif
                         }
-                        #if os(macOS)
+#if os(macOS)
                         .searchable(text: Bindable(allKontestsViewModel).searchText)
                         .apply {
                             if #available(macOS 15.0, *) {
@@ -121,15 +121,15 @@ struct AllKontestsScreen: View {
                                 $0
                             }
                         }
-//                        .background(Button("", action: { self.isSearchFiedFocused = true }).keyboardShortcut("f").hidden())
-                        #endif
+                        //                        .background(Button("", action: { self.isSearchFiedFocused = true }).keyboardShortcut("f").hidden())
+#endif
                     }
                 }
                 .navigationTitle("Kontest")
                 .onAppear {
-                    #if os(macOS)
+#if os(macOS)
                     allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
-                    #endif
+#endif
                 }
                 .toolbar {
                     if isInDevelopmentMode {
@@ -148,10 +148,10 @@ struct AllKontestsScreen: View {
                                 Text("Print all notifs")
                             }
                         }
-
+                        
                         ToolbarItem(placement: .automatic) { // change the placement here!
                             let timeInSeconds = 5
-
+                            
                             Button {
                                 LocalNotificationManager.instance.scheduleIntervalNotification(id: "This is id for notification with time \(timeInSeconds) seconds", timeIntervalInSeconds: timeInSeconds)
                             } label: {
@@ -254,26 +254,26 @@ struct AllKontestsScreen: View {
                                             }
                                         }
                                     }
-
+                                    
                                     Button("Cancel") {}
                                 })
                             }
-
+                            
                             ToolbarItem(placement: .automatic) { // change the placement here!
                                 Button {
                                     isRemoveAllKontestsFromCalendarIconAnimating = true
-
+                                    
                                     var transaction = Transaction()
                                     transaction.disablesAnimations = true
                                     withTransaction(transaction) {
                                         isRemoveAllKontestsFromCalendarIconAnimating = false
                                     }
-
+                                    
                                     Task {
                                         for kontest in allKontestsViewModel.toShowKontests {
                                             let kontestStartDate = CalendarUtility.getDate(date: kontest.start_time) ?? Date()
                                             let kontestEndDate = CalendarUtility.getDate(date: kontest.end_time) ?? Date()
-
+                                            
                                             if kontest.isCalendarEventAdded {
                                                 try await CalendarUtility.removeEvent(
                                                     startDate: kontestStartDate,
@@ -282,7 +282,7 @@ struct AllKontestsScreen: View {
                                                     notes: "",
                                                     url: URL(string: kontest.url)
                                                 )
-
+                                                
                                                 kontest.isCalendarEventAdded = false
                                                 kontest.calendarEventDate = nil
                                             }
@@ -295,8 +295,8 @@ struct AllKontestsScreen: View {
                                 .help("Remove all events from Calendar") // Tooltip text
                             }
                         }
-
-                        #if os(macOS)
+                        
+#if os(macOS)
                         ToolbarItem(placement: .automatic) {
                             Button {
                                 if !isRefreshing {
@@ -313,9 +313,9 @@ struct AllKontestsScreen: View {
                             .keyboardShortcut("r", modifiers: .command)
                             .help("Refresh")
                         }
-                        #endif
+#endif
                     }
-
+                    
                     ToolbarItem(placement: .automatic) {
                         Button {
                             router.appendScreen(screen: .SettingsScreen)
@@ -331,59 +331,67 @@ struct AllKontestsScreen: View {
                         switch screen {
                         case .AllKontestScreen:
                             AllKontestsScreen()
-
+                            
                         case Screen.SettingsScreen:
                             SettingsScreen()
-
+                            
                         case .PendingNotificationsScreen:
                             PendingNotificationsScreen()
-
+                            
                         case .SettingsScreenType(let settingsScreenType):
                             switch settingsScreenType {
                             case .ChangeUserNamesScreen:
                                 ChangeUsernameScreen()
-
+                                
                             case .FilterWebsitesScreen:
                                 FilterWebsitesScreen()
-
+                                
                             case .RotatingMapScreen:
                                 RandomRotatingMapScreen(navigationTitle: "About Me")
-
+                                
                             case .AuthenticationScreenType(let authenticationScreenType):
                                 switch authenticationScreenType {
                                 case .SignInScreen:
                                     SignInScreen()
-
+                                    
                                 case .SignUpScreen:
                                     SignUpScreen()
-
+                                    
                                 case .AccountInformationScreen:
                                     AccountInformationScreen()
                                 }
-
+                                
                             case .ChangePasswordScreen:
                                 ChangePasswordScreen()
                             }
                         }
-
+                        
                     case .kontestModel(let kontest):
-                        #if os(iOS)
+#if os(iOS)
                         KontestDetailsScreen(kontest: kontest)
-                        #endif
+                            .onAppear {
+                                print(createKontestLink(kontestModel: kontest))
+                            }
+#endif
                     }
                 }
             } else {
                 NoInternetScreen()
             }
         }
+        .onOpenURL(perform: { url in
+            print("deeplink url: \(url)")
+            
+            handleIncomingURL(url: url)
+        })
         .onChange(of: networkMonitor.currentStatus) {
             if networkMonitor.currentStatus == .satisfied {
                 allKontestsViewModel.fetchAllKontests()
-
+                
                 Dependencies.instance.reloadLeetcodeUsername()
                 Dependencies.instance.reloadCodeChefUsername()
                 Dependencies.instance.reloadCodeForcesUsername()
-
+                
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
@@ -392,35 +400,106 @@ struct AllKontestsScreen: View {
                 errorState.errorWrapper = newValue
             }
         }
-        #if !os(macOS)
+#if !os(macOS)
         .searchable(text: Bindable(allKontestsViewModel).searchText)
-        #endif
-        #if os(iOS)
+#endif
+#if os(iOS)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-            logger.debug("App became active")
-            allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
-        }
-        #endif
+    logger.debug("App became active")
+    allKontestsViewModel.toPerformWhenAppBecomeActive(codeChefUsername: changeUsernameViewModel.codeChefUsername, codeForcesUsername: changeUsernameViewModel.codeForcesUsername, leetcodeUsername: changeUsernameViewModel.leetcodeUsername)
+}
+#endif
+.onAppear {
+    if let link = createKontestLink(name: "konsrecipename", url: "https://example.com", startTime: .now, endTime: .now.addingTimeInterval(1000), site: "CodeForces") {
+        print("link: \(link)")
+    } else {
+        print("Cannot create link")
     }
-
+}
+    }
+    
     func createSection(title: String, kontests: [KontestModel], timelineViewDefaultContext: TimelineViewDefaultContext) -> some View {
         Section {
             ForEach(kontests) { kontest in
-                #if os(macOS)
+#if os(macOS)
                 kontestView(kontest: kontest, timelineViewDefaultContext: timelineViewDefaultContext)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         openURL(URL(string: kontest.url)!)
                     }
-                #else
+#else
                 NavigationLink(value: SelectionState.kontestModel(kontest)) {
                     kontestView(kontest: kontest, timelineViewDefaultContext: timelineViewDefaultContext)
                 }
-                #endif
+#endif
             }
         } header: {
             Text(title)
         }
+    }
+    
+    private func handleIncomingURL(url: URL) {
+        guard url.scheme == "kontest" else {
+            return
+        }
+        
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            print("Invalid URL")
+            return
+        }
+        
+        guard let action = components.host, action == "open-kontest" else {
+            print("Unknown URL, we can't handle this one!")
+            return
+        }
+        
+        guard let kontestID = components.queryItems?.first(where: { $0.name == "id" })?.value else {
+            print("kontestID not found")
+            return
+        }
+        
+        print("kontestID: \(kontestID)")
+        
+        let allKontests = allKontestsViewModel.allKontests
+        
+        let matchedKontest = allKontests.first { kontestModel in
+            KontestModel.generateUniqueID(kontestModel: kontestModel) == kontestID
+        }
+        
+        if let matchedKontest {
+            logger.debug("matchedKontest: \("\(matchedKontest)")")
+#if os(iOS)
+            router.goToRootView()
+            router.openKontestScreen(kontestModel: matchedKontest)
+#endif
+        } else {
+            logger.error("No matched kontest :(")
+        }
+    }
+    
+    func createKontestLink(kontestModel: KontestModel) -> String? {
+        if let start_time = CalendarUtility.getDate(date: kontestModel.start_time), let end_time = CalendarUtility.getDate(date: kontestModel.end_time) {
+            return createKontestLink(name: kontestModel.name, url: kontestModel.url, startTime: start_time, endTime: end_time, site: kontestModel.site)
+        }
+        
+        return nil
+    }
+    
+    func createKontestLink(name: String, url: String, startTime: Date, endTime: Date, site: String) -> String? {
+        let dateFormatter = ISO8601DateFormatter() // Use ISO8601 for a standard format
+        dateFormatter.formatOptions = [.withInternetDateTime]
+        
+        let startTimeString = dateFormatter.string(from: startTime)
+        let endTimeString = dateFormatter.string(from: endTime)
+        
+        var components = URLComponents()
+        components.scheme = "kontest"
+        components.host = "open-kontest"
+        components.queryItems = [
+            URLQueryItem(name: "id", value: KontestModel.generateUniqueID(name: name, url: url, startTime: startTime, endTime: endTime, site: site)),
+        ]
+        
+        return components.url?.absoluteString
     }
 }
 
@@ -429,19 +508,19 @@ extension AllKontestsScreen {
         let kontestStartDate = CalendarUtility.getDate(date: kontest.start_time)
         let kontestEndDate = CalendarUtility.getDate(date: kontest.end_time)
         print("Setted")
-
+        
         if let kontestStartDate {
             if kontest.isCalendarEventAdded {
                 Task {
                     do {
                         try await CalendarUtility.removeEvent(startDate: kontestStartDate, endDate: kontestEndDate ?? Date(), title: kontest.name, notes: "", url: URL(string: kontest.url))
-
+                        
                         kontest.isCalendarEventAdded = false
                         kontest.calendarEventDate = nil
                     } catch {
                         errorState.errorWrapper = ErrorWrapper(error: error, guidance: "Check that you have given Kontest the Calendar Permission (Full Access)")
                     }
-
+                    
                     WidgetCenter.shared.reloadAllTimelines()
                 }
             } else {
@@ -450,7 +529,7 @@ extension AllKontestsScreen {
                         if kontest.isCalendarEventAdded { // If one event was already setted, then remove it and set a new event
                             try await CalendarUtility.removeEvent(startDate: kontestStartDate, endDate: kontestEndDate ?? Date(), title: kontest.name, notes: "", url: URL(string: kontest.url))
                         }
-
+                        
                         if try await CalendarUtility.addEvent(startDate: kontestStartDate, endDate: kontestEndDate ?? Date(), title: kontest.name, notes: "", url: URL(string: kontest.url), alarmAbsoluteDate: kontestStartDate.addingTimeInterval(-15 * 60)) {
                             kontest.isCalendarEventAdded = true
                             kontest.calendarEventDate = kontestStartDate.addingTimeInterval(-15 * 60)
@@ -458,7 +537,7 @@ extension AllKontestsScreen {
                     } catch {
                         errorState.errorWrapper = ErrorWrapper(error: error, guidance: "")
                     }
-
+                    
                     WidgetCenter.shared.reloadAllTimelines()
                 }
             }
@@ -471,7 +550,7 @@ extension AllKontestsScreen {
     func kontestView(kontest: KontestModel, timelineViewDefaultContext: TimelineViewDefaultContext) -> some View {
         let kontestStartDate = CalendarUtility.getDate(date: kontest.start_time)
         let kontestEndDate = CalendarUtility.getDate(date: kontest.end_time)
-
+        
         SingleKontestView(kontest: kontest, timelineViewDefaultContext: timelineViewDefaultContext)
             .swipeActions(edge: .leading) {
                 if let kontestStartDate, let kontestEndDate, !CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate, kontestEndDate: kontestEndDate) {
@@ -483,12 +562,12 @@ extension AllKontestsScreen {
             }
             .swipeActions(edge: .trailing) {
                 let numberOfNotificationsWhichCanBeSettedForAKontest = notificationsViewModel.getNumberOfNotificationsWhichCanBeSettedForAKontest(kontest: kontest)
-
+                
                 if numberOfNotificationsWhichCanBeSettedForAKontest > 0 {
                     let numberOfNotificationsWhichAreCurrentlySetted = notificationsViewModel.getNumberOfSettedNotificationForAKontest(kontest: kontest)
                     let image = notificationsViewModel.isSetForAllNotifications(kontest: kontest) ? "bell.fill" : "bell"
                     let title = notificationsViewModel.isSetForAllNotifications(kontest: kontest) ? "Remove all notifications" : "Set all notifications"
-
+                    
                     Button(title, systemImage: image) {
                         if numberOfNotificationsWhichAreCurrentlySetted < numberOfNotificationsWhichCanBeSettedForAKontest {
                             setNotificationForAKontestAtAllTimes(kontest: kontest)
@@ -499,16 +578,16 @@ extension AllKontestsScreen {
                 }
             }
     }
-
+    
     private func setNotificationForAKontestAtAllTimes(kontest: KontestModel) {
         Task {
             do {
                 try await notificationsViewModel.setNotificationForKontest(kontest: kontest, minutesBefore: 10, hoursBefore: 0, daysBefore: 0)
-
+                
                 try await notificationsViewModel.setNotificationForKontest(kontest: kontest, minutesBefore: 30, hoursBefore: 0, daysBefore: 0)
-
+                
                 try await notificationsViewModel.setNotificationForKontest(kontest: kontest, minutesBefore: 0, hoursBefore: 1, daysBefore: 0)
-
+                
                 try await notificationsViewModel.setNotificationForKontest(kontest: kontest, minutesBefore: 0, hoursBefore: 6, daysBefore: 0)
             } catch {
                 errorState.errorWrapper = ErrorWrapper(error: error, guidance: "Please provide Notification Permission in order to set notifications")
@@ -519,7 +598,7 @@ extension AllKontestsScreen {
 
 #Preview {
     let networkMonitor = NetworkMonitor.shared
-
+    
     return AllKontestsScreen()
         .environment(networkMonitor)
         .environment(Dependencies.instance.allKontestsViewModel)

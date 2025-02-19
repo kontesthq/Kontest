@@ -32,10 +32,10 @@ class KontestModel: Codable, Identifiable, Hashable {
         case selectedCalendarAccount
         case selectedCalendarName
     }
-
+    
     required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-
+        
         id = try container.decodeIfPresent(String.self, forKey: .id) ?? "No ID"
         name = try container.decodeIfPresent(String.self, forKey: .name) ?? "No Name"
         url = try container.decodeIfPresent(String.self, forKey: .url) ?? "No URL"
@@ -56,7 +56,7 @@ class KontestModel: Codable, Identifiable, Hashable {
         selectedCalendarAccount = try container.decodeIfPresent(String.self, forKey: .selectedCalendarAccount)
         selectedCalendarName = try container.decodeIfPresent(String.self, forKey: .selectedCalendarName)
     }
-
+    
     func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
@@ -72,7 +72,7 @@ class KontestModel: Codable, Identifiable, Hashable {
         try container.encode(selectedCalendarAccount, forKey: .selectedCalendarAccount)
         try container.encode(selectedCalendarName, forKey: .selectedCalendarName)
     }
-
+    
     let id: String
     let name: String
     let url: String
@@ -88,7 +88,7 @@ class KontestModel: Codable, Identifiable, Hashable {
     var calendarEventDate: Date?
     var selectedCalendarAccount: String?
     var selectedCalendarName: String?
-
+    
     init(id: String, name: String, url: String, start_time: String, end_time: String, duration: String, site: String, in_24_hours: String, status: KontestStatus, logo: String) {
         self.id = id
         self.name = name
@@ -107,7 +107,7 @@ class KontestModel: Codable, Identifiable, Hashable {
         self.logo = logo
         isCalendarEventAdded = false
     }
-
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -124,108 +124,108 @@ extension KontestModel {
         switch site {
         case "atcoder.jp":
             Constants.SiteAbbreviations.AtCoder.rawValue
-
+            
         case "codechef.com":
             Constants.SiteAbbreviations.CodeChef.rawValue
-
+            
         case "codeforces.com":
             Constants.SiteAbbreviations.CodeForces.rawValue
-
+            
         case "codingninjas.com":
             Constants.SiteAbbreviations.CodingNinjas.rawValue
-
+            
         case "codingninjas.com/codestudio":
             Constants.SiteAbbreviations.CodingNinjas.rawValue
-
+            
         case "csacademy.com":
             Constants.SiteAbbreviations.CSAcademy.rawValue
-
+            
         case "geeksforgeeks.org":
             Constants.SiteAbbreviations.GeeksForGeeks.rawValue
-
+            
         case "hackerearth.com":
             Constants.SiteAbbreviations.HackerEarth.rawValue
-
+            
         case "hackerrank.com":
             Constants.SiteAbbreviations.HackerRank.rawValue
-
+            
         case "leetcode.com":
             Constants.SiteAbbreviations.LeetCode.rawValue
-
+            
         case "projecteuler.net":
             Constants.SiteAbbreviations.ProjectEuler.rawValue
-
+            
         case "topcoder.com":
             Constants.SiteAbbreviations.TopCoder.rawValue
-
+            
         case "toph.com":
             Constants.SiteAbbreviations.Toph.rawValue
-
+            
         case "toph.co":
             Constants.SiteAbbreviations.Toph.rawValue
-
+            
         case "yukicoder.me":
             Constants.SiteAbbreviations.YukiCoder.rawValue
-
+            
         case "cups.online":
             Constants.SiteAbbreviations.CupsOnline.rawValue
-
+            
         case "robocontest.uz":
             Constants.SiteAbbreviations.RoboContext.rawValue
-
+            
         case "ctftime.org":
             Constants.SiteAbbreviations.Ctftime.rawValue
-
+            
         case "lightoj.com":
             Constants.SiteAbbreviations.Lightoj.rawValue
-
+            
         case "ucup.ac":
             Constants.SiteAbbreviations.UCup.rawValue
-
+            
         case "kaggle.com":
             Constants.SiteAbbreviations.Kaggle.rawValue
-
+            
         case "dmoj.ca":
             Constants.SiteAbbreviations.DMOJ.rawValue
-
+            
         case "tlx.toki.id":
             Constants.SiteAbbreviations.TLX.rawValue
-
+            
         case "coderun.yandex.ru":
             Constants.SiteAbbreviations.CodeRun.rawValue
-
+            
         case "eolymp.com":
             Constants.SiteAbbreviations.Eolymp.rawValue
-
+            
         case "icpc.global":
             Constants.SiteAbbreviations.ICPCGlobal.rawValue
-
+            
         case "luogu.com.cn":
             Constants.SiteAbbreviations.Luogu.rawValue
-
+            
         case "spoj.com":
             Constants.SiteAbbreviations.Spoj.rawValue
             
         case "dl.gsu.by":
             Constants.SiteAbbreviations.GSU.rawValue
-
+            
         default:
             site
         }
     }
-
+    
     static func from(dto: KontestDTO) -> KontestModel {
         let id = generateUniqueID(dto: dto)
-
+        
         let kontestStartDate = CalendarUtility.getDate(date: dto.startTime)
         let kontestEndDate = CalendarUtility.getDate(date: dto.endTime)
-
+        
         var status: KontestStatus {
             return getKontestStatus(kontestStartDate: kontestStartDate ?? Date(), kontestEndDate: kontestEndDate ?? Date())
         }
-
+        
         let duration = (kontestEndDate?.timeIntervalSince1970 ?? 0) - (kontestStartDate?.timeIntervalSince1970 ?? 0)
-
+        
         return KontestModel(
             id: id,
             name: dto.name,
@@ -239,10 +239,26 @@ extension KontestModel {
             logo: getLogo(siteAbbreviation: dto.site)
         )
     }
-
-    private static func generateUniqueID(dto: KontestDTO) -> String {
-        let combinedString = "\(dto.name)\(dto.url)\(dto.startTime)\(dto.endTime)\(dto.duration)\(dto.site)\(dto.in_24_hours)\(dto.status)"
-
+    
+    public static func generateUniqueID(dto: KontestDTO) -> String {
+        if let startTime = CalendarUtility.getDate(date: dto.startTime), let endTime = CalendarUtility.getDate(date: dto.endTime) {
+            return generateUniqueID(name: dto.name, url: dto.url, startTime: startTime, endTime: endTime, site: dto.site)
+        }
+        
+        return ""
+    }
+    
+    public static func generateUniqueID(kontestModel: KontestModel) -> String {
+        if let startTime = CalendarUtility.getDate(date: kontestModel.start_time), let endTime = CalendarUtility.getDate(date: kontestModel.end_time) {
+            return generateUniqueID(name: kontestModel.name, url: kontestModel.url, startTime: startTime, endTime: endTime, site: kontestModel.site)
+        }
+        
+        return ""
+    }
+    
+    public static func generateUniqueID(name: String, url: String, startTime: Date, endTime: Date, site: String) -> String {
+        let combinedString = "\(name)\(url)\(startTime)\(endTime)\(site)"
+        
         if let data = combinedString.data(using: .utf8) {
             let hash = SHA256.hash(data: data)
             return hash.compactMap { String(format: "%02x", $0) }.joined()
@@ -250,92 +266,92 @@ extension KontestModel {
             return UUID().uuidString
         }
     }
-
+    
     static func getColorForIdentifier(siteAbbreviation: String, colorScheme: ColorScheme = .light) -> Color {
         switch siteAbbreviation {
         case Constants.SiteAbbreviations.AtCoder.rawValue:
             Color(red: 187/255, green: 181/255, blue: 181/255)
-
+            
         case Constants.SiteAbbreviations.CodeChef.rawValue:
             Color(red: 250/255, green: 155/255, blue: 101/255)
-
+            
         case Constants.SiteAbbreviations.CodeForces.rawValue:
-            .pink
-
+                .pink
+            
         case Constants.SiteAbbreviations.CodeForcesGym.rawValue:
-            .red
-
+                .red
+            
         case Constants.SiteAbbreviations.CodingNinjas.rawValue:
-            .orange
-
+                .orange
+            
         case Constants.SiteAbbreviations.CSAcademy.rawValue:
-            .red
-
+                .red
+            
         case Constants.SiteAbbreviations.GeeksForGeeks.rawValue:
-            .green
-
+                .green
+            
         case Constants.SiteAbbreviations.HackerEarth.rawValue:
             Color(red: 101/255, green: 125/255, blue: 251/255)
-
+            
         case Constants.SiteAbbreviations.HackerRank.rawValue:
-            .green
-
+                .green
+            
         case Constants.SiteAbbreviations.LeetCode.rawValue:
             Color(red: 235/255, green: 162/255, blue: 64/255)
-
+            
         case Constants.SiteAbbreviations.ProjectEuler.rawValue:
             Color(red: 178/255, green: 128/255, blue: 100/255)
-
+            
         case Constants.SiteAbbreviations.TopCoder.rawValue:
             if colorScheme == .light {
                 .black
             } else {
                 .white
             }
-
+            
         case Constants.SiteAbbreviations.Toph.rawValue:
-            .blue
-
+                .blue
+            
         case Constants.SiteAbbreviations.YukiCoder.rawValue:
             Color(red: 60/255, green: 66/255, blue: 79/255)
-
+            
         case Constants.SiteAbbreviations.CupsOnline.rawValue:
-            .blue
-
+                .blue
+            
         default:
-            .red
+                .red
         }
     }
-
+    
     static func getLogo(siteAbbreviation: String, colorScheme: ColorScheme = .light) -> String {
         return switch siteAbbreviation {
         case Constants.SiteAbbreviations.AtCoder.rawValue:
             "AtCoder Logo"
-
+            
         case Constants.SiteAbbreviations.CodeChef.rawValue:
             "CodeChef Logo"
-
+            
         case Constants.SiteAbbreviations.CodeForces.rawValue:
             "CodeForces Logo"
-
+            
         case Constants.SiteAbbreviations.CodeForcesGym.rawValue:
             "CodeForces Logo"
-
+            
         case Constants.SiteAbbreviations.CodingNinjas.rawValue:
             "Coding Ninjas Logo"
-
+            
         case Constants.SiteAbbreviations.CSAcademy.rawValue:
             "CSAcademy Logo"
-
+            
         case Constants.SiteAbbreviations.GeeksForGeeks.rawValue:
             "Geeks For Geeks Logo"
-
+            
         case Constants.SiteAbbreviations.HackerEarth.rawValue:
             "HackerEarth Logo"
-
+            
         case Constants.SiteAbbreviations.HackerRank.rawValue:
             "HackerRank Logo"
-
+            
         case Constants.SiteAbbreviations.LeetCode.rawValue:
             if colorScheme == .light {
                 "LeetCode Light Logo"
@@ -344,35 +360,35 @@ extension KontestModel {
             } else {
                 ""
             }
-
+            
         case Constants.SiteAbbreviations.ProjectEuler.rawValue:
             "Project Euler Logo"
-
+            
         case Constants.SiteAbbreviations.TopCoder.rawValue:
             if colorScheme == .light {
                 "TopCoder Light Logo"
             } else if colorScheme == .dark {
                 "TopCoder Dark Logo"
             } else { "" }
-
+            
         case Constants.SiteAbbreviations.Toph.rawValue:
             "Toph Logo"
-
+            
         case Constants.SiteAbbreviations.YukiCoder.rawValue:
             "Yuki Coder Logo"
-
+            
         case Constants.SiteAbbreviations.CupsOnline.rawValue:
             "Cups.online Logo"
-
+            
         default:
             "Placeholder Flag"
         }
     }
-
+    
     // Save reminder status to UserDefaults
     func saveReminderStatus(minutesBefore: Int, hoursBefore: Int, daysBefore: Int) {
         let userDefaultsID = LocalNotificationManager.instance.getNotificationID(kontestID: id, minutesBefore: minutesBefore, hoursBefore: hoursBefore, daysBefore: daysBefore)
-
+        
         if minutesBefore == 10 {
             UserDefaults(suiteName: Constants.userDefaultsGroupID)!.set(isSetForReminder10MiutesBefore, forKey: userDefaultsID)
         } else if minutesBefore == 30 {
@@ -383,26 +399,26 @@ extension KontestModel {
             UserDefaults(suiteName: Constants.userDefaultsGroupID)!.set(isSetForReminder6HoursBefore, forKey: userDefaultsID)
         }
     }
-
+    
     // Load reminder status from UserDefaults
     func loadReminderStatus() {
         var userDefaultsID = LocalNotificationManager.instance.getNotificationID(kontestID: id, minutesBefore: 10, hoursBefore: 0, daysBefore: 0)
         isSetForReminder10MiutesBefore = UserDefaults(suiteName: Constants.userDefaultsGroupID)!.bool(forKey: userDefaultsID)
-
+        
         userDefaultsID = LocalNotificationManager.instance.getNotificationID(kontestID: id, minutesBefore: 30, hoursBefore: 0, daysBefore: 0)
         isSetForReminder30MiutesBefore = UserDefaults(suiteName: Constants.userDefaultsGroupID)!.bool(forKey: userDefaultsID)
-
+        
         userDefaultsID = LocalNotificationManager.instance.getNotificationID(kontestID: id, minutesBefore: 0, hoursBefore: 1, daysBefore: 0)
         isSetForReminder1HourBefore = UserDefaults(suiteName: Constants.userDefaultsGroupID)!.bool(forKey: userDefaultsID)
-
+        
         userDefaultsID = LocalNotificationManager.instance.getNotificationID(kontestID: id, minutesBefore: 0, hoursBefore: 6, daysBefore: 0)
         isSetForReminder6HoursBefore = UserDefaults(suiteName: Constants.userDefaultsGroupID)!.bool(forKey: userDefaultsID)
     }
-
+    
     func removeReminderStatusFromUserDefaults() {
         UserDefaults(suiteName: Constants.userDefaultsGroupID)!.removeObject(forKey: id)
     }
-
+    
     static func getKontestStatus(kontestStartDate: Date, kontestEndDate: Date) -> KontestStatus {
         if CalendarUtility.isKontestRunning(kontestStartDate: kontestStartDate, kontestEndDate: kontestEndDate) {
             .OnGoing
@@ -414,26 +430,26 @@ extension KontestModel {
             .Later
         }
     }
-
+    
     /// loads the calendar status of an event
     func loadCalendarStatus(allEvents: [EKEvent]) {
         let p = CalendarUtility.isEventPresentInCalendar(allEventsOfCalendar: allEvents, startDate: CalendarUtility.getDate(date: start_time) ?? Date(), endDate: CalendarUtility.getDate(date: end_time) ?? Date(), title: name, url: URL(string: url))
-
+        
         isCalendarEventAdded = p
     }
-
+    
     /// loads the date of first time notification of an event
     func loadCalendarEventDate(allEvents: [EKEvent]) {
         calendarEventDate = CalendarUtility.getCalendarDateOfEvent(allEventsOfCalendar: allEvents, startDate: CalendarUtility.getDate(date: start_time) ?? Date(), endDate: CalendarUtility.getDate(date: end_time) ?? Date(), title: name, url: URL(string: url))
     }
-
+    
     /// loads the calendar name and account name of an event
     func loadEventCalendar(allEvents: [EKEvent]) {
         selectedCalendarAccount = CalendarUtility.getCalendarAccountNameOfAnEvent(allEventsOfCalendar: allEvents, startDate: CalendarUtility.getDate(date: start_time) ?? Date(), endDate: CalendarUtility.getDate(date: end_time) ?? Date(), title: name, url: URL(string: url))
-
+        
         selectedCalendarName = CalendarUtility.getCalendarNameOfAnEvent(allEventsOfCalendar: allEvents, startDate: CalendarUtility.getDate(date: start_time) ?? Date(), endDate: CalendarUtility.getDate(date: end_time) ?? Date(), title: name, url: URL(string: url))
     }
-
+    
     static var example: KontestModel {
         KontestModel.from(dto: KontestDTO(name: "ProjectEuler+1", url: "https://hackerrank.com/contests/projecteuler", startTime: "2023-08-15 18:29:00 UTC", endTime: "2023-08-18 17:43:00 UTC", duration: "1020.0", site: "HackerRank", in_24_hours: "No", status: "BEFORE"))
     }

@@ -45,5 +45,11 @@ final class Router: Sendable {
         path.removeAll()
     }
 
+    #if os(iOS)
+        func openKontestScreen(kontestModel: KontestModel) {
+            path.append(.kontestModel(kontestModel))
+        }
+    #endif
+
     static let instance: Router = .init()
 }
