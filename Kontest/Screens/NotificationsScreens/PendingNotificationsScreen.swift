@@ -41,6 +41,8 @@ struct SingleNotificationView: View {
                 .italic()
 
             Text("Body: \(notificationRequest.content.body)")
+            
+            Text("userInfo: \(notificationRequest.content.userInfo)")
 
             Text("ID: \(notificationRequest.identifier)")
             Spacer()

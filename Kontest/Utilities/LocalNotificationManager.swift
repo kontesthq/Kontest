@@ -72,6 +72,7 @@ final class LocalNotificationManager: Sendable {
         calendarNotificationContent.title = notificationContent.title
         calendarNotificationContent.subtitle = notificationContent.subtitle
         calendarNotificationContent.body = notificationContent.body
+        calendarNotificationContent.userInfo = notificationContent.userInfo
         calendarNotificationContent.sound = .default
         calendarNotificationContent.badge = 1
 
@@ -157,6 +158,7 @@ final class LocalNotificationManager: Sendable {
         let subtitle: String
         let body: String
         let date: Date
+        let userInfo: [AnyHashable: Any]
     }
 
     func getNotificationID(kontestID: String, minutesBefore: Int, hoursBefore: Int, daysBefore: Int) -> String {

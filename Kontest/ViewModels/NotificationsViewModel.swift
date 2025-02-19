@@ -92,8 +92,11 @@ final class NotificationsViewModel: NotificationsViewModelProtocol {
         let kontestStartDate = CalendarUtility.getDate(date: kontest.start_time)
         let notificationDate = CalendarUtility.getTimeBefore(originalDate: kontestStartDate ?? Date(), minutes: minutesBefore, hours: hoursBefore, days: daysBefore)
         let notificationID = LocalNotificationManager.instance.getNotificationID(kontestID: kontest.id, minutesBefore: minutesBefore, hoursBefore: hoursBefore, daysBefore: daysBefore)
+        
+        let kontestLink = createKontestLink(kontestModel: kontest)
+        let userInfo: [String: String] = kontestLink != nil ? ["id": kontestLink!] : [:]
 
-        LocalNotificationManager.instance.scheduleCalendarNotification(notificationContent: LocalNotificationManager.NotificationContent(title: kontestTitle, subtitle: kontestSubTitle, body: kontestBody, date: notificationDate), id: notificationID)
+        LocalNotificationManager.instance.scheduleCalendarNotification(notificationContent: LocalNotificationManager.NotificationContent(title: kontestTitle, subtitle: kontestSubTitle, body: kontestBody, date: notificationDate, userInfo: userInfo), id: notificationID)
 
         updateIsSetForNotification(kontest: kontest, to: true, minutesBefore: minutesBefore, hoursBefore: hoursBefore, daysBefore: daysBefore)
     }

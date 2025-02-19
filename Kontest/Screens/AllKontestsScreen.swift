@@ -12,7 +12,7 @@ import WidgetKit
 struct AllKontestsScreen: View {
     private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "AllKontestsScreen")
     
-    let isInDevelopmentMode = false
+    let isInDevelopmentMode = true
     
     @Environment(AllKontestsViewModel.self) private var allKontestsViewModel
     @Environment(NetworkMonitor.self) private var networkMonitor
@@ -411,7 +411,7 @@ struct AllKontestsScreen: View {
 }
 #endif
 .onAppear {
-    if let link = createKontestLink(name: "konsrecipename", url: "https://example.com", startTime: .now, endTime: .now.addingTimeInterval(1000), site: "CodeForces") {
+    if let link = Kontest.createKontestLink(name: "konsrecipename", url: "https://example.com", startTime: .now, endTime: .now.addingTimeInterval(1000), site: "CodeForces") {
         print("link: \(link)")
     } else {
         print("Cannot create link")
@@ -478,31 +478,31 @@ struct AllKontestsScreen: View {
             logger.error("No matched kontest :(")
         }
     }
-    
-    func createKontestLink(kontestModel: KontestModel) -> String? {
-        if let start_time = CalendarUtility.getDate(date: kontestModel.start_time), let end_time = CalendarUtility.getDate(date: kontestModel.end_time) {
-            return createKontestLink(name: kontestModel.name, url: kontestModel.url, startTime: start_time, endTime: end_time, site: kontestModel.site)
-        }
-        
-        return nil
+}
+
+func createKontestLink(kontestModel: KontestModel) -> String? {
+    if let start_time = CalendarUtility.getDate(date: kontestModel.start_time), let end_time = CalendarUtility.getDate(date: kontestModel.end_time) {
+        return createKontestLink(name: kontestModel.name, url: kontestModel.url, startTime: start_time, endTime: end_time, site: kontestModel.site)
     }
     
-    func createKontestLink(name: String, url: String, startTime: Date, endTime: Date, site: String) -> String? {
-        let dateFormatter = ISO8601DateFormatter() // Use ISO8601 for a standard format
-        dateFormatter.formatOptions = [.withInternetDateTime]
-        
-        let startTimeString = dateFormatter.string(from: startTime)
-        let endTimeString = dateFormatter.string(from: endTime)
-        
-        var components = URLComponents()
-        components.scheme = "kontest"
-        components.host = "open-kontest"
-        components.queryItems = [
-            URLQueryItem(name: "id", value: KontestModel.generateUniqueID(name: name, url: url, startTime: startTime, endTime: endTime, site: site)),
-        ]
-        
-        return components.url?.absoluteString
-    }
+    return nil
+}
+
+func createKontestLink(name: String, url: String, startTime: Date, endTime: Date, site: String) -> String? {
+    let dateFormatter = ISO8601DateFormatter() // Use ISO8601 for a standard format
+    dateFormatter.formatOptions = [.withInternetDateTime]
+    
+    let startTimeString = dateFormatter.string(from: startTime)
+    let endTimeString = dateFormatter.string(from: endTime)
+    
+    var components = URLComponents()
+    components.scheme = "kontest"
+    components.host = "open-kontest"
+    components.queryItems = [
+        URLQueryItem(name: "id", value: KontestModel.generateUniqueID(name: name, url: url, startTime: startTime, endTime: endTime, site: site)),
+    ]
+    
+    return components.url?.absoluteString
 }
 
 extension AllKontestsScreen {
