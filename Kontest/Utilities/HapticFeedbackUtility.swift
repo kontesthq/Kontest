@@ -5,29 +5,71 @@
 //  Created by Ayush Singhal on 13/10/23.
 //
 
+import CoreHaptics
 import Foundation
-#if os(macOS)
-    import AppKit
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
 #endif
 
+@MainActor
 class HapticFeedbackUtility {
-    #if os(macOS)
-        static func getModelIdentifier() -> String? {
-            let service = IOServiceGetMatchingService(kIOMainPortDefault,
-                                                      IOServiceMatching("IOPlatformExpertDevice"))
-            var modelIdentifier: String?
-            if let modelData = IORegistryEntryCreateCFProperty(service, "model" as CFString, kCFAllocatorDefault, 0).takeRetainedValue() as? Data {
-                modelIdentifier = String(data: modelData, encoding: .utf8)?.trimmingCharacters(in: .controlCharacters)
-            }
+    private init() {}
 
-            IOObjectRelease(service)
-            return modelIdentifier
-        }
+    static let instance = HapticFeedbackUtility()
 
-        static func performHapticFeedback() {
-            let hapticPerformer: (any NSHapticFeedbackPerformer)? = NSHapticFeedbackManager.defaultPerformer
+    func playSuccess() {
+        #if os(iOS)
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+        #elseif os(macOS)
+        NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+        #endif
+    }
 
-            hapticPerformer?.perform(.alignment, performanceTime: .now)
-        }
-    #endif
+    func playError() {
+        #if os(iOS)
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.error)
+        #elseif os(macOS)
+        NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .now)
+        #endif
+    }
+
+    func playWarning() {
+        #if os(iOS)
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.warning)
+        #elseif os(macOS)
+        NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .now)
+        #endif
+    }
+
+    func playLightImpact() {
+        #if os(iOS)
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        #elseif os(macOS)
+        NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+        #endif
+    }
+
+    func playMediumImpact() {
+        #if os(iOS)
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
+        #elseif os(macOS)
+        NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
+        #endif
+    }
+
+    func playHeavyImpact() {
+        #if os(iOS)
+        let generator = UIImpactFeedbackGenerator(style: .heavy)
+        generator.impactOccurred()
+        #elseif os(macOS)
+        NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
+        #endif
+    }
 }
