@@ -57,6 +57,10 @@ struct CodeChefChartView: View {
                 }
             }
         }
+        .navigationTitle("Codechef Rankings")
+        .sensoryFeedback(getDeviceType() == .macOS ? .alignment : .impact, trigger: codeChefViewModel.selectedDate) { _, selectedDate in
+            selectedDate != nil
+        }
     }
 
     private func animateChart() {
@@ -99,16 +103,6 @@ struct CodeChefChart: View {
     let codeChefViewModel: CodeChefViewModel = Dependencies.instance.codeChefViewModel
 
     var body: some View {
-        #if os(macOS)
-            EmptyView()
-                .hidden()
-                .onChange(of: codeChefViewModel.selectedDate) { _, selectedDate in
-                    if selectedDate != nil {
-                        HapticFeedbackUtility.performHapticFeedback()
-                    }
-                }
-        #endif
-
         Chart {
             ForEach(codeChefViewModel.attendedKontests) { attendedKontest in
                 let date = CalendarUtility.getFormattedDateForCodeChefKontestRatings(date: attendedKontest.endDate)
