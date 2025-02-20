@@ -21,16 +21,6 @@ struct CodeForcesChartView: View {
     #endif
 
     var body: some View {
-        #if os(macOS)
-            EmptyView()
-                .hidden()
-                .onChange(of: codeForcesViewModel.selectedDate) { _, selectedDate in
-                    if selectedDate != nil {
-                        HapticFeedbackUtility.performHapticFeedback()
-                    }
-                }
-        #endif
-
         VStack {
             if codeForcesViewModel.username.isEmpty {
                 Text("Please update your username in the settings")
@@ -64,6 +54,9 @@ struct CodeForcesChartView: View {
             }
         }
         .navigationTitle("CodeForces Rankings")
+        .sensoryFeedback(getDeviceType() == .macOS ? .alignment : .impact, trigger: codeForcesViewModel.selectedDate) { _, selectedDate in
+            selectedDate != nil
+        }
     }
 
     private func animateChart() {

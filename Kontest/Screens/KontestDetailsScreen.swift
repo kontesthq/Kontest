@@ -109,8 +109,10 @@ struct ButtonsView: View {
                         Task {
                             if ActivityManager.shared.activityID == nil || ActivityManager.shared.kontest != kontest {
                                 await ActivityManager.shared.start(kontest: kontest)
+                                HapticFeedbackUtility.instance.playSuccess()
                             } else {
                                 await ActivityManager.shared.endActivity()
+                                HapticFeedbackUtility.instance.playLightImpact()
                             }
                         }
                     }

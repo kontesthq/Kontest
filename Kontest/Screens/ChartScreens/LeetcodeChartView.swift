@@ -53,6 +53,9 @@ struct LeetcodeChartView: View {
             }
         }
         .navigationTitle("Leetcode Rankings")
+        .sensoryFeedback(getDeviceType() == .macOS ? .alignment : .impact, trigger: leetcodeGraphQLViewModel.selectedDate) { _, selectedDate in
+            selectedDate != nil
+        }
     }
 
     private func animateChart() {
@@ -102,16 +105,6 @@ struct LeetCodeChart: View {
 
     var body: some View {
         let _ = Self._printChanges()
-
-        #if os(macOS)
-            EmptyView()
-                .hidden()
-                .onChange(of: leetcodeGraphQLViewModel.selectedDate) { _, selectedDate in
-                    if selectedDate != nil {
-                        HapticFeedbackUtility.performHapticFeedback()
-                    }
-                }
-        #endif
 
         Chart {
             ForEach(leetCodeGraphQLViewModel.attendedKontests) { attendedContest in
