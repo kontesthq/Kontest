@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 import OSLog
+import UserNotifications
 
 @Observable
 final class AllKontestsViewModel: Sendable {
@@ -71,7 +72,7 @@ final class AllKontestsViewModel: Sendable {
         Task {
             await getAllKontests()
 
-            await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
+            await cleanupContestsFromCalendarAndNotifications(allKontests: allKontests)
 
             await MainActor.run {
                 sortAllKontests()
@@ -286,8 +287,13 @@ final class AllKontestsViewModel: Sendable {
             }
         }
     }
+    
+    private func cleanupContestsFromCalendarAndNotifications(allKontests: [KontestModel]) async {
+        await cleanupCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
+        await cleanupDuplicateContestsFromCalendarAndNotifications()
+    }
 
-    private func cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: [KontestModel]) async {
+    private func cleanupCancelledContestsFromCalendarAndNotifications(allKontests: [KontestModel]) async {
         if CalendarUtility.getAuthorizationStatus() == .fullAccess {
             let allKontestEvents = await CalendarUtility.getAllKontestEvents()
 
@@ -322,6 +328,56 @@ final class AllKontestsViewModel: Sendable {
         }
     }
 
+    private func cleanupDuplicateContestsFromCalendarAndNotifications() async {
+        if CalendarUtility.getAuthorizationStatus() == .fullAccess {
+            let allKontestEvents = await CalendarUtility.getAllKontestEvents()
+
+            if let allKontestEvents {
+                var seenEvents = Set<String>()
+
+                for kontestEvent in allKontestEvents {
+                    let eventKey = "\(kontestEvent.title.lowercased().trimmingCharacters(in: .whitespacesAndNewlines))-\(String(describing: kontestEvent.startDate))-\(String(describing: kontestEvent.endDate))"
+
+                    if seenEvents.contains(eventKey) {
+                        try? await CalendarUtility.removeEvent(event: kontestEvent)
+                    } else {
+                        seenEvents.insert(eventKey)
+                    }
+                }
+            }
+        }
+
+        if hasFullAccessToCalendar {
+            let notificationVM = Dependencies.instance.notificationsViewModel
+            let localNotificationManager = LocalNotificationManager.instance
+
+            let allPendingNotifications = notificationVM.pendingNotifications
+            var seenNotifications = Set<String>()
+
+            for notification in allPendingNotifications {
+                let triggerTime: String
+
+                if let calendarTrigger = notification.trigger as? UNCalendarNotificationTrigger,
+                   let triggerDate = Calendar.current.date(from: calendarTrigger.dateComponents)
+                {
+                    triggerTime = "\(triggerDate.timeIntervalSince1970)"
+                } else if let timeTrigger = notification.trigger as? UNTimeIntervalNotificationTrigger {
+                    triggerTime = "\(timeTrigger.timeInterval)"
+                } else {
+                    triggerTime = "unknown" // Fallback for non-time-based triggers
+                }
+
+                let notificationKey = "\(notification.content.title.lowercased().trimmingCharacters(in: .whitespacesAndNewlines))-\(notification.content.body.lowercased().trimmingCharacters(in: .whitespacesAndNewlines))-\(triggerTime)"
+
+                if seenNotifications.contains(notificationKey) {
+                    localNotificationManager.removePendingNotifications(identifiers: [notification.identifier])
+                } else {
+                    seenNotifications.insert(notificationKey)
+                }
+            }
+        }
+    }
+
     func toPerformWhenAppBecomeActive(codeChefUsername: String, codeForcesUsername: String, leetcodeUsername: String) {
         Task {
             await refreshKontests()
@@ -334,7 +390,7 @@ final class AllKontestsViewModel: Sendable {
         Dependencies.instance.changeCodeChefUsername(codeChefUsername: codeChefUsername)
         Dependencies.instance.changeCodeForcesUsername(codeForcesUsername: codeForcesUsername)
         Dependencies.instance.changeLeetcodeUsername(leetCodeUsername: leetcodeUsername)
-        
+
         await refreshKontests()
     }
 
@@ -342,7 +398,7 @@ final class AllKontestsViewModel: Sendable {
         await getAllKontests()
         filterKontests()
         await addAutomaticEventsToCalendarAndNotifications()
-        await cleanUpCancelledContestsFromCalendarAndNotifications(allKontests: allKontests)
+        await cleanupContestsFromCalendarAndNotifications(allKontests: allKontests)
     }
 
     #if os(macOS)
