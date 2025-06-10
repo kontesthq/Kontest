@@ -213,7 +213,7 @@ struct AllKontestsScreen: View {
                             })
                         }
                         
-                        if #available(iOS 26.0, *) {
+                        if #available(iOS 26.0, macOS 26.0, *) {
                             ToolbarSpacer(.fixed)
                         }
 
@@ -301,6 +301,10 @@ struct AllKontestsScreen: View {
                         }
 
                         #if os(macOS)
+                        if #available(macOS 26.0, *) {
+                            ToolbarSpacer(.fixed)
+                        }
+                        
                         ToolbarItem(placement: .automatic) {
                             Button {
                                 if !isRefreshing {
@@ -320,7 +324,7 @@ struct AllKontestsScreen: View {
                         #endif
                     }
                     
-                    if #available(iOS 26.0, *) {
+                    if #available(iOS 26.0, macOS 26.0, *) {
                         ToolbarSpacer(.fixed)
                     }
 
