@@ -208,6 +208,7 @@
 		07FD85A92AB78D5600D26C4C /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FD85A82AB78D5600D26C4C /* Dependencies.swift */; };
 		07FD85AB2AB804FA00D26C4C /* NotificationsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FD85AA2AB804FA00D26C4C /* NotificationsViewModelProtocol.swift */; };
 		07FD85AD2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FD85AC2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift */; };
+		442945DB2DF894930023374C /* kontest-logo.icon in Resources */ = {isa = PBXBuildFile; fileRef = 442945DA2DF894930023374C /* kontest-logo.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -404,6 +405,7 @@
 		07FD85A82AB78D5600D26C4C /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		07FD85AA2AB804FA00D26C4C /* NotificationsViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewModelProtocol.swift; sourceTree = "<group>"; };
 		07FD85AC2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterWebsitesViewModelProtocol.swift; sourceTree = "<group>"; };
+		442945DA2DF894930023374C /* kontest-logo.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "kontest-logo.icon"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -549,6 +551,7 @@
 		0760164C2A87CD52007CE9F5 = {
 			isa = PBXGroup;
 			children = (
+				442945DA2DF894930023374C /* kontest-logo.icon */,
 				0764FF8D2ABC71D40060AC1F /* Upcoming Kontest iOS WidgetExtension.entitlements */,
 				07183EB52AB86A53006C92AD /* KontestTestPlan.xctestplan */,
 				07EA6F492AB6405F00CD932E /* Upcoming Kontests iOS WidgetExtension.entitlements */,
@@ -1098,6 +1101,7 @@
 				07ECFB892AA58259008513C6 /* Assets.xcassets in Resources */,
 				07ECFB962AA58259008513C6 /* Preview Assets.xcassets in Resources */,
 				07ECFB802AA58259008513C6 /* README.md in Resources */,
+				442945DB2DF894930023374C /* kontest-logo.icon in Resources */,
 				079A67132B54473100901C0D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1622,7 +1626,7 @@
 		076016642A87CD55007CE9F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "kontest-logo";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Kontest/Kontest.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = Kontest/KontestMacOS.entitlements;
@@ -1664,7 +1668,7 @@
 		076016652A87CD55007CE9F5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "kontest-logo";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Kontest/Kontest.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = Kontest/KontestMacOS.entitlements;
