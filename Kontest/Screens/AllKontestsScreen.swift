@@ -212,6 +212,10 @@ struct AllKontestsScreen: View {
                                 }
                             })
                         }
+                        
+                        if #available(iOS 26.0, *) {
+                            ToolbarSpacer(.fixed)
+                        }
 
                         if CalendarUtility.getAuthorizationStatus() == .fullAccess {
                             ToolbarItem(placement: .automatic) { // change the placement here!
@@ -314,6 +318,10 @@ struct AllKontestsScreen: View {
                             .help("Refresh")
                         }
                         #endif
+                    }
+                    
+                    if #available(iOS 26.0, *) {
+                        ToolbarSpacer(.fixed)
                     }
 
                     ToolbarItem(placement: .automatic) {
