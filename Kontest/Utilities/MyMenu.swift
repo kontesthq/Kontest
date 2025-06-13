@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if os(macOS)
 struct MyMenu: Commands {
     @Binding var router: Router
     @Binding var panelSelection: Panel?
@@ -44,3 +45,4 @@ struct MyMenu: Commands {
         })
     }
 }
+#endif

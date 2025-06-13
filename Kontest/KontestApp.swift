@@ -40,15 +40,15 @@ struct KontestApp: App {
                                 AllKontestsScreen(isSearchFiedFocused: _isSearchFiedFocused)
                             }
 
-                            Tab("CodeForces", image: "CodeForces Logo Small", value: .CodeForcesGraphView) {
+                            Tab("CodeForces", image: "codeforces sf symbol", value: .CodeForcesGraphView) {
                                 CodeForcesChartView()
                             }
 
-                            Tab("LeetCode", image: "LeetCode Logo Small", value: .LeetCodeGraphView) {
+                            Tab("LeetCode", image: "leetcode sf symbol", value: .LeetCodeGraphView) {
                                 LeetcodeChartView()
                             }
 
-                            Tab("CodeChef", image: "CodeChef Small Logo", value: .CodeChefGraphView) {
+                            Tab("CodeChef", image: "codechef sf symbol", value: .CodeChefGraphView) {
                                 CodeChefChartView()
                             }
                         }
@@ -119,9 +119,11 @@ struct KontestApp: App {
 #endif
             }
         }
+#if os(macOS)
         .commands {
             MyMenu(router: $router, panelSelection: $panelSelection, isSearchFiedFocused: _isSearchFiedFocused)
         }
+#endif
 
 #if os(macOS)
         if #available(macOS 15.0, *) {
