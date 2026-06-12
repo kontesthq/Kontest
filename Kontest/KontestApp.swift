@@ -32,85 +32,16 @@ struct KontestApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if let defaults = UserDefaults(suiteName: Constants.userDefaultsGroupID) {
-                Group {
-                    if #available(macOS 15.0, iOS 18.0, *) {
-                        TabView(selection: $panelSelection) {
-                            Tab("All Kontests", systemImage: "list.bullet", value: .AllKontestScreen) {
-                                AllKontestsScreen(isSearchFiedFocused: _isSearchFiedFocused)
-                            }
-
-                            Tab("CodeForces", image: "CodeForces Logo Small", value: .CodeForcesGraphView) {
-                                CodeForcesChartView()
-                            }
-
-                            Tab("LeetCode", image: "LeetCode Logo Small", value: .LeetCodeGraphView) {
-                                LeetcodeChartView()
-                            }
-
-                            Tab("CodeChef", image: "CodeChef Small Logo", value: .CodeChefGraphView) {
-                                CodeChefChartView()
-                            }
-                        }
-                    } else {
-                        ContentView(panelSelection: $panelSelection)
-                    }
-                }
-                .onAppear(perform: {
-                    print("deviceId: \(KeychainHelper.getUniqueDeviceIdentifier())")
-                    print("deviceId sha512: \(CryptoKitUtility.sha512(for: KeychainHelper.getUniqueDeviceIdentifier()))")
-                })
-                .environment(allKontestsViewModel)
-                .environment(router)
-                .environment(networkMonitor)
-                .environment(errorState)
-                .onChange(of: errorState.errorWrapper) {
-                    if let errorWrapper = errorState.errorWrapper {
-                        self.errorWrapper = errorWrapper
-                        self.isAlertDisplayed = true
-                    }
-                }
-#if os(iOS)
-//                    .sheet(item: $errorState.errorWrapper) { errorWrapper in
-//                        ErrorView(errorWrapper: errorWrapper)
-//                            .apply {
-//                                if #available(iOS 18.0, *) {
-//                                    $0.presentationSizing(.fitted)
-//                                } else {
-//                                    $0
-//                                }
-//                            }
-//                    }
-                .alert(errorState.errorWrapper?.error is AppError ? (errorWrapper.error as! AppError).title : "Error has occurred", isPresented: $isAlertDisplayed, actions: {
-                    Button("Dismiss") {}
-
-                    if errorWrapper.error is AppError {
-                        let appError = errorWrapper.error as! AppError
-
-                        if let action = appError.action {
-                            Button(appError.actionLabel) {
-                                action()
-                            }
-                        }
-                    }
-                }, message: {
-                    Text(errorWrapper.error.localizedDescription)
-
-                    Text(errorWrapper.guidance)
-                        .font(.caption)
-                })
-
-#endif
-#if os(macOS)
-                .onAppear(perform: {
-    disallowTabbingMode()
-})
-.frame(minWidth: 900, idealWidth: 1100, minHeight: 500, idealHeight: 600)
-#endif
-.defaultAppStorage(defaults)
-            } else {
-                Text("Failed to load user defaults")
-            }
+          AppView(
+            panelSelection: $panelSelection,
+            isSearchFiedFocused: _isSearchFiedFocused,
+            errorWrapper: $errorWrapper,
+            isAlertDisplayed: $isAlertDisplayed,
+            allKontestsViewModel: allKontestsViewModel,
+            router: router,
+            networkMonitor: networkMonitor,
+            errorState: errorState
+          )
         }
         .onChange(of: scenePhase) {
             if scenePhase == .background {
@@ -258,4 +189,97 @@ struct AboutView: View {
 
 #Preview {
     AboutView()
+}
+
+struct AppView: View {
+    @Binding var panelSelection: Panel?
+    @FocusState var isSearchFiedFocused: Bool
+    @Binding var errorWrapper: ErrorWrapper
+    @Binding var isAlertDisplayed: Bool
+    let allKontestsViewModel: AllKontestsViewModel
+    let router: Router
+    let networkMonitor: NetworkMonitor
+    let errorState: ErrorState
+
+    var body: some View {
+        if let defaults = UserDefaults(suiteName: Constants.userDefaultsGroupID) {
+            Group {
+                if #available(macOS 15.0, iOS 18.0, *) {
+                    TabView(selection: $panelSelection) {
+                        Tab("All Kontests", systemImage: "list.bullet", value: .AllKontestScreen) {
+                            AllKontestsScreen(isSearchFiedFocused: _isSearchFiedFocused)
+                        }
+
+                        Tab("CodeForces", image: "CodeForces Logo Small", value: .CodeForcesGraphView) {
+                            CodeForcesChartView()
+                        }
+
+                        Tab("LeetCode", image: "LeetCode Logo Small", value: .LeetCodeGraphView) {
+                            LeetcodeChartView()
+                        }
+
+                        Tab("CodeChef", image: "CodeChef Small Logo", value: .CodeChefGraphView) {
+                            CodeChefChartView()
+                        }
+                    }
+                } else {
+                    ContentView(panelSelection: $panelSelection)
+                }
+            }
+            .onAppear(perform: {
+                print("deviceId: \(KeychainHelper.getUniqueDeviceIdentifier())")
+                print("deviceId sha512: \(CryptoKitUtility.sha512(for: KeychainHelper.getUniqueDeviceIdentifier()))")
+            })
+            .environment(allKontestsViewModel)
+            .environment(router)
+            .environment(networkMonitor)
+            .environment(errorState)
+            .onChange(of: errorState.errorWrapper) {
+                if let errorWrapper = errorState.errorWrapper {
+                    self.errorWrapper = errorWrapper
+                    self.isAlertDisplayed = true
+                }
+            }
+#if os(iOS)
+//                    .sheet(item: $errorState.errorWrapper) { errorWrapper in
+//                        ErrorView(errorWrapper: errorWrapper)
+//                            .apply {
+//                                if #available(iOS 18.0, *) {
+//                                    $0.presentationSizing(.fitted)
+//                                } else {
+//                                    $0
+//                                }
+//                            }
+//                    }
+            .alert(errorWrapper.error is AppError ? (errorWrapper.error as! AppError).title : "Error has occurred", isPresented: $isAlertDisplayed, actions: {
+                Button("Dismiss") {}
+
+                if errorWrapper.error is AppError {
+                    let appError = errorWrapper.error as! AppError
+
+                    if let action = appError.action {
+                        Button(appError.actionLabel) {
+                            action()
+                        }
+                    }
+                }
+            }, message: {
+                Text(errorWrapper.error.localizedDescription)
+
+                Text(errorWrapper.guidance)
+                    .font(.caption)
+            })
+
+#endif
+#if os(macOS)
+            .onAppear(perform: {
+disallowTabbingMode()
+})
+.frame(minWidth: 900, idealWidth: 1100, minHeight: 500, idealHeight: 600)
+#endif
+.defaultAppStorage(defaults)
+        } else {
+            Text("Failed to load user defaults")
+        }
+    }
 }
