@@ -42,6 +42,18 @@ struct KontestApp: App {
             networkMonitor: networkMonitor,
             errorState: errorState
           )
+          .onOpenURL { url in
+              print(url)
+              if url.absoluteString.hasPrefix("kontest://") {
+                  let myUrl = url.absoluteString.replacingOccurrences(of: "kontest://", with: "")
+
+                  if let kontest = allKontestsViewModel.allFetchedKontests.first(where: { $0.id == myUrl }) {
+                      router.path.append(.kontestModel(kontest))
+                  } else {
+                      router.goToRootView()
+                  }
+              }
+          }
         }
         .onChange(of: scenePhase) {
             if scenePhase == .background {
