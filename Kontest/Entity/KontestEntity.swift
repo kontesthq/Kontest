@@ -35,7 +35,8 @@ struct KontestEntity: AppEntity, Identifiable, IndexedEntity {
     }
 
     var attributeSet: CSSearchableItemAttributeSet {
-        let attributes = CSSearchableItemAttributeSet()
+        let attributes = CSSearchableItemAttributeSet(contentType: .item)
+        attributes.displayName = name
         attributes.keywords = [site]
         attributes.contentDescription = platform
         return attributes
