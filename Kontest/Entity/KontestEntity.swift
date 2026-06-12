@@ -7,8 +7,10 @@
 
 import AppIntents
 import CryptoKit
+import CoreSpotlight
 
-struct KontestEntity: AppEntity, Identifiable {
+@available(iOS 18.0, macOS 15.0, *)
+struct KontestEntity: AppEntity, Identifiable, IndexedEntity {
     static let typeDisplayRepresentation =
         TypeDisplayRepresentation(name: "Kontest")
 
@@ -17,8 +19,6 @@ struct KontestEntity: AppEntity, Identifiable {
     let id: String
     let name: String
     let site: String
-    let startDate: Date
-    let endDate: Date
 
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(
@@ -28,21 +28,18 @@ struct KontestEntity: AppEntity, Identifiable {
     }
 }
 
+@available(iOS 18.0, macOS 15.0, *)
 extension KontestEntity {
     init(model: KontestModel) {
         self.id = model.id
         self.name = model.name
         self.site = model.site
-        self.startDate = CalendarUtility.getDate(date: model.start_time) ?? .now
-        self.endDate = CalendarUtility.getDate(date: model.end_time) ?? .now
     }
 
     init(dto: KontestDTO) {
         self.id = Self.generateUniqueID(dto: dto)
         self.name = dto.name
         self.site = dto.site
-        self.startDate = CalendarUtility.getDate(date: dto.startTime) ?? .now
-        self.endDate = CalendarUtility.getDate(date: dto.endTime) ?? .now
     }
 
     private static func generateUniqueID(dto: KontestDTO) -> String {
@@ -55,6 +52,36 @@ extension KontestEntity {
     }
 }
 
+// MARK: - Spotlight Indexing (iOS 18+)
+@available(iOS 18.0, macOS 15.0, *)
+extension KontestEntity {
+    static func indexContests(_ contests: [KontestEntity]) {
+        Task {
+            do {
+                // Use the modern IndexedEntity API with named index
+                try await CSSearchableIndex(name: "com.ayush.kontest.contests")
+                    .indexAppEntities(contests, priority: 100)
+                print("✅ Successfully indexed \(contests.count) contests to Spotlight")
+            } catch {
+                print("❌ Error indexing contests: \(error)")
+            }
+        }
+    }
+
+    static func clearIndex() {
+        Task {
+            do {
+                try await CSSearchableIndex(name: "com.ayush.kontest.contests")
+                    .deleteAllSearchableItems()
+                print("✅ Successfully cleared Spotlight index")
+            } catch {
+                print("❌ Error clearing Spotlight index: \(error)")
+            }
+        }
+    }
+}
+
+@available(iOS 18.0, macOS 15.0, *)
 struct KontestQuery: EntityStringQuery {
 
     func entities(
@@ -74,8 +101,6 @@ struct KontestQuery: EntityStringQuery {
 
         return allKontests
             .map(KontestEntity.init)
-            .filter { $0.endDate > .now }
-            .sorted { $0.startDate < $1.startDate }
             .prefix(10)
             .map { $0 }
     }

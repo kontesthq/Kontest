@@ -58,8 +58,8 @@ final class NetworkMonitor: Sendable {
 
             self.currentStatus = getAppNetworkStatus(status: status)
 
-            self.logger.info("Status: \("\(path.status)")")
-            self.logger.info("Interface: \("\(interface)")")
+//            self.logger.info("Status: \("\(path.status)")")
+//            self.logger.info("Interface: \("\(interface)")")
         }
     }
 
@@ -91,8 +91,8 @@ final class NetworkMonitor: Sendable {
 
                 self.currentStatus = getAppNetworkStatus(status: status)
 
-                self.logger.info("Status: \("\(path.status)")")
-                self.logger.info("Interface: \("\(interface)")")
+//                self.logger.info("Status: \("\(path.status)")")
+//                self.logger.info("Interface: \("\(interface)")")
             }
         }
     }
@@ -131,8 +131,8 @@ final class NetworkMonitor: Sendable {
 
             self.currentStatus = getAppNetworkStatus(status: status)
 
-            self.logger.info("Status: \("\(path.status)")")
-            self.logger.info("Interface: \("\(interface)")")
+//            self.logger.info("Status: \("\(path.status)")")
+//            self.logger.info("Interface: \("\(interface)")")
         }
     }
 

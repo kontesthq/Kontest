@@ -5,6 +5,7 @@
 //  Created by Ayush Singhal on 12/08/23.
 //
 
+import AppIntents
 import Combine
 import Foundation
 import OSLog
@@ -167,6 +168,12 @@ final class AllKontestsViewModel: Sendable {
                 }
 
             filterKontestsByTime()
+
+            // Index contests in Spotlight for search and Siri awareness (iOS 18+)
+            if #available(iOS 18.0, macOS 15.0, *) {
+                let entities = allFetchedKontests.map { KontestEntity(model: $0) }
+                KontestEntity.indexContests(entities)
+            }
 
         } catch {
             logger.error("error in fetching all Kontests: \(error)")
