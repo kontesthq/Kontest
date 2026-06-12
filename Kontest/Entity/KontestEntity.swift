@@ -17,8 +17,12 @@ struct KontestEntity: AppEntity, Identifiable, IndexedEntity {
     static let defaultQuery = KontestQuery()
 
     let id: String
-    let name: String
-    let site: String
+
+    @Property(title: "Contest Name")
+    var name: String
+
+    @Property(title: "Platform")
+    var site: String
 
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(
@@ -58,22 +62,16 @@ extension KontestEntity {
     static func indexContests(_ contests: [KontestEntity]) {
         Task {
             do {
-                let index = CSSearchableIndex(name: "com.ayush.kontest.contests")
+                print("📋 Preparing to index \(contests.count) contests...")
 
-                let searchableItems = contests.map { contest -> CSSearchableItem in
-                    let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
-                    attributeSet.title = contest.name
-                    attributeSet.contentDescription = "Contest on \(contest.site)"
-                    attributeSet.keywords = [contest.site, contest.name]
-
-                    return CSSearchableItem(
-                        uniqueIdentifier: contest.id,
-                        domainIdentifier: contest.site,
-                        attributeSet: attributeSet
-                    )
+                for contest in contests {
+                    print("📌 Indexing: \(contest.name) | Site: \(contest.site)")
                 }
 
-                try await index.indexSearchableItems(searchableItems)
+                let index = CSSearchableIndex(name: "com.ayush.kontest.contests")
+
+                // Use indexAppEntities directly - modern Spotlight approach recommended by Apple
+                try await index.indexAppEntities(contests)
                 print("✅ Successfully indexed \(contests.count) contests to Spotlight")
             } catch {
                 print("❌ Error indexing contests: \(error)")
@@ -92,6 +90,7 @@ extension KontestEntity {
             }
         }
     }
+
 }
 
 @available(iOS 18.0, macOS 15.0, *)
@@ -124,12 +123,22 @@ struct KontestQuery: EntityStringQuery {
         let allKontestsViewModel = Dependencies.instance.allKontestsViewModel
         let allKontests = allKontestsViewModel.allFetchedKontests
 
-        return allKontests
+        let results = allKontests
             .filter {
                 $0.name.localizedCaseInsensitiveContains(string)
                 ||
                 $0.site.localizedCaseInsensitiveContains(string)
             }
             .map(KontestEntity.init)
+
+        print("🔍 === SIRI SEARCH RESULTS ===")
+        print("Query: '\(string)'")
+        print("Results: \(results.count) contests found")
+        for result in results {
+            print("  📍 \(result.name) | \(result.site)")
+        }
+        print("================================\n")
+
+        return results
     }
 }

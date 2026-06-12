@@ -147,7 +147,7 @@ final class AllKontestsViewModel: Sendable {
         do {
             let fetchedKontests = try await repositories.fetchAllData()
 
-            print("fetchedKontests: \(fetchedKontests)")
+//            print("fetchedKontests: \(fetchedKontests)")
 
             hasFullAccessToCalendar = CalendarUtility.getAuthorizationStatus() == .fullAccess
 
@@ -172,6 +172,7 @@ final class AllKontestsViewModel: Sendable {
             // Index contests in Spotlight for search and Siri awareness (iOS 18+)
             if #available(iOS 18.0, macOS 15.0, *) {
                 let entities = allFetchedKontests.map { KontestEntity(model: $0) }
+//                KontestEntity.clearIndex()
                 KontestEntity.indexContests(entities)
             }
 

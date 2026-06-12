@@ -8,24 +8,31 @@
 import AppIntents
 
 @available(iOS 18.0, macOS 15.0, *)
-struct OpenContestIntent: AppIntent {
+struct OpenContestIntent: OpenIntent {
     static let title: LocalizedStringResource = "Open Contest"
     static let description: IntentDescription = "Select a contest from Kontest"
-    
+
     static var openAppWhenRun: Bool = true
 
     @Parameter(title: "Contest")
-    var kontest: KontestEntity
+    var target: KontestEntity
 
     @MainActor
     func perform() async throws -> some IntentResult {
         let router = Router.instance
         let allKontestsViewModel = Dependencies.instance.allKontestsViewModel
-        
-        if let kontest = allKontestsViewModel.allFetchedKontests.first(where: { $0.id == kontest.id}) {
-            router.path.append(.kontestModel(kontest))
+
+        // Try to find in already-fetched contests by name and site
+        if let matchedKontest = allKontestsViewModel.allFetchedKontests.first(where: {
+            $0.name == target.name && $0.site == target.site
+        }) {
+            router.path.append(.kontestModel(matchedKontest))
+            print("✅ Opened contest from Spotlight: \(target.name) (\(target.site))")
         } else {
+            // If contests not yet loaded, go to root and they'll load
+            // The search will make the contest visible
             router.goToRootView()
+            print("🔍 Contest will load when app fetches contests: \(target.name) (\(target.site))")
         }
         return .result()
     }
