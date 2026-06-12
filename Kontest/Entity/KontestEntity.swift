@@ -58,9 +58,22 @@ extension KontestEntity {
     static func indexContests(_ contests: [KontestEntity]) {
         Task {
             do {
-                // Use the modern IndexedEntity API with named index
-                try await CSSearchableIndex(name: "com.ayush.kontest.contests")
-                    .indexAppEntities(contests, priority: 100)
+                let index = CSSearchableIndex(name: "com.ayush.kontest.contests")
+
+                let searchableItems = contests.map { contest -> CSSearchableItem in
+                    let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
+                    attributeSet.title = contest.name
+                    attributeSet.contentDescription = "Contest on \(contest.site)"
+                    attributeSet.keywords = [contest.site, contest.name]
+
+                    return CSSearchableItem(
+                        uniqueIdentifier: contest.id,
+                        domainIdentifier: contest.site,
+                        attributeSet: attributeSet
+                    )
+                }
+
+                try await index.indexSearchableItems(searchableItems)
                 print("✅ Successfully indexed \(contests.count) contests to Spotlight")
             } catch {
                 print("❌ Error indexing contests: \(error)")
