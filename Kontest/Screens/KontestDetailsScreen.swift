@@ -74,6 +74,16 @@ struct KontestDetailsScreen: View {
             ButtonsView(kontest: kontest)
         }
         .frame(maxHeight: .infinity)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    let deepLink = "kontest://\(kontest.id)"
+                    ClipboardUtility.copyToClipBoard(deepLink)
+                }) {
+                    Image(systemName: "link")
+                }
+            }
+        }
     }
 }
 
