@@ -208,6 +208,9 @@
 		07FD85A92AB78D5600D26C4C /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FD85A82AB78D5600D26C4C /* Dependencies.swift */; };
 		07FD85AB2AB804FA00D26C4C /* NotificationsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FD85AA2AB804FA00D26C4C /* NotificationsViewModelProtocol.swift */; };
 		07FD85AD2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FD85AC2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift */; };
+		53A6EC6E2FDC5AC00061FFE9 /* KontestEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6EC6D2FDC5AC00061FFE9 /* KontestEntity.swift */; };
+		53A6EC742FDC5D8F0061FFE9 /* KontestShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6EC732FDC5D8F0061FFE9 /* KontestShortcuts.swift */; };
+		53A6EC762FDC60340061FFE9 /* SiteEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6EC752FDC60340061FFE9 /* SiteEntity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -404,6 +407,9 @@
 		07FD85A82AB78D5600D26C4C /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		07FD85AA2AB804FA00D26C4C /* NotificationsViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewModelProtocol.swift; sourceTree = "<group>"; };
 		07FD85AC2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterWebsitesViewModelProtocol.swift; sourceTree = "<group>"; };
+		53A6EC6D2FDC5AC00061FFE9 /* KontestEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KontestEntity.swift; sourceTree = "<group>"; };
+		53A6EC732FDC5D8F0061FFE9 /* KontestShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KontestShortcuts.swift; sourceTree = "<group>"; };
+		53A6EC752FDC60340061FFE9 /* SiteEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteEntity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -683,6 +689,7 @@
 		07ECFB362AA58259008513C6 /* Kontest */ = {
 			isa = PBXGroup;
 			children = (
+				53A6EC6A2FDC5A510061FFE9 /* Entity */,
 				077921B52C8B989F0021F70B /* Kontest.entitlements */,
 				07BDE0902B546B3C0059A5FA /* Authentication */,
 				079A67122B54473100901C0D /* GoogleService-Info.plist */,
@@ -899,6 +906,16 @@
 				07FD85AC2AB809BC00D26C4C /* FilterWebsitesViewModelProtocol.swift */,
 			);
 			path = ViewModelProtocols;
+			sourceTree = "<group>";
+		};
+		53A6EC6A2FDC5A510061FFE9 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				53A6EC752FDC60340061FFE9 /* SiteEntity.swift */,
+				53A6EC6D2FDC5AC00061FFE9 /* KontestEntity.swift */,
+				53A6EC732FDC5D8F0061FFE9 /* KontestShortcuts.swift */,
+			);
+			path = Entity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1169,6 +1186,7 @@
 				074215EB2CF972F900ADF523 /* ActivityManager.swift in Sources */,
 				07ECFBB72AA58259008513C6 /* CodeChefFetcher.swift in Sources */,
 				07ECFBA12AA58259008513C6 /* SingleNotificationMenu.swift in Sources */,
+				53A6EC6E2FDC5AC00061FFE9 /* KontestEntity.swift in Sources */,
 				079A672D2B545A0000901C0D /* UserManager.swift in Sources */,
 				073269EF2AAC4B0C0028476D /* ChangeUsernameScreen.swift in Sources */,
 				079CF5522B527F6700BE8E13 /* CodeChefScrapingContestModel.swift in Sources */,
@@ -1201,6 +1219,7 @@
 				074DD4522AA61570005C16A5 /* AppError.swift in Sources */,
 				07ECFBAC2AA58259008513C6 /* FontUtility.swift in Sources */,
 				07ECFB922AA58259008513C6 /* CodeForcesUserInfoAPIModel.swift in Sources */,
+				53A6EC762FDC60340061FFE9 /* SiteEntity.swift in Sources */,
 				07D766692AC8404A000A3DFD /* Sidebar.swift in Sources */,
 				07ECFBA32AA58259008513C6 /* PendingNotificationsScreen.swift in Sources */,
 				07ECFB9C2AA58259008513C6 /* AllKontestsScreen.swift in Sources */,
@@ -1249,6 +1268,7 @@
 				073E75822C916ECB00E5B934 /* Fetcher.swift in Sources */,
 				07ECFB942AA58259008513C6 /* CodeChefAPIModel.swift in Sources */,
 				07567EA52AB645E9007EFEE1 /* AddToCalendarIntent.swift in Sources */,
+				53A6EC742FDC5D8F0061FFE9 /* KontestShortcuts.swift in Sources */,
 				077E0BC32CA42896005536F5 /* ChangePasswordScreen.swift in Sources */,
 				07EBCC8E2C93FCFC00F0CE9E /* CodeChefNewAPIRepository.swift in Sources */,
 				077685272B56A50C00A1449F /* AccountInformationScreen.swift in Sources */,

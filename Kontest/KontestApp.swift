@@ -45,12 +45,20 @@ struct KontestApp: App {
           .onOpenURL { url in
               print(url)
               if url.absoluteString.hasPrefix("kontest://") {
-                  let myUrl = url.absoluteString.replacingOccurrences(of: "kontest://", with: "")
+                  let urlString = url.absoluteString.replacingOccurrences(of: "kontest://", with: "")
 
-                  if let kontest = allKontestsViewModel.allFetchedKontests.first(where: { $0.id == myUrl }) {
-                      router.path.append(.kontestModel(kontest))
+                  if urlString.hasPrefix("site?name=") {
+                      // Handle site-based deep link: kontest://site?name=CodeChef
+                      let siteName = urlString.replacingOccurrences(of: "site?name=", with: "")
+                      panelSelection = .AllKontestScreen
+                      // Filter will be applied by the view model based on the search/filter state
                   } else {
-                      router.goToRootView()
+                      // Handle contest ID deep link: kontest://{id}
+                      if let kontest = allKontestsViewModel.allFetchedKontests.first(where: { $0.id == urlString }) {
+                          router.path.append(.kontestModel(kontest))
+                      } else {
+                          router.goToRootView()
+                      }
                   }
               }
           }
