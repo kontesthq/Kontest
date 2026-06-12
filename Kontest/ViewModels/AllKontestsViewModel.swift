@@ -170,10 +170,10 @@ final class AllKontestsViewModel: Sendable {
             filterKontestsByTime()
 
             // Index contests in Spotlight for search and Siri awareness (iOS 18+)
-            if #available(iOS 18.0, macOS 15.0, *) {
+            if #available(iOS 18.4, macOS 15.4, *) {
                 let entities = allFetchedKontests.map { KontestEntity(model: $0) }
-//                KontestEntity.clearIndex()
-                KontestEntity.indexContests(entities)
+                await KontestEntity.clearIndex()
+                await KontestEntity.indexContests(entities)
             }
 
         } catch {

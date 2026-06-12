@@ -7,7 +7,7 @@
 
 import AppIntents
 
-@available(iOS 18.0, macOS 15.0, *)
+@available(iOS 18.4, macOS 15.4, *)
 struct OpenContestIntent: OpenIntent {
     static let title: LocalizedStringResource = "Open Contest"
     static let description: IntentDescription = "Select a contest from Kontest"
@@ -38,7 +38,7 @@ struct OpenContestIntent: OpenIntent {
     }
 }
 
-@available(iOS 18.0, macOS 15.0, *)
+@available(iOS 18.4, macOS 15.4, *)
 struct GetLatestContestIntent: AppIntent {
     static let title: LocalizedStringResource = "Get Latest Contest"
     static let description: IntentDescription = "Find the latest contest, optionally for a specific platform"
@@ -93,7 +93,7 @@ struct GetLatestContestIntent: AppIntent {
     }
 }
 
-@available(iOS 18.0, macOS 15.0, *)
+@available(iOS 18.4, macOS 15.4, *)
 struct OpenSiteContestsIntent: AppIntent {
     static let title: LocalizedStringResource = "Filter by Site"
     static let description: IntentDescription = "Select a contest site"
@@ -106,7 +106,31 @@ struct OpenSiteContestsIntent: AppIntent {
     }
 }
 
-@available(iOS 18.0, macOS 15.0, *)
+@available(iOS 18.4, macOS 15.0, *)
+struct ShowContestSearchResultsIntent: AppIntent {
+    static let title: LocalizedStringResource = "Show Search Results"
+    static let description: IntentDescription = "Show contest search results in the app"
+
+    static var openAppWhenRun: Bool = true
+
+    @Parameter(title: "Search Query")
+    var searchQuery: String
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        let router = Router.instance
+
+        // Navigate to root to ensure app is initialized
+        router.goToRootView()
+
+        // TODO: Pass search query to AllKontestsScreen to auto-fill search
+        print("🔍 Opening app with search results for: '\(searchQuery)'")
+
+        return .result(value: "Searching for '\(searchQuery)'")
+    }
+}
+
+@available(iOS 18.4, macOS 15.4, *)
 struct KontestShortcuts: AppShortcutsProvider {
 
     @AppShortcutsBuilder
