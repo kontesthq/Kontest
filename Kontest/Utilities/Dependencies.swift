@@ -34,6 +34,7 @@ final class Dependencies: Sendable {
             notificationsViewModel: notificationsViewModel,
             filterWebsitesViewModel: filterWebsitesViewModel,
             repos: MultipleRepositories(repos: [
+                AnyFetcher(ClistAPIRepository()), // TEST: clist.by JSON API (preferred)
                 AnyFetcher(KontestNewAPIRepository()),
                 AnyFetcher(KontestNewRepository())
             ])

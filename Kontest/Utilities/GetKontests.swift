@@ -13,6 +13,7 @@ class GetKontests {
 
     static func getKontests() async -> (fetchedKontests: [KontestModel], error: (any Error)?) {
         let repositories = MultipleRepositories(repos: [
+            AnyFetcher(ClistAPIRepository()), // TEST: clist.by JSON API (preferred)
             AnyFetcher(KontestNewAPIRepository()),
             AnyFetcher(KontestNewRepository())
         ])

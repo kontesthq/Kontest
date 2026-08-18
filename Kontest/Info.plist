@@ -7,7 +7,5 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Save and remove events directly from Kontest.</string>
 </dict>
 </plist>

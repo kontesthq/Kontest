@@ -85,3 +85,111 @@ final class KontestNewRepository: Fetcher, KontestFetcher {
         }
     }
 }
+
+// MARK: - clist.by API repository (TEST ONLY)
+
+/// ⚠️ TEST-ONLY hardcoded credentials for the clist.by API.
+///
+/// `clist.by` now serves its HTML behind a Cloudflare bot-challenge, so the
+/// HTML-scraping `KontestNewRepository` above returns a 403 / empty list. This
+/// repository instead calls clist's official JSON API (`/api/v4/contest/`),
+/// which is NOT behind the challenge.
+///
+/// Do NOT ship these credentials in a public release — the key is embedded in
+/// the app binary and can be extracted. For production, move this behind your
+/// own backend or fetch the key from a secure store.
+enum ClistAPIConfig {
+    static let username = "ayush.singhal@grofers.com"
+    static let apiKey = "5ec2a3dd0b5ce13f36a01401ab57573e359d7d22"
+    static let baseURL = "https://clist.by/api/v4/contest/"
+    static let fetchLimit = 200
+}
+
+/// Top-level clist API response envelope.
+private struct ClistContestResponse: Decodable {
+    let objects: [ClistContest]
+}
+
+/// A single contest object from clist's `/api/v4/contest/` endpoint.
+private struct ClistContest: Decodable {
+    let event: String     // contest name
+    let href: String      // contest url
+    let start: String     // naive-UTC ISO, e.g. "2026-11-13T00:00:00"
+    let end: String       // naive-UTC ISO
+    let duration: Double  // seconds
+    let resource: String  // host, e.g. "codeforces.com" (matches KontestDTO.site)
+}
+
+final class ClistAPIRepository: Fetcher, KontestFetcher {
+    typealias DataType = KontestDTO
+
+    private let logger = Logger(subsystem: "com.ayushsinghal.Kontest", category: "ClistAPIRepository")
+
+    func getData() async throws -> [KontestDTO] {
+        try await getAllKontests()
+    }
+
+    func getAllKontests() async throws -> [KontestDTO] {
+        guard var components = URLComponents(string: ClistAPIConfig.baseURL) else {
+            logger.error("Error in making clist url")
+            throw URLError(.badURL)
+        }
+
+        components.queryItems = [
+            URLQueryItem(name: "upcoming", value: "true"),
+            URLQueryItem(name: "order_by", value: "start"),
+            URLQueryItem(name: "limit", value: String(ClistAPIConfig.fetchLimit)),
+        ]
+
+        guard let url = components.url else {
+            logger.error("Error in making clist url")
+            throw URLError(.badURL)
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue(
+            "ApiKey \(ClistAPIConfig.username):\(ClistAPIConfig.apiKey)",
+            forHTTPHeaderField: "Authorization"
+        )
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200 ..< 300).contains(httpResponse.statusCode)
+            else {
+                logger.error("clist API returned a non-success response")
+                throw URLError(.badServerResponse)
+            }
+
+            let decoded = try JSONDecoder().decode(ClistContestResponse.self, from: data)
+
+            let kontests: [KontestDTO] = decoded.objects.map { contest in
+                KontestDTO(
+                    name: contest.event,
+                    url: contest.href,
+                    startTime: Self.toAppDateString(contest.start),
+                    endTime: Self.toAppDateString(contest.end),
+                    duration: String(Int(contest.duration)),
+                    site: contest.resource,
+                    in_24_hours: "NO",
+                    status: "CODING"
+                )
+            }
+
+            return kontests
+        } catch {
+            logger.error("Error in fetching clist Kontests: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
+    /// clist returns naive-UTC ISO strings like `"2026-11-13T00:00:00"`.
+    /// `CalendarUtility.getDate` parses the `"yyyy-MM-dd HH:mm:ss zzz"` format
+    /// (e.g. `"2022-10-10 06:30:00 UTC"`), so convert into that shape.
+    private static func toAppDateString(_ clistTime: String) -> String {
+        let withoutFraction = clistTime.split(separator: ".").first.map(String.init) ?? clistTime
+        let spaced = withoutFraction.replacingOccurrences(of: "T", with: " ")
+        return "\(spaced) UTC"
+    }
+}
